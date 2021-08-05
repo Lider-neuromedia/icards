@@ -1,0 +1,48 @@
+{
+    "theme": {
+        "text_color": "#49494B",
+        "main_color": "#C03A3A"
+    },
+    "fields": {
+        "logo": "icon.png",
+        "name": "Sample Card",
+        "cargo": "Sample Card CEO",
+        "action_contacts": [
+            {
+                "phone": "+573003003030"
+            },
+            {
+                "email": "sample@mail.com"
+            },
+            {
+                "whatsapp": "+573003003030"
+            }
+        ],
+        "description": "Descripción de ejemplo para esta E-card de ejemplo",
+        "contact_list": [
+            {
+                "phone": "+573003003030"
+            },
+            {
+                "cellphone": "+573003003030"
+            },
+            {
+                "email": "sample@mail.com"
+            },
+            {
+                "web": "http://sample.com"
+            }
+        ],
+        "social_list": [
+            {
+                "facebook": "https://www.facebook.com/"
+            },
+            {
+                "instagram": "https://www.instagram.com/"
+            },
+            {
+                "linkedin": "https://www.linkedin.com/"
+            }
+        ]
+    }
+}
