@@ -1,21 +1,5 @@
 @extends('layouts.simple')
 
-@section('styles')
-
-    <style>
-
-        body {
-            --bg-light-color: #ffffff;
-            --bg-dark-color: #1d1e22;
-            --main-color: {{ $theme->main_color }};
-            --text-color: {{ $theme->text_color }};
-            --white-color: #ffffff;
-        }
-
-    </style>
-
-@endsection
-
 @section('content')
 
     <header class="header">
@@ -37,19 +21,24 @@
                     @foreach ($ac as $ac_key => $value)
 
                         <div class="header-action">
-                            <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
-
                             @if ($ac_key == "phone")
-                                <a href="tel:{{$value}}">Llamar</a>
+                                <a href="tel:{{$value}}">
+                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
+                                    <span>Llamar</span>
+                                </a>
                             @endif
 
                             @if ($ac_key == "email")
-                                <a href="mailto:{{$value}}">Enviar Correo</a>
+                                <a href="mailto:{{$value}}">
+                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
+                                    <span>Enviar Correo</span>
+                                </a>
                             @endif
 
                             @if ($ac_key == "whatsapp")
                                 <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20quiero%20comprar%20eCards%20para%20mi%20negocio">
-                                    Enviar Whatsapp
+                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
+                                    <span>Enviar Whatsapp</span>
                                 </a>
                             @endif
                         </div>
@@ -71,7 +60,7 @@
 
                             @php
                                 $link = "$value";
-                                if ($cl_key == "phone" || $ac_key == "cellphone") {
+                                if ($cl_key == "phone" || $cl_key == "cellphone") {
                                     $link = "tel:$value";
                                 } else if ($cl_key == "email") {
                                     $link = "mailto:$value";
@@ -138,5 +127,21 @@
             <p>Esta es una página de referencia para que visualice el funcionamiento de una eCard, nuestros créditos, logotipos o páginas web nunca serán visualizados en las eCards de nuestros clientes</p>
         </div>
     </footer>
+
+@endsection
+
+@section('styles')
+
+    <style>
+
+        body {
+            --bg-light-color: #ffffff;
+            --bg-dark-color: #1d1e22;
+            --main-color: {{ $theme->main_color }};
+            --text-color: {{ $theme->text_color }};
+            --white-color: #ffffff;
+        }
+
+    </style>
 
 @endsection

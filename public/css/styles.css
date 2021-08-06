@@ -86,11 +86,21 @@ body {
 }
 
 .header-action a {
+    align-items: center;
     color: var(--white-color);
+    display: flex;
+    flex-flow: column nowrap;
     font-size: 1.2rem;
     font-weight: normal;
+    gap: 1rem;
     text-decoration: none;
     text-align: center;
+}
+
+.header-action a:hover,
+.header-action a:active {
+    color: var(--main-color);
+    font-weight: bold;
 }
 
 /* ########################## Main ########################## */
