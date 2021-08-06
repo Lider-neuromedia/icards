@@ -1,5 +1,21 @@
 @extends('layouts.simple')
 
+@section('styles')
+
+    <style>
+
+        body {
+            --bg-light-color: #ffffff;
+            --bg-dark-color: #1d1e22;
+            --main-color: {{ $theme->main_color }};
+            --text-color: {{ $theme->text_color }};
+            --white-color: #ffffff;
+        }
+
+    </style>
+
+@endsection
+
 @section('content')
 
     <header class="header">
