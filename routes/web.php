@@ -20,3 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/ec/{card}', 'CardsController@card');
+
+Route::get('/setup', function () {
+    $exitCode = Artisan::call('storage:link');
+    return response()->json('done', 200);
+});
