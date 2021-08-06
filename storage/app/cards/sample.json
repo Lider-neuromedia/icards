@@ -7,6 +7,7 @@
         "logo": "icon.png",
         "name": "Sample Card",
         "cargo": "Sample Card CEO",
+        "company": "Sample Inc.",
         "action_contacts": [
             {
                 "phone": "+573003003030"

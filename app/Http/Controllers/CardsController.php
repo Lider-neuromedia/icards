@@ -15,6 +15,6 @@ class CardsController extends Controller
         $data = json_decode(Storage::get("cards/$card.json"));
         $ecard = $data->fields;
 
-        return view('card', compact('card', 'ecard'));
+        return view('ecard.ecard', compact('card', 'ecard'));
     }
 }
