@@ -4,7 +4,7 @@
         "main_color": "#C03A3A"
     },
     "fields": {
-        "logo": "icon.jpeg",
+        "logo": "icon.png",
         "name": "Sample Card",
         "cargo": "Sample Card CEO",
         "company": "Sample Inc.",
