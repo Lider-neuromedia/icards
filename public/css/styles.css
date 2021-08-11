@@ -28,8 +28,8 @@ body {
 /* ########################## Header ########################## */
 
 .header {
-    background-color: var(--bg-dark-color);
-    color: var(--white-color);
+    background-color: var(--white-color);
+    color: var(--bg-dark-color);
     padding: 2rem 0;
 }
 
@@ -40,7 +40,7 @@ body {
 }
 
 .header-divisor {
-    border-top: 1px solid var(--white-color);
+    border-top: 1px solid var(--main-color);
     margin: 1rem 0;
     width: 100%;
 }
@@ -50,9 +50,15 @@ body {
     font-size: 1.8rem;
 }
 
+.header-logo {
+    background-color: var(--white-color);
+    border-radius: 50%;
+}
+
 .header-logo img {
     height: auto;
-    width: 8rem;
+    display: block;
+    width: 12rem;
 }
 
 .header-name {
@@ -87,7 +93,7 @@ body {
 
 .header-action a {
     align-items: center;
-    color: var(--white-color);
+    color: var(--bg-dark-color);
     display: flex;
     flex-flow: column nowrap;
     font-size: 1.2rem;
