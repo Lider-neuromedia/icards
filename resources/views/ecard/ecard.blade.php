@@ -5,7 +5,7 @@
     <header class="header">
         <div class="wrapper">
             <div class="header-logo">
-                <img width="30px" height="30px" src="{{ url("storage/$card/$ecard->logo") }}">
+                <img width="30px" height="30px" src="{{ url("storage/$card/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
             </div>
 
             <h1 class="header-description header-name">
@@ -23,21 +23,21 @@
                         <div class="header-action">
                             @if ($ac_key == "phone")
                                 <a href="tel:{{$value}}">
-                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
+                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
                                     <span>Llamar</span>
                                 </a>
                             @endif
 
                             @if ($ac_key == "email")
                                 <a href="mailto:{{$value}}">
-                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
+                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
                                     <span>Enviar Correo</span>
                                 </a>
                             @endif
 
                             @if ($ac_key == "whatsapp")
                                 <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20quiero%20comprar%20eCards%20para%20mi%20negocio">
-                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}">
+                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
                                     <span>Enviar Whatsapp</span>
                                 </a>
                             @endif
@@ -90,7 +90,7 @@
 
                             <li>
                                 <a href="{{ $sl_value }}" target="_blank">
-                                    <img width="30px" height="30px" src="{{ url("assets/social-$sl_key.png") }}">
+                                    <img width="30px" height="30px" src="{{ url("assets/social-$sl_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
                                 </a>
                             </li>
 
@@ -108,12 +108,12 @@
             <article class="content-ecard">
                 <div class="ecard">
                     <div class="ecard-border">
-                        <img class="ecard-logo" width="30px" height="30px" src="{{ url("storage/$card/{$ecard->logo}") }}">
+                        <img class="ecard-logo" width="30px" height="30px" src="{{ url("storage/$card/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}">
                         <div class="ecard-name">
                             {{ $ecard->name }}<br>
                             {{ $ecard->cargo }}
                         </div>
-                        <img class="ecard-qr" src="{{ url("storage/$card/qr.png") }}" alt="eCard">
+                        <img class="ecard-qr" src="{{ url("storage/$card/qr.png") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="eCard">
                         <div class="ecard-action">Escanear Código QR</div>
                     </div>
                 </div>
