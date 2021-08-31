@@ -5,7 +5,7 @@
     <header class="header">
         <div class="wrapper">
             <div class="header-logo">
-                <img width="30px" height="30px" src="{{ url("storage/$card/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                <img width="30px" height="30px" src="{{ url("storage/cards/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
             </div>
 
             <h1 class="header-description header-name">
@@ -85,7 +85,6 @@
                 <h2 class="content-social-title">Redes Sociales</h2>
                 <ul>
                     @foreach ($ecard->social_list as $sl)
-
                         @foreach ($sl as $sl_key => $sl_value)
 
                             <li>
@@ -95,11 +94,10 @@
                             </li>
 
                         @endforeach
-
                     @endforeach
                 </ul>
                 <div class="content-social-actions">
-                    <a href="{{ url("storage/$card/$card.vcf") }}">Descargar eCard</a>
+                    <a href="{{ url("storage/cards/{$card->slug}.vcf") }}">Descargar eCard</a>
                 </div>
             </nav>
 
@@ -108,12 +106,12 @@
             <article class="content-ecard">
                 <div class="ecard">
                     <div class="ecard-border">
-                        <img class="ecard-logo" width="30px" height="30px" src="{{ url("storage/$card/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                        <img class="ecard-logo" width="30px" height="30px" src="{{ url("storage/cards/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}">
                         <div class="ecard-name">
                             {{ $ecard->name }}<br>
                             {{ $ecard->cargo }}
                         </div>
-                        <img class="ecard-qr" src="{{ url("storage/$card/qr.png") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="eCard">
+                        <img class="ecard-qr" src="{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="eCard">
                         <div class="ecard-action">Escanear Código QR</div>
                     </div>
                 </div>
@@ -137,9 +135,8 @@
         body {
             --bg-light-color: #ffffff;
             --bg-dark-color: #1d1e22;
-            --main-color: {{ $theme->main_color }};
-            --text-color: {{ $theme->text_color }};
             --white-color: #ffffff;
+            --main-color: {!! $theme->main_color !!};
         }
 
     </style>
