@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
     public function initMasters()
     {
         User::create([
-            'role' => User::ROLE_MASTER,
+            'role' => User::ROLE_ADMIN,
             'name' => 'Jose Nieto',
             'email' => 'inge1neuro@gmail.com',
             'password' => \Hash::make('secret'),
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
     public function initClients()
     {
         $c1 = User::create([
-            'role' => User::ROLE_ADMIN,
+            'role' => User::ROLE_CLIENT,
             'name' => 'Centelsa',
             'email' => 'centelsa@mail.com',
             'password' => \Hash::make('secret'),
@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
         $subscription->save();
 
         $c2 = User::create([
-            'role' => User::ROLE_ADMIN,
+            'role' => User::ROLE_CLIENT,
             'name' => 'Montana Group',
             'email' => 'montanagroup@mail.com',
             'password' => \Hash::make('secret'),

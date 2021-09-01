@@ -15,13 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::prefix('admin')->namespace('Admin')->group(function () {
+    Route::resource('clients', 'ClientsController');
+});
+
+Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/ec/{card}', 'CardsController@card');
 
-Route::get('/setup', function () {
+Route::get('/setup-storage', function () {
     $exitCode = Artisan::call('storage:link');
     return response()->json('done', 200);
 });
