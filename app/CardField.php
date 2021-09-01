@@ -51,7 +51,7 @@ class CardField extends Model
         'others' => [
             'label' => 'Datos de Tarjeta',
             'values' => [
-                ['key' => 'logo', 'label' => 'Logo', 'type' => 'image'],
+                ['key' => 'logo', 'label' => 'Logo', 'type' => 'image', 'general' => true],
                 ['key' => 'name', 'label' => 'Nombre', 'type' => 'text'],
                 ['key' => 'cargo', 'label' => 'Cargo', 'type' => 'text'],
                 ['key' => 'company', 'label' => 'Empresa', 'type' => 'text'],
@@ -89,7 +89,7 @@ class CardField extends Model
         'theme' => [
             'label' => 'Tema Visual',
             'values' => [
-                ['key' => 'main_color', 'label' => 'Color Principal', 'type' => 'color'],
+                ['key' => 'main_color', 'label' => 'Color Principal', 'type' => 'color', 'general' => true],
             ],
         ],
     ];
