@@ -53,4 +53,38 @@ class User extends Authenticatable
 
         return $field ? url("storage/cards/{$field->value}") : null;
     }
+
+    public function isClient()
+    {
+        return $this->role === self::ROLE_CLIENT;
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function getCardsUsageAttribute()
+    {
+        $subscription = $this->subscriptions()->first();
+
+        if ($subscription == null) {
+            return "0/0";
+        }
+
+        $cards = $this->cards()->count();
+
+        return "$cards/{$subscription->cards}";
+    }
+
+    public function getSubscriptionStatusAttribute()
+    {
+        $subscription = $this->subscriptions()->first();
+
+        if ($subscription == null) {
+            return "No tiene suscripción";
+        }
+
+        return $subscription->finish_at->format('d/m/Y h:ia');
+    }
 }

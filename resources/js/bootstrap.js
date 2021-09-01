@@ -11,7 +11,8 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
-    require('@fortawesome/fontawesome-free/js/all.min.js')
+    require('@fortawesome/fontawesome-free/js/all.min.js');
+    require('@fortawesome/fontawesome-free/js/v4-shims.min.js');
     require('admin-lte');
 } catch (e) {}
 

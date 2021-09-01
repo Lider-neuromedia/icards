@@ -30,3 +30,15 @@ window.Vue = require('vue');
 // const app = new Vue({
 //     el: '#app',
 // });
+
+document.addEventListener('DOMContentLoaded', function () {
+    configurePagination();
+});
+
+/**
+ * Agregar clases css a elementos de paginación.
+ */
+function configurePagination() {
+    const paginations = document.querySelectorAll('.pagination');
+    paginations.forEach(x => x.classList.add('pagination-sm', 'm-0'));
+}

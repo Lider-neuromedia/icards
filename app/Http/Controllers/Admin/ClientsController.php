@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 class ClientsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.clients.index');
+        $search = $request->get('search');
+        $clients = User::query()
+            ->whereRole(User::ROLE_CLIENT)
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")
+                        ->orWhere('email', 'like', "%$search%");
+                });
+            })
+            ->paginate(12);
+
+        return view('admin.clients.index', compact('clients', 'search'));
     }
 
     public function create()

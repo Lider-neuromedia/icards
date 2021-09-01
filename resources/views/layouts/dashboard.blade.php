@@ -66,9 +66,18 @@
             <div class="sidebar">
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-address-card"></i><p>Tarjetas</p></a></li>
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-user-circle"></i><p>Perfil</p></a></li>
-                        <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa fa-palette"></i><p>Tema</p></a></li>
+
+                        @if (auth()->user()->isClient())
+                            <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-address-card"></i><p>Tarjetas</p></a></li>
+                            <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-user-circle"></i><p>Perfil</p></a></li>
+                            <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa fa-palette"></i><p>Tema</p></a></li>
+                        @endif
+
+                        @if (auth()->user()->isAdmin())
+                            <li class="nav-item"><a href="{{route('clients.index')}}" class="nav-link"><i class="nav-icon far fa-address-card"></i><p>Clientes</p></a></li>
+                            <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-user-circle"></i><p>Administradores</p></a></li>
+                        @endif
+
                         <li class="nav-item border-top">
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
                                 <i class="nav-icon far fa fa-door-closed"></i><p>Cerrar Sesión</p>
