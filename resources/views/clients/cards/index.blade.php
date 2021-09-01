@@ -11,6 +11,10 @@
     <div class="row">
         <div class="col-12">
 
+            <div class="alert alert-light text-center text-primary border-primary">
+                Límite de tarjetas ({{auth()->user()->cards_usage}})
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"></h3>
