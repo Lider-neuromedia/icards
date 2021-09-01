@@ -37,6 +37,15 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class, 'client_id', 'id');
     }
 
+    public function getRoleDescriptionAttribute()
+    {
+        $list = [
+            self::ROLE_ADMIN => 'Administrador',
+            self::ROLE_CLIENT => 'Cliente',
+        ];
+        return $list[$this->role];
+    }
+
     public function getLogoAttribute()
     {
         $myself = $this->id;
@@ -86,5 +95,15 @@ class User extends Authenticatable
         }
 
         return $subscription->finish_at->format('d/m/Y h:ia');
+    }
+
+    public function scopeOnlyClients($query)
+    {
+        return $query->whereRole(self::ROLE_CLIENT);
+    }
+
+    public function scopeOnlyAdmins($query)
+    {
+        return $query->whereRole(self::ROLE_ADMIN);
     }
 }

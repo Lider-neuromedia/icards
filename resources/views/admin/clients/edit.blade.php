@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Clientes')
+@section('title', 'Editar Cliente')
 
 @section('breadcrumbs')
     <li class="breadcrumb-item"><a href="{{route('clients.index')}}">Clientes</a></li>

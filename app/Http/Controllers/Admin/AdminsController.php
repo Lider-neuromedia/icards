@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 
-class ClientsController extends Controller
+class AdminsController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $clients = User::query()
-            ->whereRole(User::ROLE_CLIENT)
+        $users = User::query()
+            ->whereRole(User::ROLE_ADMIN)
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%$search%")
@@ -21,12 +21,12 @@ class ClientsController extends Controller
             })
             ->paginate(12);
 
-        return view('admin.clients.index', compact('clients', 'search'));
+        return view('admin.users.index', compact('users', 'search'));
     }
 
     public function create()
     {
-        return view('admin.clients.create');
+        return view('admin.users.create');
     }
 
     public function store(Request $request)
@@ -34,22 +34,22 @@ class ClientsController extends Controller
         //
     }
 
-    public function show(User $client)
+    public function show(User $user)
     {
         //
     }
 
-    public function edit(User $client)
+    public function edit(User $user)
     {
-        return view('admin.clients.edit');
+        return view('admin.users.edit');
     }
 
-    public function update(Request $request, User $client)
+    public function update(Request $request, User $user)
     {
         //
     }
 
-    public function destroy(User $client)
+    public function destroy(User $user)
     {
         //
     }

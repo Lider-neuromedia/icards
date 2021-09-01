@@ -16,7 +16,8 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->namespace('Admin')->group(function () {
-    Route::resource('clients', 'ClientsController');
+    Route::resource('clients', 'ClientsController', ['except' => ['show']]);
+    Route::resource('users', 'AdminsController', ['except' => ['show']]);
 });
 
 Auth::routes(['register' => false]);

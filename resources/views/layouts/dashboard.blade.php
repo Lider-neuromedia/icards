@@ -75,7 +75,7 @@
 
                         @if (auth()->user()->isAdmin())
                             <li class="nav-item"><a href="{{route('clients.index')}}" class="nav-link"><i class="nav-icon far fa-address-card"></i><p>Clientes</p></a></li>
-                            <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-user-circle"></i><p>Administradores</p></a></li>
+                            <li class="nav-item"><a href="{{route('users.index')}}" class="nav-link"><i class="nav-icon far fa-user-circle"></i><p>Administradores</p></a></li>
                         @endif
 
                         <li class="nav-item border-top">

@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
     public function initCards()
     {
         $c1 = new Card(['slug' => 'evelio-molano-martinez', 'qr_code' => 'qr-evelio-molano-martinez.png']);
-        $c1->client()->associate(User::find(2));
+        $c1->client()->associate(User::onlyClients()->first());
         $c1->save();
         $c1->fields()->saveMany([
             new CardField(['group' => 'others', 'key' => 'logo', 'value' => 'logo-evelio-molano-martinez.png']),
@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $c2 = new Card(['slug' => 'juan-salazar', 'qr_code' => 'qr-juan-salazar.png']);
-        $c2->client()->associate(User::find(2));
+        $c2->client()->associate(User::onlyClients()->first());
         $c2->save();
         $c2->fields()->saveMany([
             new CardField(['group' => 'others', 'key' => 'logo', 'value' => 'logo-juan-salazar.png']),
@@ -131,7 +131,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $c3 = new Card(['slug' => 'lina-maria-montes-quintero', 'qr_code' => 'qr-lina-maria-montes-quintero.png']);
-        $c3->client()->associate(User::find(3));
+        $c3->client()->associate(User::onlyClients()->get()[1]);
         $c3->save();
         $c3->fields()->saveMany([
             new CardField(['group' => 'others', 'key' => 'logo', 'value' => 'logo-lina-maria-montes-quintero.png']),
