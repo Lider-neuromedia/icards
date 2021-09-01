@@ -18,6 +18,13 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
+            if (auth()->user()->isClient()) {
+                return redirect('/clients/cards');
+            }
+            if (auth()->user()->isAdmin()) {
+                return redirect('/admin/clients');
+            }
+
             return redirect('/home');
         }
 

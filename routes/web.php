@@ -15,12 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('admin')->namespace('Admin')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->group(function () {
     Route::resource('clients', 'ClientsController', ['except' => ['show']]);
     Route::resource('users', 'AdminsController', ['except' => ['show']]);
 });
 
-Route::prefix('clients')->namespace('Clients')->group(function () {
+Route::prefix('clients')->middleware(['auth', 'role:client'])->namespace('Clients')->group(function () {
     Route::resource('cards', 'CardsController', ['except' => ['show']]);
 });
 
