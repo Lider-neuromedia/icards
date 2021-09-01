@@ -19,6 +19,7 @@ class ClientsController extends Controller
                         ->orWhere('email', 'like', "%$search%");
                 });
             })
+            ->orderBy('name', 'asc')
             ->paginate(12);
 
         return view('admin.clients.index', compact('clients', 'search'));

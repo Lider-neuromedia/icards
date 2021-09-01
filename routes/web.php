@@ -20,6 +20,10 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('users', 'AdminsController', ['except' => ['show']]);
 });
 
+Route::prefix('clients')->namespace('Clients')->group(function () {
+    Route::resource('cards', 'CardsController', ['except' => ['show']]);
+});
+
 Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');

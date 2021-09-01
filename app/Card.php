@@ -20,4 +20,18 @@ class Card extends Model
     {
         return $this->hasMany(CardField::class);
     }
+
+    public function getUrlAttribute()
+    {
+        return url("ec/{$this->slug}");
+    }
+
+    public function field($group, $key)
+    {
+        $field = $this->fields()
+            ->where('group', $group)
+            ->where('key', $key)
+            ->first();
+        return $field ? $field->value : '';
+    }
 }
