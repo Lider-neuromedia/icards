@@ -22,7 +22,7 @@
                     <div class="card-tools">
                         <form action="{{route('cards.index')}}" method="get">
                             <div class="input-group input-group-sm" style="max-width: 300px;">
-                                <input value="{{$search}}" type="text" name="search" class="form-control float-right" placeholder="Buscar">
+                                <input value="{{$search}}" type="search" name="search" class="form-control float-right" placeholder="Buscar">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search" aria-hidden="true"></i>
