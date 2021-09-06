@@ -39,11 +39,7 @@ class User extends Authenticatable
 
     public function getRoleDescriptionAttribute()
     {
-        $list = [
-            self::ROLE_ADMIN => 'Administrador',
-            self::ROLE_CLIENT => 'Cliente',
-        ];
-        return $list[$this->role];
+        return self::roles()[$this->role];
     }
 
     public function getLogoAttribute()
@@ -105,5 +101,13 @@ class User extends Authenticatable
     public function scopeOnlyAdmins($query)
     {
         return $query->whereRole(self::ROLE_ADMIN);
+    }
+
+    public static function roles()
+    {
+        return [
+            self::ROLE_ADMIN => 'Administrador',
+            self::ROLE_CLIENT => 'Cliente',
+        ];
     }
 }

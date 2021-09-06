@@ -111,6 +111,9 @@
 
             <!-- Main content -->
             <section class="content">
+                <div class="container">
+                    @include('partials.messages')
+                </div>
                 <div class="container-fluid">
                     @yield('content')
                 </div>

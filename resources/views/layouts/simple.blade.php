@@ -17,6 +17,9 @@
     @yield('styles')
 </head>
 <body>
+    <div class="container">
+        @include('partials.messages')
+    </div>
     @yield('content')
 </body>
 </html>
