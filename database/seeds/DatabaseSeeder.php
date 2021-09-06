@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             'password' => \Hash::make('secret'),
         ]);
         $start_at = Carbon::createFromFormat('Y-m-d', '2021-01-01');
-        $finish_at = $start_at->add('years', 1);
+        $finish_at = Carbon::createFromFormat('Y-m-d', '2021-01-01')->add('years', 1);
 
         $subscription = new Subscription([
             'cards' => 5,
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $start_at = Carbon::createFromFormat('Y-m-d', '2021-05-21');
-        $finish_at = $start_at->add('years', 1);
+        $finish_at = Carbon::createFromFormat('Y-m-d', '2021-05-21')->add('years', 1);
 
         $subscription = new Subscription([
             'cards' => 3,
