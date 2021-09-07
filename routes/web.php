@@ -21,6 +21,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->
 });
 
 Route::prefix('clients')->middleware(['auth', 'role:client'])->namespace('Clients')->group(function () {
+    Route::get('profile', 'ProfileController@index')->name('profile.index');
+    Route::post('profile', 'ProfileController@store')->name('profile.store');
     Route::resource('cards', 'CardsController', ['except' => ['show']]);
 });
 
