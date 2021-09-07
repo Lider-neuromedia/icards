@@ -69,6 +69,17 @@ class User extends Authenticatable
         return $this->role === self::ROLE_ADMIN;
     }
 
+    public function isCardsLimitReached()
+    {
+        $subscription = $this->subscriptions()->first();
+
+        if ($subscription == null) {
+            return true;
+        }
+
+        return $subscription->cards == $this->cards()->count();
+    }
+
     public function getCardsUsageAttribute()
     {
         $subscription = $this->subscriptions()->first();
@@ -78,7 +89,6 @@ class User extends Authenticatable
         }
 
         $cards = $this->cards()->count();
-
         return "$cards/{$subscription->cards}";
     }
 

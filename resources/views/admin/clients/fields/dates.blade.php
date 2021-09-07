@@ -1,5 +1,5 @@
 <div class="form-group">
-    <label class="form-label" for="start_at">*Fecha de Inicio</label>
+    <label class="form-label" for="start_at">*Fecha de Inicio <small>(yyyy-mm-dd hh:mm:ss)</small></label>
     <input
         required
         class="form-control @error('start_at') is-invalid @enderror"
@@ -16,7 +16,7 @@
 </div>
 
 <div class="form-group">
-    <label class="form-label" for="finish_at">*Fecha de finalización</label>
+    <label class="form-label" for="finish_at">*Fecha de finalización <small>(yyyy-mm-dd hh:mm:ss)</small></label>
     <input
         required
         class="form-control @error('finish_at') is-invalid @enderror"

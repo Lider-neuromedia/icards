@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-12">
 
-            <div class="alert alert-light text-center text-primary border-primary">
+            <div class="alert alert-light text-center border-primary bg-white">
                 Límite de tarjetas ({{auth()->user()->cards_usage}})
             </div>
 
@@ -40,9 +40,11 @@
                                 <th>URL</th>
                                 <th>Nombre</th>
                                 <th class="text-right">
-                                    <a href="{{route('cards.create')}}" class="btn btn-primary btn-xs" title="Crear Tarjeta">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                    </a>
+                                    @if (!auth()->user()->isCardsLimitReached())
+                                        <a href="{{route('cards.create')}}" class="btn btn-primary btn-xs" title="Crear Tarjeta">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </a>
+                                    @endif
                                 </th>
                             </tr>
                         </thead>
