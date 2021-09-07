@@ -12,8 +12,8 @@
             <p class="form-control">{{$subscription->finish_at->format('d/m/Y H:ia')}}</p>
         </div>
         <div class="form-group">
-            <label class="form-label" for="finish_at">Cantidad de tarjetas</label>
-            <p class="form-control">{{$subscription->cards}}</p>
+            <label class="form-label" for="finish_at">Cantidad de tarjetas <small>(en uso/total)</small></label>
+            <p class="form-control">{{$client->cards_usage}}</p>
         </div>
     </div>
 </div>
