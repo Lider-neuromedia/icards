@@ -22,7 +22,7 @@
         "description": "Descripción de ejemplo para esta E-card de ejemplo",
         "contact_list": [
             {
-                "phone": "+573003003030"
+                "phone1": "+573003003030"
             },
             {
                 "cellphone": "+573003003030"

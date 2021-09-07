@@ -60,7 +60,7 @@
 
                             @php
                                 $link = "$value";
-                                if ($cl_key == "phone" || $cl_key == "cellphone") {
+                                if ($cl_key == "phone1" || $cl_key == "phone2" || $cl_key == "cellphone") {
                                     $link = "tel:$value";
                                 } else if ($cl_key == "email") {
                                     $link = "mailto:$value";

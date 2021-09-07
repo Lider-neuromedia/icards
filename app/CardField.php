@@ -47,43 +47,71 @@ class CardField extends Model
         return 'text';
     }
 
+    public static function hasGroupWithGeneralFields($group)
+    {
+        foreach (self::TEMPLATE_FIELDS as $key => $fields_group) {
+            if ($key == $group) {
+                foreach ($fields_group['values'] as $value) {
+                    if ($value['general'] === true) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static function hasGroupWithSpecificFields($group)
+    {
+        foreach (self::TEMPLATE_FIELDS as $key => $fields_group) {
+            if ($key == $group) {
+                foreach ($fields_group['values'] as $value) {
+                    if ($value['general'] === false) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     const TEMPLATE_FIELDS = [
         'others' => [
             'label' => 'Datos de Tarjeta',
             'values' => [
                 ['key' => 'logo', 'label' => 'Logo', 'type' => 'image', 'general' => true],
-                ['key' => 'name', 'label' => 'Nombre', 'type' => 'text'],
-                ['key' => 'cargo', 'label' => 'Cargo', 'type' => 'text'],
-                ['key' => 'company', 'label' => 'Empresa', 'type' => 'text'],
-                ['key' => 'description', 'label' => 'Descripción', 'type' => 'textarea'],
+                ['key' => 'name', 'label' => 'Nombre', 'type' => 'text', 'general' => false],
+                ['key' => 'cargo', 'label' => 'Cargo', 'type' => 'text', 'general' => false],
+                ['key' => 'company', 'label' => 'Empresa', 'type' => 'text', 'general' => false],
+                ['key' => 'description', 'label' => 'Descripción', 'type' => 'textarea', 'general' => false],
             ],
         ],
         'action_contacts' => [
             'label' => 'Contacto Principal',
             'values' => [
-                ['key' => 'phone', 'label' => 'Teléfono', 'type' => 'text'],
-                ['key' => 'email', 'label' => 'E-mail', 'type' => 'text'],
-                ['key' => 'whatsapp', 'label' => 'Whatsapp', 'type' => 'text'],
+                ['key' => 'phone', 'label' => 'Teléfono', 'type' => 'text', 'general' => false],
+                ['key' => 'email', 'label' => 'E-mail', 'type' => 'text', 'general' => false],
+                ['key' => 'whatsapp', 'label' => 'Whatsapp', 'type' => 'text', 'general' => false],
             ],
         ],
         'contact_list' => [
             'label' => 'Datos de Contacto',
             'values' => [
-                ['key' => 'cellphone', 'label' => 'Celular', 'type' => 'text'],
-                ['key' => 'phone', 'label' => 'Teléfono 1', 'type' => 'text'],
-                ['key' => 'phone', 'label' => 'Teléfono 2', 'type' => 'text'],
-                ['key' => 'email', 'label' => 'E-mail', 'type' => 'text'],
-                ['key' => 'web', 'label' => 'Página Web', 'type' => 'text'],
+                ['key' => 'cellphone', 'label' => 'Celular', 'type' => 'text', 'general' => false],
+                ['key' => 'phone1', 'label' => 'Teléfono 1', 'type' => 'text', 'general' => false],
+                ['key' => 'phone2', 'label' => 'Teléfono 2', 'type' => 'text', 'general' => false],
+                ['key' => 'email', 'label' => 'E-mail', 'type' => 'text', 'general' => false],
+                ['key' => 'web', 'label' => 'Página Web', 'type' => 'text', 'general' => false],
             ],
         ],
         'social_list' => [
             'label' => 'Redes Sociales',
             'values' => [
-                ['key' => 'facebook', 'label' => 'Facebook', 'type' => 'text'],
-                ['key' => 'instagram', 'label' => 'Instagram', 'type' => 'text'],
-                ['key' => 'linkedin', 'label' => 'LinkedIn', 'type' => 'text'],
-                ['key' => 'twitter', 'label' => 'Twitter', 'type' => 'text'],
-                ['key' => 'youtube', 'label' => 'YouTube', 'type' => 'text'],
+                ['key' => 'facebook', 'label' => 'Facebook', 'type' => 'text', 'general' => false],
+                ['key' => 'instagram', 'label' => 'Instagram', 'type' => 'text', 'general' => false],
+                ['key' => 'linkedin', 'label' => 'LinkedIn', 'type' => 'text', 'general' => false],
+                ['key' => 'twitter', 'label' => 'Twitter', 'type' => 'text', 'general' => false],
+                ['key' => 'youtube', 'label' => 'YouTube', 'type' => 'text', 'general' => false],
             ],
         ],
         'theme' => [

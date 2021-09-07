@@ -49729,6 +49729,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 document.addEventListener('DOMContentLoaded', function () {
   configurePagination();
+  configureChangeFileEvent();
 });
 /**
  * Agregar clases css a elementos de paginación.
@@ -49738,6 +49739,21 @@ function configurePagination() {
   var paginations = document.querySelectorAll('.pagination');
   paginations.forEach(function (x) {
     return x.classList.add('pagination-sm', 'm-0');
+  });
+}
+/**
+ * Detectar evento de selección de imagen en tarjeta.
+ */
+
+
+function configureChangeFileEvent() {
+  var fileFields = document.querySelectorAll('.file-field');
+  fileFields.forEach(function (el) {
+    el.addEventListener('change', function (e) {
+      var fileName = e.target.files[0].name;
+      var nextSibling = e.target.nextElementSibling;
+      nextSibling.innerText = fileName;
+    });
   });
 }
 

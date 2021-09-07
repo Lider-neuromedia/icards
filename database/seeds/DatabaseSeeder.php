@@ -87,8 +87,8 @@ class DatabaseSeeder extends Seeder
             new CardField(['group' => 'action_contacts', 'key' => 'whatsapp', 'value' => '+573154332611']),
             //
             new CardField(['group' => 'contact_list', 'key' => 'cellphone', 'value' => '+573164784035']),
-            new CardField(['group' => 'contact_list', 'key' => 'phone', 'value' => '0326083400']),
-            new CardField(['group' => 'contact_list', 'key' => 'phone', 'value' => '0323920200']),
+            new CardField(['group' => 'contact_list', 'key' => 'phone1', 'value' => '0326083400']),
+            new CardField(['group' => 'contact_list', 'key' => 'phone2', 'value' => '0323920200']),
             new CardField(['group' => 'contact_list', 'key' => 'email', 'value' => 'evelio.molano@centelsa.com.co']),
             new CardField(['group' => 'contact_list', 'key' => 'web', 'value' => 'https://www.centelsa.com']),
             //
@@ -116,8 +116,8 @@ class DatabaseSeeder extends Seeder
             new CardField(['group' => 'action_contacts', 'key' => 'whatsapp', 'value' => '+573154332611']),
             //
             new CardField(['group' => 'contact_list', 'key' => 'cellphone', 'value' => '+573164784035']),
-            new CardField(['group' => 'contact_list', 'key' => 'phone', 'value' => '0326083400']),
-            new CardField(['group' => 'contact_list', 'key' => 'phone', 'value' => '0323920200']),
+            new CardField(['group' => 'contact_list', 'key' => 'phone1', 'value' => '0326083400']),
+            new CardField(['group' => 'contact_list', 'key' => 'phone2', 'value' => '0323920200']),
             new CardField(['group' => 'contact_list', 'key' => 'email', 'value' => 'evelio.molano@centelsa.com.co']),
             new CardField(['group' => 'contact_list', 'key' => 'web', 'value' => 'https://www.centelsa.com']),
             //
@@ -145,8 +145,8 @@ class DatabaseSeeder extends Seeder
             new CardField(['group' => 'action_contacts', 'key' => 'whatsapp', 'value' => '+573154332611']),
             //
             new CardField(['group' => 'contact_list', 'key' => 'cellphone', 'value' => '+573164784035']),
-            new CardField(['group' => 'contact_list', 'key' => 'phone', 'value' => '0326083400']),
-            new CardField(['group' => 'contact_list', 'key' => 'phone', 'value' => '0323920200']),
+            new CardField(['group' => 'contact_list', 'key' => 'phone1', 'value' => '0326083400']),
+            new CardField(['group' => 'contact_list', 'key' => 'phone2', 'value' => '0323920200']),
             new CardField(['group' => 'contact_list', 'key' => 'email', 'value' => 'evelio.molano@centelsa.com.co']),
             new CardField(['group' => 'contact_list', 'key' => 'web', 'value' => 'https://www.centelsa.com']),
             //
