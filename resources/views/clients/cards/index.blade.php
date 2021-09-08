@@ -50,6 +50,12 @@
                         </thead>
                         <tbody>
 
+                            @if ($cards->count() == 0)
+                                <tr>
+                                    <td class="text-center" colspan="3">No hay tarjetas</td>
+                                </tr>
+                            @endif
+
                             @foreach ($cards as $card)
                                 <tr>
                                     <td><a target="_blank" href="{{$card->url}}">{{$card->url}}</a></td>
@@ -66,9 +72,11 @@
                     </table>
                 </div>
 
-                <div class="card-footer d-flex justify-content-end">
-                    {{$cards->appends(['search' => $search])->links()}}
-                </div>
+                @if ($cards->count() > 0)
+                    <div class="card-footer d-flex justify-content-end">
+                        {{$cards->appends(['search' => $search])->links()}}
+                    </div>
+                @endif
             </div>
 
         </div>
