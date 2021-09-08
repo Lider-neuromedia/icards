@@ -14,7 +14,18 @@ class CardRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        $id = trim($this->get('id'));
+
+        if (!\Auth::check()) {
+            return false;
+        }
+        if ($id == null || $id == '') {
+            if (\Auth::user()->isCardsLimitReached()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
