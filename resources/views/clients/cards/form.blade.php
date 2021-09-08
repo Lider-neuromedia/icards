@@ -2,7 +2,7 @@
     @foreach ($groups as $group_key => $group)
         @if (\App\CardField::hasGroupWithSpecificFields($group_key))
 
-            <div class="col-12 col-md-6">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header text-primary">{{$group['label']}}</div>
                     <div class="card-body">

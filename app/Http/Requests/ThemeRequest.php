@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\CardField;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CardRequest extends FormRequest
+class ThemeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +31,7 @@ class CardRequest extends FormRequest
             foreach ($group['values'] as $field) {
                 $field_key = $group_key . '_' . $field['key'];
 
-                if ($field['general'] == false) {
+                if ($field['general'] == true) {
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
                     } else if ($field['type'] === 'image') {

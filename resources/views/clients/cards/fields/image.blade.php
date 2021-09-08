@@ -1,7 +1,7 @@
 <div class="mb-3">
     <label class="form-label" for="{{$field_key}}">{{$field['label']}}</label>
-    <div class="form-group @error($field_key) is-invalid @enderror">
-        <div class="custom-file">
+    <div class="form-group">
+        <div class="custom-file @error($field_key) is-invalid @enderror">
             <input
                 name="{{$field_key}}"
                 id="{{$field_key}}"

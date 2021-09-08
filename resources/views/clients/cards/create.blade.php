@@ -11,9 +11,9 @@
     <div class="container">
 
         <div class="row justify-content-center mb-5">
-            <div class="col-12">
+            <div class="col-12 col-sm-8">
 
-                <form action="{{ route('cards.store', $card) }}" method="post">
+                <form action="{{ route('cards.store', $card) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @include('clients.cards.form')
                 </form>

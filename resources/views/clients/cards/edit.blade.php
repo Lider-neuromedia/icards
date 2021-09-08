@@ -11,11 +11,11 @@
     <div class="container">
 
         <div class="row justify-content-center mb-5">
-            <div class="col-12">
+            <div class="col-12 col-sm-8">
 
                 {{-- Formulario de editar --}}
 
-                <form action="{{ route('cards.update', $card) }}" method="post">
+                <form action="{{ route('cards.update', $card) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="id" value="{{$card->id}}">

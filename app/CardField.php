@@ -107,11 +107,11 @@ class CardField extends Model
         'social_list' => [
             'label' => 'Redes Sociales',
             'values' => [
-                ['key' => 'facebook', 'label' => 'Facebook', 'type' => 'text', 'general' => false],
-                ['key' => 'instagram', 'label' => 'Instagram', 'type' => 'text', 'general' => false],
-                ['key' => 'linkedin', 'label' => 'LinkedIn', 'type' => 'text', 'general' => false],
-                ['key' => 'twitter', 'label' => 'Twitter', 'type' => 'text', 'general' => false],
-                ['key' => 'youtube', 'label' => 'YouTube', 'type' => 'text', 'general' => false],
+                ['key' => 'facebook', 'label' => 'Facebook', 'type' => 'text', 'general' => true],
+                ['key' => 'instagram', 'label' => 'Instagram', 'type' => 'text', 'general' => true],
+                ['key' => 'linkedin', 'label' => 'LinkedIn', 'type' => 'text', 'general' => true],
+                ['key' => 'twitter', 'label' => 'Twitter', 'type' => 'text', 'general' => true],
+                ['key' => 'youtube', 'label' => 'YouTube', 'type' => 'text', 'general' => true],
             ],
         ],
         'theme' => [

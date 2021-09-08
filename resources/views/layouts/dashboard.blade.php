@@ -70,7 +70,7 @@
                         @if (auth()->user()->isClient())
                             <li class="nav-item"><a href="{{route('cards.index')}}" class="nav-link"><i class="nav-icon far fa-address-card"></i><p>Tarjetas</p></a></li>
                             <li class="nav-item"><a href="{{route('profile.index')}}" class="nav-link"><i class="nav-icon far fa-user-circle"></i><p>Perfil</p></a></li>
-                            <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa fa-palette"></i><p>Tema</p></a></li>
+                            <li class="nav-item"><a href="{{route('cards.theme')}}" class="nav-link"><i class="nav-icon far fa fa-palette"></i><p>Tema</p></a></li>
                         @endif
 
                         @if (auth()->user()->isAdmin())

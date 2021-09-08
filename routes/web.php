@@ -24,6 +24,8 @@ Route::prefix('clients')->middleware(['auth', 'role:client'])->namespace('Client
     Route::get('profile', 'ProfileController@index')->name('profile.index');
     Route::post('profile', 'ProfileController@store')->name('profile.store');
     Route::resource('cards', 'CardsController', ['except' => ['show']]);
+    Route::get('/theme', 'CardsController@theme')->name('cards.theme');
+    Route::post('/theme', 'CardsController@storeTheme')->name('cards.theme-store');
 });
 
 Auth::routes(['register' => false]);

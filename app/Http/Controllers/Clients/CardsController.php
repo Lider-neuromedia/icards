@@ -6,6 +6,7 @@ use App\Card;
 use App\CardField;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CardRequest;
+use App\Http\Requests\ThemeRequest;
 use Illuminate\Http\Request;
 
 class CardsController extends Controller
@@ -43,11 +44,6 @@ class CardsController extends Controller
         return $this->saveOrUpdate($request);
     }
 
-    public function show(Card $card)
-    {
-        //
-    }
-
     public function edit(Card $card)
     {
         $groups = CardField::TEMPLATE_FIELDS;
@@ -64,6 +60,75 @@ class CardsController extends Controller
         $card->delete();
         session()->flash('message', "Tarjeta borrada.");
         return redirect()->action('Clients\CardsController@index');
+    }
+
+    public function theme()
+    {
+        $groups = CardField::TEMPLATE_FIELDS;
+        $card = \Auth::user()->cards()->first();
+        return view('clients.cards.theme', compact('card', 'groups'));
+    }
+
+    public function storeTheme(ThemeRequest $request)
+    {
+        try {
+
+            \DB::beginTransaction();
+
+            $groups = CardField::TEMPLATE_FIELDS;
+
+            foreach ($groups as $group_key => $group) {
+                foreach ($group['values'] as $field) {
+                    $field_key = $group_key . '_' . $field['key'];
+
+                    if ($field['general'] == true) {
+                        foreach (\Auth::user()->cards as $card) {
+                            $card_field = $card->fields()
+                                ->where('group', $group_key)
+                                ->where('key', $field['key'])
+                                ->first();
+
+                            $value = $card_field ? $card_field->value : '';
+
+                            if ($field['type'] == 'image') {
+                                if ($request->hasFile($field_key)) {
+                                    $image_path = $request->file($field_key)->store('public/cards');
+                                    $image_path = array_reverse(explode('/', $image_path))[0];
+                                    $value = $image_path;
+                                }
+                            } else {
+                                $value = $request->get($field_key);
+                            }
+
+                            if ($card_field) {
+                                $card_field->update([
+                                    'value' => $value,
+                                ]);
+                            } else {
+                                $card->fields()->save(new CardField([
+                                    'group' => $group_key,
+                                    'key' => $field['key'],
+                                    'value' => $value,
+                                ]));
+                            }
+                        }
+                    }
+                }
+            }
+
+            \DB::commit();
+
+            session()->flash('message', "Tema guardado correctamente.");
+            return redirect()->action('Clients\CardsController@theme');
+
+        } catch (\Exception $ex) {
+            \Log::info($ex->getMessage());
+            \Log::info($ex->getTraceAsString());
+            \DB::rollBack();
+
+            session()->flash('message-error', "Error interno al guardar tema.");
+            return redirect()->back()->withInput($request->input());
+        }
     }
 
     private function saveOrUpdate(Request $request, Card $card = null)
@@ -109,21 +174,23 @@ class CardsController extends Controller
                 foreach ($group['values'] as $field) {
                     $field_key = $group_key . '_' . $field['key'];
 
-                    $card_field = $card->fields()
-                        ->where('group', $group_key)
-                        ->where('key', $field['key'])
-                        ->first();
+                    if ($field['general'] == false) {
+                        $card_field = $card->fields()
+                            ->where('group', $group_key)
+                            ->where('key', $field['key'])
+                            ->first();
 
-                    if ($card_field) {
-                        $card_field->update([
-                            'value' => $request->get($field_key),
-                        ]);
-                    } else {
-                        $card->fields()->save(new CardField([
-                            'group' => $group_key,
-                            'key' => $field['key'],
-                            'value' => $request->get($field_key),
-                        ]));
+                        if ($card_field) {
+                            $card_field->update([
+                                'value' => $request->get($field_key),
+                            ]);
+                        } else {
+                            $card->fields()->save(new CardField([
+                                'group' => $group_key,
+                                'key' => $field['key'],
+                                'value' => $request->get($field_key),
+                            ]));
+                        }
                     }
                 }
             }
