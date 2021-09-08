@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Card;
 use App\CardField;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,6 +24,9 @@ class CardRequest extends FormRequest
             if (\Auth::user()->isCardsLimitReached()) {
                 return false;
             }
+        }
+        if (Card::whereId($id)->exists() && !\Auth::user()->cards()->whereId($id)->exists()) {
+            return false;
         }
 
         return true;

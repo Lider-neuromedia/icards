@@ -7,6 +7,7 @@ use App\CardField;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CardRequest;
 use App\Http\Requests\ThemeRequest;
+use App\User;
 use Illuminate\Http\Request;
 
 class CardsController extends Controller
@@ -46,6 +47,10 @@ class CardsController extends Controller
 
     public function edit(Card $card)
     {
+        if ($card->client->id != \Auth::user()->id) {
+            return redirect()->action('Clients\CardsController@index');
+        }
+
         $groups = CardField::TEMPLATE_FIELDS;
         return view('clients.cards.edit', compact('card', 'groups'));
     }
@@ -195,6 +200,8 @@ class CardsController extends Controller
                 }
             }
 
+            $this->updateCardFields(\Auth::user());
+
             \DB::commit();
 
             session()->flash('message', "Tarjeta guardada correctamente.");
@@ -207,6 +214,50 @@ class CardsController extends Controller
 
             session()->flash('message-error', "Error interno al guardar tarjeta.");
             return redirect()->back()->withInput($request->input());
+        }
+    }
+
+    /**
+     * Actualizar los datos generales de todas las tarjetas para que sean iguales.
+     */
+    private function updateCardFields(User $client)
+    {
+        $groups = CardField::TEMPLATE_FIELDS;
+        $primary_card = $client->cards()->first();
+
+        if ($primary_card && $client->cards()->count() > 1) { // Validar que haya mas de una tarjeta.
+            foreach ($client->cards as $card) {
+                if ($primary_card->id != $card->id) { // Validar que no sea la misma tarjeta que la principal.
+
+                    foreach ($groups as $group_key => $group) {
+                        foreach ($group['values'] as $field) {
+                            $field_key = $group_key . '_' . $field['key'];
+
+                            if ($field['general'] == true) {
+                                $card_field = $card->fields()
+                                    ->where('group', $group_key)
+                                    ->where('key', $field['key'])
+                                    ->first();
+
+                                $value = $primary_card->field($group_key, $field['key']);
+
+                                if ($card_field) {
+                                    $card_field->update([
+                                        'value' => $value,
+                                    ]);
+                                } else {
+                                    $card->fields()->save(new CardField([
+                                        'group' => $group_key,
+                                        'key' => $field['key'],
+                                        'value' => $value,
+                                    ]));
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
         }
     }
 }
