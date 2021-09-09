@@ -279,8 +279,8 @@ class CardsController extends Controller
             ->margin(30)
             ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
             ->build()
-            ->saveToFile(storage_path("app/public/cards/{$card->slug}.png"));
+            ->saveToFile(storage_path("app/public/cards/qr-{$card->slug}.png"));
 
-        $card->update(['qr_code' => "{$card->slug}.png"]);
+        $card->update(['qr_code' => "qr-{$card->slug}.png"]);
     }
 }
