@@ -5,7 +5,7 @@
     <header class="header">
         <div class="wrapper">
             <div class="header-logo">
-                <img width="30px" height="30px" src="{{ url("storage/cards/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                <img width="30px" height="auto" src="{{ url("storage/cards/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
             </div>
 
             <h1 class="header-description header-name">
@@ -20,28 +20,32 @@
                 @foreach ($ecard->action_contacts as $ac)
                     @foreach ($ac as $ac_key => $value)
 
-                        <div class="header-action">
-                            @if ($ac_key == "phone")
-                                <a href="tel:{{$value}}">
-                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
-                                    <span>Llamar</span>
-                                </a>
-                            @endif
+                        @if ($value)
 
-                            @if ($ac_key == "email")
-                                <a href="mailto:{{$value}}">
-                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
-                                    <span>Enviar Correo</span>
-                                </a>
-                            @endif
+                            <div class="header-action">
+                                @if ($ac_key == "phone")
+                                    <a href="tel:{{$value}}">
+                                        <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <span>Llamar</span>
+                                    </a>
+                                @endif
 
-                            @if ($ac_key == "whatsapp")
-                                <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20quiero%20comprar%20eCards%20para%20mi%20negocio">
-                                    <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
-                                    <span>Enviar Whatsapp</span>
-                                </a>
-                            @endif
-                        </div>
+                                @if ($ac_key == "email")
+                                    <a href="mailto:{{$value}}">
+                                        <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <span>Enviar Correo</span>
+                                    </a>
+                                @endif
+
+                                @if ($ac_key == "whatsapp")
+                                    <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20quiero%20comprar%20eCards%20para%20mi%20negocio">
+                                        <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <span>Enviar Whatsapp</span>
+                                    </a>
+                                @endif
+                            </div>
+
+                        @endif
 
                     @endforeach
                 @endforeach
@@ -51,28 +55,35 @@
 
     <main class="content">
         <div class="wrapper">
-            <div class="content-description">{{ $ecard->description }}</div>
+
+            @if ($ecard->description)
+                <div class="content-description">{{ $ecard->description }}</div>
+            @endif
 
             <nav class="content-contact-list">
                 <ul>
                     @foreach ($ecard->contact_list as $cl)
                         @foreach ($cl as $cl_key => $value)
 
-                            @php
-                                $link = "$value";
-                                if ($cl_key == "phone1" || $cl_key == "phone2" || $cl_key == "cellphone") {
-                                    $link = "tel:$value";
-                                } else if ($cl_key == "email") {
-                                    $link = "mailto:$value";
-                                }
-                            @endphp
+                            @if ($value)
 
-                            <li>
-                                <a href="{{$link}}" @if ($cl_key == "web") target="_blank" @endif>
-                                    <img width="30px" height="30px" src="{{ url("assets/contact-$cl_key.png") }}">
-                                    {{ $value }}
-                                </a>
-                            </li>
+                                @php
+                                    $link = "$value";
+                                    if ($cl_key == "phone1" || $cl_key == "phone2" || $cl_key == "cellphone") {
+                                        $link = "tel:$value";
+                                    } else if ($cl_key == "email") {
+                                        $link = "mailto:$value";
+                                    }
+                                @endphp
+
+                                <li>
+                                    <a href="{{$link}}" @if ($cl_key == "web") target="_blank" @endif>
+                                        <img width="30px" height="30px" src="{{ url("assets/contact-$cl_key.png") }}">
+                                        {{ $value }}
+                                    </a>
+                                </li>
+
+                            @endif
 
                         @endforeach
                     @endforeach
@@ -87,11 +98,15 @@
                     @foreach ($ecard->social_list as $sl)
                         @foreach ($sl as $sl_key => $sl_value)
 
-                            <li>
-                                <a href="{{ $sl_value }}" target="_blank">
-                                    <img width="30px" height="30px" src="{{ url("assets/social-$sl_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
-                                </a>
-                            </li>
+                            @if ($sl_value)
+
+                                <li>
+                                    <a href="{{ $sl_value }}" target="_blank">
+                                        <img width="30px" height="30px" src="{{ url("assets/social-$sl_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                    </a>
+                                </li>
+
+                            @endif
 
                         @endforeach
                     @endforeach
@@ -116,6 +131,7 @@
                     </div>
                 </div>
             </article>
+
         </div>
     </main>
 
