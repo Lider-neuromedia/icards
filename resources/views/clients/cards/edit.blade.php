@@ -22,6 +22,19 @@
                     @include('clients.cards.form')
                 </form>
 
+                <div class="card mb-5">
+                    <div class="card-header">
+                        <div class="card-title">Ver Tarjeta</div>
+
+                        <div class="card-tools">
+                            <a class="btn btn-primary btn-sm" title="Ver Tarjeta" href="{{$card->url}}" target="_blank">
+                                <i class="fa fa-link" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
                 {{-- Formulario de borrar --}}
 
                 @include('partials.delete', [

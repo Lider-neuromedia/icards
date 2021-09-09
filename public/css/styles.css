@@ -3,7 +3,7 @@ body {
     --bg-light-color: #ffffff;
     --bg-dark-color: #1d1e22;
     --main-color: #C03A3A;
-    --text-color: #707072;
+    --text-color: #333333;
     --white-color: #ffffff;
 
     color: var(--text-color);

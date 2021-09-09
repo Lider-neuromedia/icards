@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CardRequest;
 use App\Http\Requests\ThemeRequest;
 use App\User;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
 
 class CardsController extends Controller
@@ -201,6 +206,7 @@ class CardsController extends Controller
             }
 
             $this->updateCardFields(\Auth::user());
+            $this->generateQRCode($card);
 
             \DB::commit();
 
@@ -259,5 +265,22 @@ class CardsController extends Controller
                 }
             }
         }
+    }
+
+    private function generateQRCode(Card $card)
+    {
+        Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data($card->url)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(30)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->build()
+            ->saveToFile(storage_path("app/public/cards/{$card->slug}.png"));
+
+        $card->update(['qr_code' => "{$card->slug}.png"]);
     }
 }

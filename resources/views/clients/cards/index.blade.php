@@ -72,7 +72,7 @@
                     </table>
                 </div>
 
-                @if ($cards->count() > 0)
+                @if ($cards->count() > 12)
                     <div class="card-footer d-flex justify-content-end">
                         {{$cards->appends(['search' => $search])->links()}}
                     </div>
