@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
     /**
@@ -23,6 +21,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (auth()->check()) {
+            if (auth()->user()->isClient()) {
+                return redirect('/clients/cards');
+            }
+            if (auth()->user()->isAdmin()) {
+                return redirect('/admin/clients');
+            }
+        }
         return view('home');
     }
 }
