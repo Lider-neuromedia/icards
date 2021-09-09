@@ -101,6 +101,8 @@ class ClientsController extends Controller
             $subscription->client()->associate($client);
             $subscription->save();
 
+            $this->deleteClientExtraCards($client);
+
             \DB::commit();
 
             session()->flash('message', "Registro guardado correctamente.");
@@ -113,6 +115,23 @@ class ClientsController extends Controller
 
             session()->flash('message-error', "Error interno al guardar registro.");
             return redirect()->back()->withInput($request->input());
+        }
+    }
+
+    /**
+     * Borrar las tarjetas que sobrepasen el límite de la subscripción.
+     */
+    private function deleteClientExtraCards(User $client)
+    {
+        $max = $client->subscriptions()->first()->cards;
+        $cards_count = $client->cards()->count();
+
+        if ($max < $cards_count) {
+            do {
+
+                $client->cards()->orderBy('created_at', 'desc')->first()->delete();
+
+            } while ($client->cards()->count() > $max);
         }
     }
 }
