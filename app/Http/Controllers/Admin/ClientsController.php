@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
+use App\Mail\AccountCreated;
 use App\Subscription;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ClientsController extends Controller
 {
@@ -84,6 +86,7 @@ class ClientsController extends Controller
 
             $data = $request->only('name', 'email');
             $data['role'] = User::ROLE_CLIENT;
+            $send_mail = false;
 
             if ($request->has('password') && $request->get('password')) {
                 $data['password'] = \Hash::make($request->get('password'));
@@ -94,6 +97,7 @@ class ClientsController extends Controller
             } else {
                 $client = User::create($data);
                 $client->save();
+                $send_mail = true;
             }
 
             $client->subscriptions()->delete();
@@ -102,6 +106,10 @@ class ClientsController extends Controller
             $subscription->save();
 
             $this->deleteClientExtraCards($client);
+
+            if ($send_mail) {
+                Mail::to($client)->send(new AccountCreated($client));
+            }
 
             \DB::commit();
 

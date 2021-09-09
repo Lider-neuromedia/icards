@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -90,6 +91,20 @@ class User extends Authenticatable
 
         $cards = $this->cards()->count();
         return "$cards/{$subscription->cards}";
+    }
+
+    /**
+     * Obtener la cantidad de días que le quedan de suscripción al usuario.
+     */
+    public function getSubscriptionDaysLeft()
+    {
+        $sub = $this->subscriptions()->first();
+
+        if ($sub == null) {
+            return 0;
+        }
+
+        return Carbon::now()->diffInDays($sub->finish_at);
     }
 
     public function getSubscriptionStatusAttribute()
