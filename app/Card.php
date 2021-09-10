@@ -26,6 +26,11 @@ class Card extends Model
         return url("ec/{$this->slug}");
     }
 
+    public function getVcardAttribute()
+    {
+        return url("storage/cards/card-{$this->slug}.vcf");
+    }
+
     public function field($group, $key)
     {
         $field = $this->fields()

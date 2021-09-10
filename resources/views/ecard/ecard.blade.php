@@ -112,7 +112,7 @@
                     @endforeach
                 </ul>
                 <div class="content-social-actions">
-                    <a href="{{ url("storage/cards/{$card->slug}.vcf") }}">Descargar eCard</a>
+                    <a href="{{$card->vcard}}">Descargar eCard</a>
                 </div>
             </nav>
 
