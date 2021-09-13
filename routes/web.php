@@ -34,7 +34,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/ec/{card}', 'CardsController@card');
 
-Route::get('/setup-storage', function () {
-    $exitCode = Artisan::call('storage:link');
-    return response()->json('done', 200);
-});
+if (true) {
+    Route::get('/setup-storage', function () {
+        $exitCode = Artisan::call('storage:link');
+        return response()->json('done', 200);
+    });
+}
