@@ -100,8 +100,12 @@ class ClientsController extends Controller
                 $send_mail = true;
             }
 
+            $subscription_data = $request->only('cards', 'start_at', 'finish_at');
+            $subscription_data['start_at'] = Carbon::createFromFormat('Y-m-d\TH:i', $subscription_data['start_at']);
+            $subscription_data['finish_at'] = Carbon::createFromFormat('Y-m-d\TH:i', $subscription_data['finish_at']);
+
             $client->subscriptions()->delete();
-            $subscription = new Subscription($request->only('cards', 'start_at', 'finish_at'));
+            $subscription = new Subscription($subscription_data);
             $subscription->client()->associate($client);
             $subscription->save();
 

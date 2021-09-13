@@ -27,8 +27,8 @@ class ClientRequest extends FormRequest
             'name' => ['required', 'string', 'max:100', 'min:5'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'start_at' => ['required', "date_format:Y-m-d H:i:s"],
-            'finish_at' => ['required', "date_format:Y-m-d H:i:s", 'after:start_at'],
+            'start_at' => ['required', "date_format:Y-m-d\TH:i"],
+            'finish_at' => ['required', "date_format:Y-m-d\TH:i", 'after:start_at'],
             'cards' => ['required', 'integer', 'min:1'],
         ];
 
