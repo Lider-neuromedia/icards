@@ -16,8 +16,8 @@ class CreateSubscriptionsTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('cards')->unsigned()->comments('Cantidad de tarjetas');
-            $table->timestamp('start_at');
-            $table->timestamp('finish_at');
+            $table->timestamp('start_at')->nullable()->default(null);
+            $table->timestamp('finish_at')->nullable()->default(null);
             $table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

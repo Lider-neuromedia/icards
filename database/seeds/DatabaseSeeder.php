@@ -17,9 +17,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        $this->initMasters();
-        $this->initClients();
-        $this->initCards();
+        if (User::where('role', User::ROLE_ADMIN)->count() == 0) {
+            $this->initMasters();
+        }
+        if (User::where('role', User::ROLE_CLIENT)->count() == 0) {
+            $this->initClients();
+        }
+        if (Card::count() == 0) {
+            $this->initCards();
+        }
     }
 
     public function initMasters()

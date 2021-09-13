@@ -39,4 +39,18 @@ if (true) {
         $exitCode = Artisan::call('storage:link');
         return response()->json('done', 200);
     });
+
+    Route::get('/clear-cache', function () {
+        $exitCode = Artisan::call('config:clear');
+        $exitCode = Artisan::call('cache:clear');
+        $exitCode = Artisan::call('config:cache');
+        $exitCode = Artisan::call('view:clear');
+        $exitCode = Artisan::call('route:clear');
+        return response()->json('done', 200);
+    });
+
+    Route::get('/setup-db', function () {
+        $exitCode = Artisan::call('migrate --seed --no-interaction');
+        return response()->json('done', 200);
+    });
 }
