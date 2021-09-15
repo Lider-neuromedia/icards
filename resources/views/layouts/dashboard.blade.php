@@ -24,15 +24,6 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
 
-        <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            @if (\Auth::user()->logo)
-                <img class="animation__shake img-circle bg-white" src="{{\Auth::user()->logo}}" height="60" width="60">
-            @else
-                <img class="animation__shake img-circle bg-white" src="{{url('assets/logo.png')}}" height="60" width="60">
-            @endif
-        </div>
-
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
@@ -51,15 +42,8 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{route('home')}}" class="brand-link">
-                <div class="">
-                    @if (\Auth::user()->logo)
-                        <img src="{{\Auth::user()->logo}}" class="brand-image img-circle elevation-3 bg-white">
-                    @else
-                        <img src="{{url('assets/logo.png')}}" class="brand-image img-circle elevation-3 bg-white">
-                    @endif
-                </div>
-                <span class="brand-text font-weight-light">{{ \Auth::user()->name }}</span>
+            <a href="{{route('home')}}" class="brand-link text-center">
+                <span class="brand-text font-weight-light">{{ \Auth::user()->name }} {{ env('ASSETS_VERSION', 1) }}</span>
             </a>
 
             <!-- Sidebar -->
