@@ -1,11 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.empty')
 
 @section('content')
-<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-center">
+                    <img src="{{asset('assets/logo.png')}}" width="100px" height="auth">
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">
@@ -54,6 +55,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Reset Password') }}
                                 </button>
+                                <br>
+                                <a class="btn btn-link" href="{{ route('login') }}">
+                                    {{ __('Iniciar Sesión') }}
+                                </a>
                             </div>
                         </div>
                     </form>
@@ -61,5 +66,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
