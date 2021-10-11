@@ -25,21 +25,21 @@
                             <div class="header-action">
                                 @if ($ac_key == "phone")
                                     <a href="tel:{{$value}}">
-                                        <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <i class="icofont-phone"></i>
                                         <span>Llamar</span>
                                     </a>
                                 @endif
 
                                 @if ($ac_key == "email")
                                     <a href="mailto:{{$value}}">
-                                        <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <i class="icofont-email"></i>
                                         <span>Enviar Correo</span>
                                     </a>
                                 @endif
 
                                 @if ($ac_key == "whatsapp")
                                     <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20quiero%20comprar%20eCards%20para%20mi%20negocio">
-                                        <img width="30px" height="30px" src="{{ url("assets/action-$ac_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <i class="icofont-brand-whatsapp"></i>
                                         <span>Enviar Whatsapp</span>
                                     </a>
                                 @endif
@@ -146,6 +146,7 @@
 
 @section('styles')
 
+    <link rel="stylesheet" href="{{asset('icofont/icofont.min.css')}}">
     <style>
 
         body {
@@ -153,6 +154,8 @@
             --bg-dark-color: #1d1e22;
             --white-color: #ffffff;
             --main-color: {!! $theme->main_color !!};
+            --header-bg-color: {!! $theme->header_bg_color !!};
+            --header-text-color: {!! $theme->header_text_color !!};
         }
 
     </style>

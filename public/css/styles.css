@@ -28,8 +28,8 @@ body {
 /* ########################## Header ########################## */
 
 .header {
-    background-color: var(--white-color);
-    color: var(--bg-dark-color);
+    background-color: var(--header-bg-color);
+    color: var(--header-text-color);
     padding: 2rem 0;
 }
 
@@ -40,7 +40,7 @@ body {
 }
 
 .header-divisor {
-    border-top: 1px solid var(--main-color);
+    border-top: 1px solid var(--header-text-color);
     margin: 1rem 0;
     width: 100%;
 }
@@ -53,8 +53,9 @@ body {
 
 .header-logo {
     background-color: var(--white-color);
-    border-radius: 50%;
     margin-bottom: 2rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
 }
 
 .header-logo img {
@@ -99,9 +100,13 @@ body {
     width: 3rem;
 }
 
+.header-action i {
+    font-size: 3rem;
+}
+
 .header-action a {
     align-items: center;
-    color: var(--bg-dark-color);
+    color: var(--header-text-color);
     display: flex;
     flex-flow: column nowrap;
     font-size: 1.2rem;
@@ -113,7 +118,7 @@ body {
 
 .header-action a:hover,
 .header-action a:active {
-    color: var(--main-color);
+    color: var(--bg-dark-color);
     font-weight: bold;
 }
 

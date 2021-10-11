@@ -44,6 +44,22 @@ class CardsController extends Controller
             $ecard[CardField::GROUP_SOCIAL_LIST][] = (Object) [$field->key => $field->value];
         }
 
+        // Llenar campos que estén vacíos.
+        foreach (CardField::TEMPLATE_FIELDS as $group_key => $fields) {
+            foreach ($fields['values'] as $field) {
+                if ($group_key == 'others') {
+                    if (!isset($ecard[$field['key']])) {
+                        $ecard[$field['key']] = $field['default'];
+                    }
+                }
+                if ($group_key == 'theme') {
+                    if (!isset($theme[$field['key']])) {
+                        $theme[$field['key']] = $field['default'];
+                    }
+                }
+            }
+        }
+
         $ecard = (Object) $ecard;
         $theme = (Object) $theme;
 
