@@ -48,6 +48,7 @@ body {
 .header-description {
     font-weight: normal;
     font-size: 1.8rem;
+    text-align: center;
 }
 
 .header-logo {
@@ -60,6 +61,12 @@ body {
     height: auto;
     display: block;
     width: 20rem;
+}
+
+@media screen and (max-width:600px) {
+    .header-logo img {
+        width: 15rem;
+    }
 }
 
 .header-name {
@@ -181,6 +188,12 @@ body {
     font-weight: bold;
 }
 
+@media screen and (max-width:600px) {
+    .content-contact-list a {
+        padding: 0.8rem 0;
+    }
+}
+
 /* ########################## Social ########################## */
 
 .content-social-list {
@@ -194,7 +207,7 @@ body {
 
 .content-social-list ul {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     gap: 2rem;
     justify-content: center;
     list-style-type: none;
@@ -277,7 +290,7 @@ body {
     border-left: 1px solid var(--text-color);
     border-right: 1px solid var(--text-color);
     font-size: 1.2rem;
-    font-weight: lighter;
+    font-weight: normal;
     flex: 0 1 auto;
     padding: 0 0.5rem;
     text-align: center;
@@ -308,7 +321,7 @@ body {
 
 .footer {
     font-size: 0.8rem;
-    font-weight: lighter;
+    font-weight: normal;
     margin-bottom: 2rem;
     padding-top: 2rem;
     position: relative;
