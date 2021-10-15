@@ -20,13 +20,14 @@ class CardRequest extends FormRequest
         if (!\Auth::check()) {
             return false;
         }
-        if ($id == null || $id == '') {
-            if (\Auth::user()->isCardsLimitReached()) {
+        if (!\Auth::user()->isAdmin()) {
+            if ($id == null || $id == '') {
+                if (\Auth::user()->isCardsLimitReached()) {
+                    return false;
+                }
+            } else if (Card::whereId($id)->exists() && !\Auth::user()->cards()->whereId($id)->exists()) {
                 return false;
             }
-        }
-        if (Card::whereId($id)->exists() && !\Auth::user()->cards()->whereId($id)->exists()) {
-            return false;
         }
 
         return true;

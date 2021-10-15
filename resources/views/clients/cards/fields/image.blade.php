@@ -7,7 +7,8 @@
                 id="{{$field_key}}"
                 type="file"
                 class="custom-file-input file-field"
-                lang="es">
+                lang="es"
+                accept="image/png, image/jpeg">
             <label class="custom-file-label" for="{{$field_key}}">
                 Seleccionar imagen
             </label>

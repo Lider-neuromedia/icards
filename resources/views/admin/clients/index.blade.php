@@ -39,7 +39,7 @@
                                 <th class="text-center">Tarjetas</th>
                                 <th class="text-right">
                                     <a href="{{route('clients.create')}}" class="btn btn-primary btn-xs" title="Crear Cliente">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Crear Cliente
                                     </a>
                                 </th>
                             </tr>
@@ -53,9 +53,9 @@
                                     <td>{{$client->subscription_status}}</td>
                                     <td class="text-center">{{$client->cards_usage}}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-xs btn-success" href="{{route('clients.edit', $client->id)}}" title="Editar Cliente">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                                        </a>
+                                        <a class="btn btn-xs btn-primary" href="{{route('clients.cards.theme', $client)}}">Tema</a>
+                                        <a class="btn btn-xs btn-primary" href="{{route('clients.cards.index', $client)}}">Tarjetas</a>
+                                        <a class="btn btn-xs btn-primary" href="{{route('clients.edit', $client)}}">Editar de Cliente</a>
                                     </td>
                                 </tr>
                             @endforeach

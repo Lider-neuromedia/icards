@@ -1,9 +1,19 @@
+@php
+    $index_route = route('cards.index');
+    $create_route = route('cards.store', $card);
+
+    if (auth()->user()->isAdmin()) {
+        $index_route = route('clients.cards.index', $client);
+        $create_route = route('clients.cards.store', [$client, $card]);
+    }
+@endphp
+
 @extends('layouts.dashboard')
 
 @section('title', 'Crear Tarjeta')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{route('cards.index')}}">Tarjetas</a></li>
+    <li class="breadcrumb-item"><a href="{{$index_route}}">Tarjetas</a></li>
     <li class="breadcrumb-item active">Crear Tarjeta</li>
 @endsection
 
@@ -13,7 +23,7 @@
         <div class="row justify-content-center mb-5">
             <div class="col-12 col-sm-8">
 
-                <form action="{{ route('cards.store', $card) }}" method="post" enctype="multipart/form-data">
+                <form action="{{$create_route}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @include('clients.cards.form')
                 </form>

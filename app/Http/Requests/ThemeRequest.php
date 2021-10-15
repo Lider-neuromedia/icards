@@ -35,7 +35,7 @@ class ThemeRequest extends FormRequest
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
                     } else if ($field['type'] === 'image') {
-                        $validation[$field_key] = ['nullable', 'image'];
+                        $validation[$field_key] = ['nullable', 'file', 'mimes:jpeg,jpg,png'];
                     } else if ($field['type'] === 'text') {
                         $validation[$field_key] = ['nullable', 'string', 'max:250'];
                     } else if ($field['type'] === 'textarea') {

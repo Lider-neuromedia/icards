@@ -1,3 +1,13 @@
+@php
+    $index_route = route('cards.index');
+    $create_route = route('cards.create');
+
+    if (auth()->user()->isAdmin()) {
+        $index_route = route('clients.cards.index', $client);
+        $create_route = route('clients.cards.create', $client);
+    }
+@endphp
+
 @extends('layouts.dashboard')
 
 @section('title', 'Tarjetas')
@@ -12,7 +22,7 @@
         <div class="col-12">
 
             <div class="alert alert-light text-center border-primary bg-white">
-                Límite de tarjetas ({{auth()->user()->cards_usage}})
+                Límite de tarjetas ({{$client->cards_usage}})
             </div>
 
             <div class="card">
@@ -20,7 +30,7 @@
                     <h3 class="card-title"></h3>
 
                     <div class="card-tools">
-                        <form action="{{route('cards.index')}}" method="get">
+                        <form action="{{$index_route}}" method="get">
                             <div class="input-group input-group-sm" style="max-width: 300px;">
                                 <input value="{{$search}}" type="search" name="search" class="form-control float-right" placeholder="Buscar">
                                 <div class="input-group-append">
@@ -40,8 +50,8 @@
                                 <th>URL</th>
                                 <th>Nombre</th>
                                 <th class="text-right">
-                                    @if (!auth()->user()->isCardsLimitReached())
-                                        <a href="{{route('cards.create')}}" class="btn btn-primary btn-xs" title="Crear Tarjeta">
+                                    @if (!$client->isCardsLimitReached())
+                                        <a href="{{$create_route}}" class="btn btn-primary btn-xs" title="Crear Tarjeta">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </a>
                                     @endif
@@ -57,11 +67,18 @@
                             @endif
 
                             @foreach ($cards as $card)
+                                @php
+                                    $edit_route = route('cards.edit', $card);
+
+                                    if (auth()->user()->isAdmin()) {
+                                        $edit_route = route('clients.cards.edit', [$client, $card]);
+                                    }
+                                @endphp
                                 <tr>
                                     <td><a target="_blank" href="{{$card->url}}">{{$card->url}}</a></td>
                                     <td>{{$card->field('others', 'name')}}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-xs btn-success" href="{{route('cards.edit', $card->id)}}" title="Editar Tarjeta">
+                                        <a class="btn btn-xs btn-success" href="{{$edit_route}}" title="Editar Tarjeta">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
                                     </td>

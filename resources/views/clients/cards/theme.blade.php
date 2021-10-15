@@ -1,3 +1,11 @@
+@php
+    $store_route = route('cards.theme-store');
+
+    if (auth()->user()->isAdmin()) {
+        $store_route = route('clients.cards.theme-store', $client);
+    }
+@endphp
+
 @extends('layouts.dashboard')
 
 @section('title', 'Tema Visual')
@@ -22,7 +30,7 @@
 
                     {{-- Formulario de editar --}}
 
-                    <form action="{{ route('cards.theme-store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{$store_route}}" method="post" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row">

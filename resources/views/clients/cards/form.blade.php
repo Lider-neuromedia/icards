@@ -1,3 +1,11 @@
+@php
+    $back_route = route('cards.index');
+
+    if (auth()->user()->isAdmin()) {
+        $back_route = route('clients.cards.index', $client);
+    }
+@endphp
+
 <div class="row">
     @foreach ($groups as $group_key => $group)
         @if (\App\CardField::hasGroupWithSpecificFields($group_key))
@@ -43,7 +51,7 @@
 
 <div class="row">
     <div class="col-md-12 my-5">
-        <a class="btn btn-dark" href="{{ route('cards.index') }}">Volver</a>
+        <a class="btn btn-dark" href="{{$back_route}}">Volver</a>
         <button class="btn btn-primary" type="submit">
             Guardar
         </button>
