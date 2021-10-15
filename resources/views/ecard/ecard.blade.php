@@ -119,7 +119,12 @@
             <div class="content-divisor"></div>
 
             <article class="content-ecard">
-                <div class="ecard">
+                <canvas id="canvas-card" width="320" height="440"></canvas>
+                <div class="content-ecard-download-container">
+                    <button class="content-ecard-download" id="donwload-canvas-button" type="button">Descargar Imagen</button>
+                </div>
+
+                {{-- <div class="ecard">
                     <div class="ecard-border">
                         <img class="ecard-logo" width="30px" height="30px" src="{{ url("storage/cards/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}">
                         <div class="ecard-name">
@@ -129,7 +134,7 @@
                         <img class="ecard-qr" src="{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="eCard">
                         <div class="ecard-action">Escanear Código QR</div>
                     </div>
-                </div>
+                </div> --}}
             </article>
 
         </div>
@@ -142,6 +147,9 @@
         </div>
     </footer>
 
+    <!-- Imagen necesaria para generar img desde el canvas -->
+    <img id="image1" src="" alt="" style="display: none;">
+
 @endsection
 
 @section('styles')
@@ -153,11 +161,25 @@
             --bg-light-color: #ffffff;
             --bg-dark-color: #1d1e22;
             --white-color: #ffffff;
-            --main-color: {!! $theme->main_color !!};
-            --header-bg-color: {!! $theme->header_bg_color !!};
-            --header-text-color: {!! $theme->header_text_color !!};
+            --main-color: <?= $theme->main_color ?>;
+            --header-bg-color: <?= $theme->header_bg_color ?>;
+            --header-text-color: <?= $theme->header_text_color ?>;
         }
 
     </style>
+
+    <script src="{{ asset('js/app.js') }}?v={{ env('ASSETS_VERSION', 1) }}" defer></script>
+
+    <script>
+
+        window.card = {
+            imageLogo: "{{url("storage/cards/{$ecard->logo}")}}?v={{env('ASSETS_VERSION', 1)}}",
+            imageQR: "{{url("storage/cards/{$card->qr_code}")}}?v={{env('ASSETS_VERSION', 1)}}",
+            mainColor: "<?= $theme->main_color ?>",
+            name: "{{$ecard->name}}",
+            cargo: "{{$ecard->cargo}}",
+        }
+
+    </script>
 
 @endsection

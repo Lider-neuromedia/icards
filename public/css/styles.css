@@ -257,6 +257,31 @@ body {
 
 /* ########################## Card ########################## */
 
+.content-ecard {
+    padding-top: 1rem;
+}
+
+.content-ecard-download-container {
+    text-align: center;
+}
+
+.content-ecard-download {
+    background-color: var(--bg-dark-color);
+    border: 0;
+    border-radius: 1.3rem;
+    color: var(--white-color);
+    cursor: pointer;
+    display: inline-block;
+    margin: 1rem 0 0 0;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+}
+
+.content-ecard-download:hover,
+.content-ecard-download:active {
+    background-color: var(--main-color);
+}
+
 .ecard {
     --size: 10px;
     background-color: var(--white-color);
