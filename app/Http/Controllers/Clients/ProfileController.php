@@ -27,6 +27,10 @@ class ProfileController extends Controller
             }
 
             $client = \Auth::user();
+
+            $slug = \App\Services\SlugService::generate($data['name'], 'users', $client->id);
+            $data['slug'] = $slug;
+
             $client->update($data);
 
             \DB::commit();

@@ -8,17 +8,39 @@ use Carbon\Carbon;
 
 class CardsController extends Controller
 {
+    public function clientCard(String $client, String $card)
+    {
+        $card = Card::query()
+            ->whereSlug($card)
+            ->whereHas('client', function ($q) use ($client) {
+                $q->whereSlug($client)
+                    ->whereHas('subscriptions', function ($q) {
+                        $now = Carbon::now()->format('Y-m-d H:i:s');
+                        $q->where('finish_at', '>', $now);
+                    });
+            })
+            ->firstOrFail();
+
+        return $this->cardTemplate($card);
+    }
+
     public function card(String $card)
     {
         $card = Card::query()
             ->whereSlug($card)
             ->whereHas('client', function ($q) {
                 $q->whereHas('subscriptions', function ($q) {
-                    $q->where('finish_at', '>', Carbon::now()->format('Y-m-d H:i:s'));
+                    $now = Carbon::now()->format('Y-m-d H:i:s');
+                    $q->where('finish_at', '>', $now);
                 });
             })
             ->firstOrFail();
 
+        return $this->cardTemplate($card);
+    }
+
+    private function cardTemplate(Card $card)
+    {
         $template = $card->fields()->get()->groupBy('group');
 
         $ecard = [

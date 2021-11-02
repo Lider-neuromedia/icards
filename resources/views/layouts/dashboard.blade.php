@@ -43,7 +43,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{route('home')}}" class="brand-link text-center">
-                <span class="brand-text font-weight-light">{{ \Auth::user()->name }} {{ env('ASSETS_VERSION', 1) }}</span>
+                <span class="brand-text font-weight-light">{{ \Auth::user()->name }}</span>
             </a>
 
             <!-- Sidebar -->

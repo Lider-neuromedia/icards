@@ -23,7 +23,7 @@ class Card extends Model
 
     public function getUrlAttribute()
     {
-        return url("ec/{$this->slug}");
+        return url("{$this->client->slug}/{$this->slug}");
     }
 
     public function getVcardAttribute()

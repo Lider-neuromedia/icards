@@ -2,10 +2,12 @@
 
 use App\Card;
 use App\CardField;
+use App\Services\CardsService;
 use App\Subscription;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,7 +18,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
         if (User::where('role', User::ROLE_ADMIN)->count() == 0) {
             $this->initMasters();
         }
@@ -25,6 +26,26 @@ class DatabaseSeeder extends Seeder
         }
         if (Card::count() == 0) {
             $this->initCards();
+        }
+        if (Schema::hasColumn('users', 'slug')) {
+            $this->initClientSlugs();
+        }
+    }
+
+    public function initClientSlugs()
+    {
+        $clients = User::whereNull('slug')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        foreach ($clients as $client) {
+            $slug = \App\Services\SlugService::generate($client->name, 'users', $client->id);
+            $client->update(['slug' => $slug]);
+
+            foreach ($client->cards as $card) {
+                $cardsService = new CardsService();
+                $cardsService->refreshCard($client, $card);
+            }
         }
     }
 

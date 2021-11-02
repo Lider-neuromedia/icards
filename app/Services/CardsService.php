@@ -154,28 +154,9 @@ class CardsService
 
             \DB::beginTransaction();
 
-            $slug = '';
-            $n = 0;
-
-            do {
-                if ($n === 0) {
-                    $slug = \Str::slug($request->get('others_name'));
-                } else {
-                    $slug = \Str::slug($request->get('others_name') . " $n");
-                }
-                $n++;
-
-                $exists = Card::query()
-                    ->where('slug', $slug)
-                    ->when($card != null, function ($q) use ($card) {
-                        $q->where('id', '!=', $card->id);
-                    })
-                    ->exists();
-            } while ($exists);
-
-            $data = [
-                'slug' => $slug,
-            ];
+            $card_id = $card != null ? $card->id : null;
+            $slug = \App\Services\SlugService::generate($request->get('others_name'), 'cards', $card_id);
+            $data = ['slug' => $slug];
 
             if ($card != null) {
                 \Storage::delete("public/cards/card-{$card->slug}.vcf");
@@ -214,9 +195,7 @@ class CardsService
                 }
             }
 
-            $this->updateCardFields($client);
-            $this->generateQRCode($card);
-            $this->generateVCard($card);
+            $this->refreshCard($client, $card);
 
             \DB::commit();
 
@@ -235,6 +214,13 @@ class CardsService
             session()->flash('message-error', "Error interno al guardar tarjeta.");
             return redirect()->back()->withInput($request->input());
         }
+    }
+
+    public function refreshCard(User $client, Card $card)
+    {
+        $this->updateCardFields($client);
+        $this->generateQRCode($card);
+        $this->generateVCard($card);
     }
 
     /**

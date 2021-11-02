@@ -92,6 +92,10 @@ class ClientsController extends Controller
                 $data['password'] = \Hash::make($request->get('password'));
             }
 
+            $client_id = $client != null ? $client->id : null;
+            $slug = \App\Services\SlugService::generate($data['name'], 'users', $client_id);
+            $data['slug'] = $slug;
+
             if ($client != null) {
                 $client->update($data);
             } else {

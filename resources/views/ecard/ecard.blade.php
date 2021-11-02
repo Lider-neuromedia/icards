@@ -38,7 +38,7 @@
                                 @endif
 
                                 @if ($ac_key == "whatsapp")
-                                    <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20quiero%20comprar%20eCards%20para%20mi%20negocio">
+                                    <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20en%20que%20te%20puedo%20ayudar">
                                         <i class="icofont-brand-whatsapp"></i>
                                         <span>Enviar Whatsapp</span>
                                     </a>
