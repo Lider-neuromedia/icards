@@ -92,6 +92,7 @@ class CardField extends Model
                 ['key' => 'phone', 'label' => 'Teléfono', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'email', 'label' => 'E-mail', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'whatsapp', 'label' => 'Whatsapp', 'type' => 'text', 'general' => false, 'default' => ''],
+                ['key' => 'whatsapp_message', 'label' => 'Mensaje de Whatsapp', 'type' => 'text', 'general' => false, 'default' => 'Hola, en que te puedo ayudar'],
             ],
         ],
         'contact_list' => [

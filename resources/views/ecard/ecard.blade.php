@@ -38,7 +38,7 @@
                                 @endif
 
                                 @if ($ac_key == "whatsapp")
-                                    <a href="https://api.whatsapp.com/send?phone={{$value}}&text=Hola,%20en%20que%20te%20puedo%20ayudar">
+                                    <a href="https://api.whatsapp.com/send?phone={{$value}}&text={!!$ecard->whatsapp_message!!}">
                                         <i class="icofont-brand-whatsapp"></i>
                                         <span>Enviar Whatsapp</span>
                                     </a>

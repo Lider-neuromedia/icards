@@ -50,6 +50,10 @@ class CardsController extends Controller
         ];
         $theme = [];
 
+        $whatsapp_message = $card->field(CardField::GROUP_ACTION_CONTACTS, 'whatsapp_message');
+        $whatsapp_message = $whatsapp_message != '' ? rawurlencode($whatsapp_message) : '';
+        $ecard['whatsapp_message'] = $whatsapp_message;
+
         foreach ($template[CardField::GROUP_OTHERS] as $field) {
             $ecard[$field->key] = $field->value;
         }

@@ -37,6 +37,19 @@ class Card extends Model
             ->where('group', $group)
             ->where('key', $key)
             ->first();
-        return $field ? $field->value : '';
+
+        if ($field == null) {
+            $field_value = '';
+
+            foreach (CardField::TEMPLATE_FIELDS[$group]['values'] as $value) {
+                if ($value['key'] == $key) {
+                    $field_value = $value['default'];
+                }
+            }
+
+            return $field_value;
+        }
+
+        return $field->value;
     }
 }

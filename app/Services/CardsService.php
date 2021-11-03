@@ -319,7 +319,7 @@ class CardsService
             $logo_data = base64_encode(\Storage::get("public/cards/$logo"));
         }
 
-        $phone = $card->field('others', 'phone');
+        $phone = $card->field('action_contacts', 'phone');
         $phone1 = $card->field('contact_list', 'phone1');
         $phone2 = $card->field('contact_list', 'phone2');
 
