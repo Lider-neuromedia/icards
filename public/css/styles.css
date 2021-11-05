@@ -239,6 +239,7 @@ body {
 
 .content-social-actions {
     margin: 2rem 0;
+    text-align: center;
 }
 
 .content-social-actions a {
@@ -253,6 +254,8 @@ body {
 .content-social-actions a:hover,
 .content-social-actions a:active {
     background-color: var(--main-color);
+    color: var(--white-color);
+    font-weight: normal;
 }
 
 /* ########################## Card ########################## */

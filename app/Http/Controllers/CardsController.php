@@ -54,20 +54,30 @@ class CardsController extends Controller
         $whatsapp_message = $whatsapp_message != '' ? rawurlencode($whatsapp_message) : '';
         $ecard['whatsapp_message'] = $whatsapp_message;
 
-        foreach ($template[CardField::GROUP_OTHERS] as $field) {
-            $ecard[$field->key] = $field->value;
+        if (isset($template[CardField::GROUP_OTHERS])) {
+            foreach ($template[CardField::GROUP_OTHERS] as $field) {
+                $ecard[$field->key] = $field->value;
+            }
         }
-        foreach ($template[CardField::GROUP_THEME] as $field) {
-            $theme[$field->key] = $field->value;
+        if (isset($template[CardField::GROUP_THEME])) {
+            foreach ($template[CardField::GROUP_THEME] as $field) {
+                $theme[$field->key] = $field->value;
+            }
         }
-        foreach ($template[CardField::GROUP_ACTION_CONTACTS] as $field) {
-            $ecard[CardField::GROUP_ACTION_CONTACTS][] = (Object) [$field->key => $field->value];
+        if (isset($template[CardField::GROUP_ACTION_CONTACTS])) {
+            foreach ($template[CardField::GROUP_ACTION_CONTACTS] as $field) {
+                $ecard[CardField::GROUP_ACTION_CONTACTS][] = (Object) [$field->key => $field->value];
+            }
         }
-        foreach ($template[CardField::GROUP_CONTACT_LIST] as $field) {
-            $ecard[CardField::GROUP_CONTACT_LIST][] = (Object) [$field->key => $field->value];
+        if (isset($template[CardField::GROUP_CONTACT_LIST])) {
+            foreach ($template[CardField::GROUP_CONTACT_LIST] as $field) {
+                $ecard[CardField::GROUP_CONTACT_LIST][] = (Object) [$field->key => $field->value];
+            }
         }
-        foreach ($template[CardField::GROUP_SOCIAL_LIST] as $field) {
-            $ecard[CardField::GROUP_SOCIAL_LIST][] = (Object) [$field->key => $field->value];
+        if (isset($template[CardField::GROUP_SOCIAL_LIST])) {
+            foreach ($template[CardField::GROUP_SOCIAL_LIST] as $field) {
+                $ecard[CardField::GROUP_SOCIAL_LIST][] = (Object) [$field->key => $field->value];
+            }
         }
 
         // Llenar campos que estén vacíos.

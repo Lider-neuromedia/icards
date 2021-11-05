@@ -20,7 +20,7 @@
                 @foreach ($ecard->action_contacts as $ac)
                     @foreach ($ac as $ac_key => $value)
 
-                        @if ($value)
+                        @if ($value && !in_array($ac_key, ['whatsapp_message']))
 
                             <div class="header-action">
                                 @if ($ac_key == "phone")
@@ -61,6 +61,9 @@
             @endif
 
             <nav class="content-contact-list">
+                <div class="content-social-actions">
+                    <a href="{{$card->vcard}}">Guardar Contacto</a>
+                </div>
                 <ul>
                     @foreach ($ecard->contact_list as $cl)
                         @foreach ($cl as $cl_key => $value)
@@ -112,7 +115,7 @@
                     @endforeach
                 </ul>
                 <div class="content-social-actions">
-                    <a href="{{$card->vcard}}">Descargar eCard</a>
+                    <a href="{{$card->vcard}}">Guardar Contacto</a>
                 </div>
             </nav>
 
