@@ -81,7 +81,7 @@
 
                                 <li>
                                     <a href="{{$link}}" @if ($cl_key == "web") target="_blank" @endif>
-                                        <img width="30px" height="30px" src="{{ url("assets/contact-$cl_key.png") }}">
+                                        <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
                                         {{ $value }}
                                     </a>
                                 </li>
@@ -105,7 +105,7 @@
 
                                 <li>
                                     <a href="{{ $sl_value }}" target="_blank">
-                                        <img width="30px" height="30px" src="{{ url("assets/social-$sl_key.png") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                                        <img width="30px" height="30px" src="{{ mix("assets/social-$sl_key.png") }}">
                                     </a>
                                 </li>
 

@@ -5,7 +5,7 @@
         <div class="col-md-8">
             <div class="card border-primary">
                 <div class="card-header bg-primary text-center">
-                    <img src="{{asset('assets/logo.png')}}" width="100px" height="auth">
+                    <img src="{{mix('assets/logo.png')}}" width="100px" height="auth">
                 </div>
 
                 <div class="card-body">
