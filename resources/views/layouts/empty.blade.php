@@ -9,14 +9,14 @@
     <title>iCard</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v={{ env('ASSETS_VERSION', 1) }}" defer></script>
+    <script src="{{ mix('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v={{ env('ASSETS_VERSION', 1) }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <style>
         @media screen and (min-width: 600px) {
             main {

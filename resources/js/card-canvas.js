@@ -39,7 +39,7 @@ async function initCardCanvas(card) {
     // Título
     const textColor = getComputedStyle(document.querySelector('body')).getPropertyValue('--text-color');
     ctx.lineWidth = 1.0;
-    ctx.font = "1.2rem 'Exo', sans-serif";
+    ctx.font = "19px 'Exo', sans-serif";
     ctx.fillStyle = textColor;
     ctx.textAlign = 'center';
 

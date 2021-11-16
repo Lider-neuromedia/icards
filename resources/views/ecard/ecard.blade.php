@@ -157,7 +157,7 @@
 
 @section('styles')
 
-    <link rel="stylesheet" href="{{asset('icofont/icofont.min.css')}}">
+    <link rel="stylesheet" href="{{mix('icofont/icofont.min.css')}}">
     <style>
 
         body {
@@ -171,7 +171,7 @@
 
     </style>
 
-    <script src="{{ asset('js/app.js') }}?v={{ env('ASSETS_VERSION', 1) }}" defer></script>
+    <script src="{{ mix('js/app.js') }}" defer></script>
 
     <script>
 
