@@ -172,6 +172,7 @@
             --main-color: <?= $theme->main_color ?>;
             --header-bg-color: <?= $theme->header_bg_color ?>;
             --header-text-color: <?= $theme->header_text_color ?>;
+            --logo-bg: <?= $ecard->logo_bg ?>;
         }
 
     </style>

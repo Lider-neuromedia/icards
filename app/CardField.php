@@ -80,6 +80,7 @@ class CardField extends Model
             'label' => 'Datos de Tarjeta',
             'values' => [
                 ['key' => 'logo', 'label' => 'Logo', 'type' => 'image', 'general' => true, 'default' => null],
+                ['key' => 'logo_bg', 'label' => 'Fondo de logo', 'type' => 'color', 'general' => true, 'default' => '#ffffff'],
                 ['key' => 'name', 'label' => 'Nombre', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'cargo', 'label' => 'Cargo', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'company', 'label' => 'Empresa', 'type' => 'text', 'general' => false, 'default' => ''],

@@ -52,9 +52,9 @@ body {
 }
 
 .header-logo {
-    background-color: var(--white-color);
-    margin-bottom: 2rem;
+    background-color: var(--logo-bg);
     border-radius: 0.5rem;
+    margin-bottom: 2rem;
     padding: 0.5rem;
 }
 
