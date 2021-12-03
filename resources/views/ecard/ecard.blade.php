@@ -62,7 +62,7 @@
 
             <nav class="content-contact-list">
                 <div class="content-social-actions">
-                    <a href="{{$card->vcard}}">Guardar Contacto</a>
+                    <a class="action-black-button" href="{{$card->vcard}}">Guardar Contacto</a>
                 </div>
                 <ul>
                     @foreach ($ecard->contact_list as $cl)
@@ -115,7 +115,12 @@
                     @endforeach
                 </ul>
                 <div class="content-social-actions">
-                    <a href="{{$card->vcard}}">Guardar Contacto</a>
+                    <a class="action-black-button" href="{{$card->vcard}}">Guardar Contacto</a>
+                </div>
+                <div class="content-social-actions">
+                    <a class="action-black-button" href="https://api.whatsapp.com/send?text={{$card->vcard}}">
+                        Compartir
+                    </a>
                 </div>
             </nav>
 
