@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
         if (Schema::hasColumn('users', 'slug')) {
             $this->initClientSlugs();
         }
+        if (Schema::hasTable('card_statistics')) {
+            $this->refreshQRCodesForTrackVisits();
+        }
     }
 
     public function initClientSlugs()
@@ -46,6 +49,16 @@ class DatabaseSeeder extends Seeder
                 $cardsService = new CardsService();
                 $cardsService->refreshCard($client, $card);
             }
+        }
+    }
+
+    public function refreshQRCodesForTrackVisits()
+    {
+        $dateCardVisitsImplemented = '2022-02-09';
+        $cards = Card::whereDate('updated_at', '<', $dateCardVisitsImplemented)->get();
+
+        foreach ($cards as $card) {
+            CardsService::generateQRCode($card);
         }
     }
 

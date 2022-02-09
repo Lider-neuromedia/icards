@@ -232,7 +232,7 @@ class CardsService
     public function refreshCard(User $client, Card $card)
     {
         $this->updateCardFields($client);
-        $this->generateQRCode($card);
+        self::generateQRCode($card);
         $this->generateVCard($card);
     }
 
@@ -280,9 +280,10 @@ class CardsService
         }
     }
 
-    private function generateQRCode(Card $card)
+    public static function generateQRCode(Card $card)
     {
         $qrCardUrl = "{$card->url}?action=scan";
+        $qrFile = "qr-{$card->slug}.png";
 
         Builder::create()
             ->writer(new PngWriter())
@@ -294,9 +295,9 @@ class CardsService
             ->margin(30)
             ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
             ->build()
-            ->saveToFile(storage_path("app/public/cards/qr-{$card->slug}.png"));
+            ->saveToFile(storage_path("app/public/cards/{$qrFile}"));
 
-        $card->update(['qr_code' => "qr-{$card->slug}.png"]);
+        $card->update(['qr_code' => $qrFile]);
     }
 
     private function generateVCard(Card $card)
