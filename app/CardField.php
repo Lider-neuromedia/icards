@@ -79,6 +79,7 @@ class CardField extends Model
         'others' => [
             'label' => 'Datos de Tarjeta',
             'values' => [
+                ['key' => 'profile', 'label' => 'Foto de perfil', 'type' => 'image', 'general' => false, 'default' => null],
                 ['key' => 'logo', 'label' => 'Logo', 'type' => 'image', 'general' => true, 'default' => null],
                 ['key' => 'logo_bg', 'label' => 'Fondo de logo', 'type' => 'color', 'general' => true, 'default' => '#ffffff'],
                 ['key' => 'name', 'label' => 'Nombre', 'type' => 'text', 'general' => false, 'default' => ''],

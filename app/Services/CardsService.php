@@ -180,15 +180,27 @@ class CardsService
                             ->where('key', $field['key'])
                             ->first();
 
+                        $value = null;
+
+                        if ($field['type'] == 'image') {
+                            if ($request->hasFile($field_key)) {
+                                $image_path = $request->file($field_key)->store('public/cards');
+                                $image_path = array_reverse(explode('/', $image_path))[0];
+                                $value = $image_path;
+                            }
+                        } else {
+                            $value = $request->get($field_key);
+                        }
+
                         if ($card_field) {
                             $card_field->update([
-                                'value' => $request->get($field_key),
+                                'value' => $value,
                             ]);
                         } else {
                             $card->fields()->save(new CardField([
                                 'group' => $group_key,
                                 'key' => $field['key'],
-                                'value' => $request->get($field_key),
+                                'value' => $value,
                             ]));
                         }
                     }

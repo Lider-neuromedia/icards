@@ -5,8 +5,20 @@
     <header class="header">
         <div class="wrapper">
             <div class="header-logo">
-                <img width="30px" height="auto" src="{{ url("storage/cards/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
+                <img width="30px" height="auto"
+                    src="{{ url("storage/cards/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
             </div>
+
+            @if ($ecard->profile)
+                @php
+                    $profileImage = url("storage/cards/$ecard->profile");
+                    $profileImage = "url('{$profileImage}')";
+                @endphp
+                <div class="header-profile" style="--profile-image: {{ $profileImage }};">
+                    {{-- <img width="30px" height="auto"
+                        src="{{ url("storage/cards/$ecard->profile") }}?v={{ env('ASSETS_VERSION', 1) }}"> --}}
+                </div>
+            @endif
 
             <h1 class="header-description header-name">
                 <strong>{{ $ecard->name }}</strong>
@@ -23,22 +35,23 @@
                         @if ($value && !in_array($ac_key, ['whatsapp_message']))
 
                             <div class="header-action">
-                                @if ($ac_key == "phone")
-                                    <a href="tel:{{$value}}">
+                                @if ($ac_key == 'phone')
+                                    <a href="tel:{{ $value }}">
                                         <i class="icofont-phone"></i>
                                         <span>Llamar</span>
                                     </a>
                                 @endif
 
-                                @if ($ac_key == "email")
-                                    <a href="mailto:{{$value}}">
+                                @if ($ac_key == 'email')
+                                    <a href="mailto:{{ $value }}">
                                         <i class="icofont-email"></i>
                                         <span>Enviar Correo</span>
                                     </a>
                                 @endif
 
-                                @if ($ac_key == "whatsapp")
-                                    <a href="https://api.whatsapp.com/send?phone={{$value}}&text={!!$ecard->whatsapp_message!!}">
+                                @if ($ac_key == 'whatsapp')
+                                    <a
+                                        href="https://api.whatsapp.com/send?phone={{ $value }}&text={!! $ecard->whatsapp_message !!}">
                                         <i class="icofont-brand-whatsapp"></i>
                                         <span>Enviar Whatsapp</span>
                                     </a>
@@ -62,7 +75,7 @@
 
             <nav class="content-contact-list">
                 <div class="content-social-actions">
-                    <a class="action-black-button" href="{{$card->vcard}}">Guardar Contacto</a>
+                    <a class="action-black-button" href="{{ $card->vcard }}">Guardar Contacto</a>
                 </div>
                 <ul>
                     @foreach ($ecard->contact_list as $cl)
@@ -72,20 +85,19 @@
 
                                 @php
                                     $link = "$value";
-                                    if ($cl_key == "phone1" || $cl_key == "phone2" || $cl_key == "cellphone") {
+                                    if ($cl_key == 'phone1' || $cl_key == 'phone2' || $cl_key == 'cellphone') {
                                         $link = "tel:$value";
-                                    } else if ($cl_key == "email") {
+                                    } elseif ($cl_key == 'email') {
                                         $link = "mailto:$value";
                                     }
                                 @endphp
 
                                 <li>
-                                    <a href="{{$link}}" @if ($cl_key == "web") target="_blank" @endif>
+                                    <a href="{{ $link }}" @if ($cl_key == 'web') target="_blank" @endif>
                                         <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
                                         {{ $value }}
                                     </a>
                                 </li>
-
                             @endif
 
                         @endforeach
@@ -108,17 +120,16 @@
                                         <img width="30px" height="30px" src="{{ mix("assets/social-$sl_key.png") }}">
                                     </a>
                                 </li>
-
                             @endif
 
                         @endforeach
                     @endforeach
                 </ul>
                 <div class="content-social-actions">
-                    <a class="action-black-button" href="{{$card->vcard}}">Guardar Contacto</a>
+                    <a class="action-black-button" href="{{ $card->vcard }}">Guardar Contacto</a>
                 </div>
                 <div class="content-social-actions">
-                    <a class="action-black-button" href="https://api.whatsapp.com/send?text={{$card->vcard}}">
+                    <a class="action-black-button" href="https://api.whatsapp.com/send?text={{ $card->vcard }}">
                         Compartir
                     </a>
                 </div>
@@ -129,7 +140,8 @@
             <article class="content-ecard">
                 <canvas id="canvas-card" width="320" height="440"></canvas>
                 <div class="content-ecard-download-container">
-                    <button class="content-ecard-download" id="donwload-canvas-button" type="button">Descargar Imagen</button>
+                    <button class="content-ecard-download" id="donwload-canvas-button" type="button">Descargar
+                        Imagen</button>
                 </div>
 
                 {{-- <div class="ecard">
@@ -151,7 +163,8 @@
     <footer class="footer">
         <div class="wrapper">
             <p>De acuerdo a nuestra política de protección de datos no compartimos información real de nuestros clientes</p>
-            <p>Esta es una página de referencia para que visualice el funcionamiento de una eCard, nuestros créditos, logotipos o páginas web nunca serán visualizados en las eCards de nuestros clientes</p>
+            <p>Esta es una página de referencia para que visualice el funcionamiento de una eCard, nuestros créditos,
+                logotipos o páginas web nunca serán visualizados en las eCards de nuestros clientes</p>
         </div>
     </footer>
 
@@ -162,17 +175,16 @@
 
 @section('styles')
 
-    <link rel="stylesheet" href="{{mix('icofont/icofont.min.css')}}">
+    <link rel="stylesheet" href="{{ mix('icofont/icofont.min.css') }}">
     <style>
-
         body {
             --bg-light-color: #ffffff;
             --bg-dark-color: #1d1e22;
             --white-color: #ffffff;
-            --main-color: <?= $theme->main_color ?>;
-            --header-bg-color: <?= $theme->header_bg_color ?>;
-            --header-text-color: <?= $theme->header_text_color ?>;
-            --logo-bg: <?= $ecard->logo_bg ?>;
+            --main-color: <?=$theme->main_color ?>;
+            --header-bg-color: <?=$theme->header_bg_color ?>;
+            --header-text-color: <?=$theme->header_text_color ?>;
+            --logo-bg: <?=$ecard->logo_bg ?>;
         }
 
     </style>
@@ -180,15 +192,13 @@
     <script src="{{ mix('js/app.js') }}" defer></script>
 
     <script>
-
         window.card = {
-            imageLogo: "{{url("storage/cards/{$ecard->logo}")}}?v={{env('ASSETS_VERSION', 1)}}",
-            imageQR: "{{url("storage/cards/{$card->qr_code}")}}?v={{env('ASSETS_VERSION', 1)}}",
+            imageLogo: "{{ url("storage/cards/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}",
+            imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}",
             mainColor: "<?= $theme->main_color ?>",
-            name: "{{$ecard->name}}",
-            cargo: "{{$ecard->cargo}}",
+            name: "{{ $ecard->name }}",
+            cargo: "{{ $ecard->cargo }}",
         }
-
     </script>
 
 @endsection

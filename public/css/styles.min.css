@@ -1,1 +1,414 @@
-body{--bg-light-color:#ffffff;--bg-dark-color:#1d1e22;--main-color:#C03A3A;--text-color:#333333;--white-color:#ffffff;color:var(--text-color);font-family:Exo,sans-serif;font-size:16px;margin:0;padding:0}.wrapper{max-width:1024px;margin:0 auto;padding:0 1rem}.content-divisor{border-top:1px solid var(--text-color);margin:1rem 0;width:80%}.header{background-color:var(--header-bg-color);color:var(--header-text-color);padding:2rem 0}.header .wrapper{align-items:center;display:flex;flex-flow:column nowrap}.header-divisor{border-top:1px solid var(--header-text-color);margin:1rem 0;width:100%}.header-description{font-weight:400;font-size:1.8rem;text-align:center}.header-logo{background-color:var(--logo-bg);border-radius:.5rem;margin-bottom:2rem;padding:.5rem}.header-logo img{height:auto;display:block;width:20rem}@media screen and (max-width:600px){.header-logo img{width:15rem}}.header-name{font-size:1.8rem;font-weight:400}.header-cargo{text-align:center}.header-actions{display:flex;flex-flow:row nowrap;justify-content:space-between;padding:1rem 0;width:100%}.header-action{align-items:center;display:flex;flex:1 1 30%;flex-flow:column nowrap;gap:1rem}.header-action img{height:auto;width:3rem}.header-action i{font-size:3rem}.header-action a{align-items:center;color:var(--header-text-color);display:flex;flex-flow:column nowrap;font-size:1.2rem;font-weight:400;gap:1rem;text-decoration:none;text-align:center}@supports (-webkit-touch-callout:none) and (not (translate:none)){.header-action a span{display:inline-block;margin-top:1rem}}.header-action a:active,.header-action a:hover{color:var(--bg-dark-color);font-weight:700}.content{padding:2rem 0}.content .wrapper{align-items:center;box-sizing:border-box;display:flex;flex-flow:column nowrap}.content-description{margin:0 auto;max-width:80%;text-align:center}.content-contact-list ul{align-items:center;border-bottom:1px solid var(--bg-dark-color);border-top:1px solid var(--bg-dark-color);list-style-type:none;margin:2rem 0;padding:0}.content-contact-list ul li{position:relative}.content-contact-list ul li:before{bottom:0;border-bottom:1px solid var(--text-color);content:"";left:10%;position:absolute;width:80%}.content-contact-list ul li:last-child:before{border-bottom:0}.content-contact-list img{height:auto;width:1.2rem}.content-contact-list a{align-items:center;color:var(--text-color);display:flex;flex-flow:row nowrap;gap:.5rem;justify-content:center;margin:.8rem 0;padding:.8rem 1rem;text-decoration:none;word-break:break-all}.content-contact-list a:active,.content-contact-list a:hover{color:var(--main-color);font-weight:700}@media screen and (max-width:600px){.content-contact-list a{padding:.8rem 0}}.content-social-list{text-align:center}.content-social-title{font-weight:400;font-size:1.2rem}.content-social-list ul{display:flex;flex-flow:row wrap;gap:2rem;justify-content:center;list-style-type:none;padding:0}@supports (-webkit-touch-callout:none) and (not (translate:none)){.content-social-list ul li{margin-bottom:5%;margin-left:5%;margin-right:5%}}.content-social-list li a{background-color:var(--main-color);border-radius:50%;display:block;padding:1rem}.content-social-list li a:active,.content-social-list li a:hover{background-color:var(--bg-dark-color)}.content-social-list li img{display:block;height:auto;width:1.5rem}.content-social-actions{margin:2rem 0;text-align:center}.content-social-actions .action-black-button{background-color:var(--bg-dark-color);border:0;border-radius:1.3rem;color:var(--white-color);cursor:pointer;display:inline-block;padding:.8rem 2rem;text-decoration:none}.content-social-actions .action-black-button:active,.content-social-actions .action-black-button:hover{background-color:var(--main-color);color:var(--white-color);font-weight:400}.content-ecard{padding-top:1rem}.content-ecard-download-container{text-align:center}.content-ecard-download{background-color:var(--bg-dark-color);border:0;border-radius:1.3rem;color:var(--white-color);cursor:pointer;display:inline-block;margin:1rem 0 0 0;padding:.8rem 2rem;text-decoration:none}.content-ecard-download:active,.content-ecard-download:hover{background-color:var(--main-color)}.ecard{--size:10px;background-color:var(--white-color);border-bottom-left-radius:2rem;border-top-right-radius:2rem;box-shadow:0 0 5px var(--text-color),0 0 10px var(--text-color);max-width:300px;margin:2rem 0;padding:.5rem}.ecard-border{align-items:center;border:calc(var(--size) * .4) solid var(--main-color);border-bottom-left-radius:2rem;border-top-right-radius:2rem;display:flex;flex-flow:column nowrap;gap:.8rem;padding:2rem}@media screen and (max-width:600px){.ecard-border{padding:1rem}}.ecard-logo{height:auto;width:50%}.ecard-name{border-left:1px solid var(--text-color);border-right:1px solid var(--text-color);font-size:1.2rem;font-weight:400;flex:0 1 auto;padding:0 .5rem;text-align:center}.ecard-qr{border:calc(var(--size) * .6) solid var(--main-color);border-radius:.8rem;width:90%}.ecard-action{background-color:var(--main-color);border-radius:1.4rem;color:var(--white-color);padding:1rem 1.5rem;text-align:center}@media screen and (max-width:600px){.ecard-action{padding:1rem}}.footer{font-size:.8rem;font-weight:400;margin-bottom:2rem;padding-top:2rem;position:relative;text-align:center}.footer:before{top:0;border-top:1px solid var(--text-color);content:"";left:10%;position:absolute;width:80%}
+/* Ecard Plantilla */
+body {
+    --bg-light-color: #ffffff;
+    --bg-dark-color: #1d1e22;
+    --main-color: #C03A3A;
+    --text-color: #333333;
+    --white-color: #ffffff;
+
+    color: var(--text-color);
+    font-family: 'Exo', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.content-divisor {
+    border-top: 1px solid var(--text-color);
+    margin: 1rem 0;
+    width: 80%;
+}
+
+/* ########################## Header ########################## */
+
+.header {
+    background-color: var(--header-bg-color);
+    color: var(--header-text-color);
+    padding: 2rem 0;
+}
+
+.header .wrapper {
+    align-items: center;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.header-divisor {
+    border-top: 1px solid var(--header-text-color);
+    margin: 1rem 0;
+    width: 100%;
+}
+
+.header-description {
+    font-weight: normal;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.header-logo {
+    background-color: var(--logo-bg);
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+}
+
+.header-profile {
+    background-image: var(--profile-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 3px solid var(--logo-bg);
+    border-radius: 50%;
+    height: 120px;
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+    padding: 0.5rem;
+    position: relative;
+    width: 120px;
+}
+
+.header-profile img {
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    width: 100%;
+}
+
+.header-logo img {
+    height: auto;
+    display: block;
+    width: 20rem;
+}
+
+@media screen and (max-width:600px) {
+    .header-logo img {
+        width: 15rem;
+    }
+}
+
+.header-name {
+    font-size: 1.8rem;
+    font-weight: normal;
+}
+
+.header-cargo {
+    text-align: center;
+}
+
+.header-actions {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    padding: 1rem 0;
+    width: 100%;
+}
+
+.header-action {
+    align-items: center;
+    display: flex;
+    flex: 1 1 30%;
+    flex-flow: column nowrap;
+    gap: 1rem;
+}
+
+.header-action img {
+    height: auto;
+    width: 3rem;
+}
+
+.header-action i {
+    font-size: 3rem;
+}
+
+.header-action a {
+    align-items: center;
+    color: var(--header-text-color);
+    display: flex;
+    flex-flow: column nowrap;
+    font-size: 1.2rem;
+    font-weight: normal;
+    gap: 1rem;
+    text-decoration: none;
+    text-align: center;
+
+}
+
+/* Arreglando gap para iPhone */
+@supports (-webkit-touch-callout: none) and (not (translate: none)) {
+    .header-action a span {
+        display: inline-block;
+        margin-top: 1rem;
+    }
+}
+
+.header-action a:hover,
+.header-action a:active {
+    color: var(--bg-dark-color);
+    font-weight: bold;
+}
+
+/* ########################## Main ########################## */
+
+.content {
+    padding: 2rem 0;
+}
+
+.content .wrapper {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.content-description {
+    margin: 0 auto;
+    max-width: 80%;
+    text-align: center;
+}
+
+/* ########################## Contact ########################## */
+
+.content-contact-list ul {
+    align-items: center;
+    border-bottom: 1px solid var(--bg-dark-color);
+    border-top: 1px solid var(--bg-dark-color);
+    list-style-type: none;
+    margin: 2rem 0;
+    padding: 0;
+}
+
+.content-contact-list ul li {
+    position: relative;
+}
+
+.content-contact-list ul li:before {
+    bottom: 0;
+    border-bottom: 1px solid var(--text-color);
+    content: "";
+    left: 10%;
+    position: absolute;
+    width: 80%;
+}
+
+.content-contact-list ul li:last-child:before {
+    border-bottom: 0;
+}
+
+.content-contact-list img {
+    height: auto;
+    width: 1.2rem;
+}
+
+.content-contact-list a {
+    align-items: center;
+    color: var(--text-color);
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 0.8rem 0;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.content-contact-list a:hover,
+.content-contact-list a:active {
+    color: var(--main-color);
+    font-weight: bold;
+}
+
+@media screen and (max-width:600px) {
+    .content-contact-list a {
+        padding: 0.8rem 0;
+    }
+}
+
+/* ########################## Social ########################## */
+
+.content-social-list {
+    text-align: center;
+}
+
+.content-social-title {
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
+.content-social-list ul {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 2rem;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Arreglando gap para iPhone */
+@supports (-webkit-touch-callout: none) and (not (translate: none)) {
+    .content-social-list ul li {
+        margin-bottom: 5%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+.content-social-list li a {
+    background-color: var(--main-color);
+    border-radius: 50%;
+    display: block;
+    padding: 1rem;
+}
+
+.content-social-list li a:hover,
+.content-social-list li a:active {
+    background-color: var(--bg-dark-color);
+}
+
+.content-social-list li img {
+    display: block;
+    height: auto;
+    width: 1.5rem;
+}
+
+.content-social-actions {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.content-social-actions .action-black-button {
+    background-color: var(--bg-dark-color);
+    border: 0;
+    border-radius: 1.3rem;
+    color: var(--white-color);
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+}
+
+.content-social-actions .action-black-button:hover,
+.content-social-actions .action-black-button:active {
+    background-color: var(--main-color);
+    color: var(--white-color);
+    font-weight: normal;
+}
+
+/* ########################## Card ########################## */
+
+.content-ecard {
+    padding-top: 1rem;
+}
+
+.content-ecard-download-container {
+    text-align: center;
+}
+
+.content-ecard-download {
+    background-color: var(--bg-dark-color);
+    border: 0;
+    border-radius: 1.3rem;
+    color: var(--white-color);
+    cursor: pointer;
+    display: inline-block;
+    margin: 1rem 0 0 0;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+}
+
+.content-ecard-download:hover,
+.content-ecard-download:active {
+    background-color: var(--main-color);
+}
+
+.ecard {
+    --size: 10px;
+    background-color: var(--white-color);
+    border-bottom-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    box-shadow: 0 0 5px var(--text-color), 0 0 10px var(--text-color);
+    max-width: 300px;
+    margin: 2rem 0;
+    padding: 0.5rem;
+}
+
+.ecard-border {
+    align-items: center;
+    border: calc(var(--size) * 0.4) solid var(--main-color);
+    border-bottom-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.8rem;
+    padding: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+
+    .ecard-border {
+        padding: 1rem;
+    }
+}
+
+.ecard-logo {
+    height: auto;
+    width: 50%;
+}
+
+.ecard-name {
+    border-left: 1px solid var(--text-color);
+    border-right: 1px solid var(--text-color);
+    font-size: 1.2rem;
+    font-weight: normal;
+    flex: 0 1 auto;
+    padding: 0 0.5rem;
+    text-align: center;
+}
+
+.ecard-qr {
+    border: calc(var(--size) * 0.6) solid var(--main-color);
+    border-radius: 0.8rem;
+    width: 90%;
+}
+
+.ecard-action {
+    background-color: var(--main-color);
+    border-radius: 1.4rem;
+    color: var(--white-color);
+    padding: 1rem 1.5rem;
+    text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+
+    .ecard-action {
+        padding: 1rem;
+    }
+}
+
+/* ########################## Footer ########################## */
+
+.footer {
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+    position: relative;
+    text-align: center;
+}
+
+.footer:before {
+    top: 0;
+    border-top: 1px solid var(--text-color);
+    content: "";
+    left: 10%;
+    position: absolute;
+    width: 80%;
+}

@@ -58,6 +58,29 @@ body {
     padding: 0.5rem;
 }
 
+.header-profile {
+    background-image: var(--profile-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 3px solid var(--logo-bg);
+    border-radius: 50%;
+    height: 120px;
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+    padding: 0.5rem;
+    position: relative;
+    width: 120px;
+}
+
+.header-profile img {
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    width: 100%;
+}
+
 .header-logo img {
     height: auto;
     display: block;
