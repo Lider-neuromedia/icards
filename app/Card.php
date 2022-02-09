@@ -21,6 +21,23 @@ class Card extends Model
         return $this->hasMany(CardField::class);
     }
 
+    public function statistics()
+    {
+        return $this->hasMany(CardStatistic::class);
+    }
+
+    public function getVisitsAttribute()
+    {
+        $visits = $this->statistics()->where('action', 'visit-card')->first();
+        return $visits != null ? intval($visits->data) : 0;
+    }
+
+    public function getQrVisitsAttribute()
+    {
+        $visits = $this->statistics()->where('action', 'scan-card')->first();
+        return $visits != null ? intval($visits->data) : 0;
+    }
+
     public function getUrlAttribute()
     {
         return url("{$this->client->slug}/{$this->slug}");

@@ -15,6 +15,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::post('analytics/track', 'AnalyticsController@trackAction');
+
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->group(function () {
     Route::resource('clients', 'ClientsController', ['except' => ['show']]);
     Route::resource('clients.cards', 'CardsController', ['except' => ['show']]);

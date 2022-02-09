@@ -1,5 +1,12 @@
 @extends('layouts.simple')
 
+@section('meta')
+
+    <meta name="analytics-url" content="{{ $card->url }}">
+    <meta name="analytics-card-id" content="{{ $card->id }}">
+
+@endsection
+
 @section('content')
 
     <header class="header">
@@ -14,10 +21,7 @@
                     $profileImage = url("storage/cards/$ecard->profile");
                     $profileImage = "url('{$profileImage}')";
                 @endphp
-                <div class="header-profile" style="--profile-image: {{ $profileImage }};">
-                    {{-- <img width="30px" height="auto"
-                        src="{{ url("storage/cards/$ecard->profile") }}?v={{ env('ASSETS_VERSION', 1) }}"> --}}
-                </div>
+                <div class="header-profile" style="--profile-image: {{ $profileImage }};"></div>
             @endif
 
             <h1 class="header-description header-name">

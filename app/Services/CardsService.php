@@ -29,6 +29,7 @@ class CardsService
                         });
                 });
             })
+            ->with('statistics')
             ->orderBy('slug', 'asc')
             ->paginate(12);
 
@@ -180,7 +181,7 @@ class CardsService
                             ->where('key', $field['key'])
                             ->first();
 
-                        $value = null;
+                        $value = $card_field ? $card_field->value : null;
 
                         if ($field['type'] == 'image') {
                             if ($request->hasFile($field_key)) {
@@ -281,10 +282,12 @@ class CardsService
 
     private function generateQRCode(Card $card)
     {
+        $qrCardUrl = "{$card->url}?action=scan";
+
         Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([])
-            ->data($card->url)
+            ->data($qrCardUrl)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(300)
