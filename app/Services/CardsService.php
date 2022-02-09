@@ -103,6 +103,8 @@ class CardsService
                             $value = $card_field ? $card_field->value : '';
 
                             if ($field['type'] == 'image') {
+                                $value = $request->get($field_key . "_current") ?: null;
+
                                 if ($request->hasFile($field_key)) {
                                     $image_path = $request->file($field_key)->store('public/cards');
                                     $image_path = array_reverse(explode('/', $image_path))[0];
@@ -181,9 +183,11 @@ class CardsService
                             ->where('key', $field['key'])
                             ->first();
 
-                        $value = $card_field ? $card_field->value : null;
+                        $value = null;
 
                         if ($field['type'] == 'image') {
+                            $value = $request->get($field_key . "_current") ?: null;
+
                             if ($request->hasFile($field_key)) {
                                 $image_path = $request->file($field_key)->store('public/cards');
                                 $image_path = array_reverse(explode('/', $image_path))[0];
