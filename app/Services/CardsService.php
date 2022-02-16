@@ -382,12 +382,12 @@ class CardsService
         $photo = $card->field('others', 'profile');
 
         if ($logo != '') {
-            $logo_path = storage_path("app/public/cards/$logo");
-            $vcard->addLogo($logo_path);
+            $logoContent = \Storage::get("public/cards/$logo");
+            $vcard->addLogoContent($logoContent);
         }
         if ($photo != '') {
-            $photo_path = storage_path("app/public/cards/$photo");
-            $vcard->addPhoto($photo_path);
+            $photoContent = \Storage::get("public/cards/$photo");
+            $vcard->addPhotoContent($photoContent);
         }
 
         $path = storage_path("app/public/cards/");
