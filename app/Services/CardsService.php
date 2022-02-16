@@ -12,6 +12,7 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
+use JeroenDesloovere\VCard\VCard;
 
 class CardsService
 {
@@ -306,8 +307,102 @@ class CardsService
 
     private function generateVCard(Card $card)
     {
+        $vcard = new VCard();
+        $cardName = $this->generateCardName($card);
+
+        $vcard->addName(
+            $cardName->lastname,
+            $cardName->firstname,
+            $cardName->additional,
+            $cardName->prefix,
+            $cardName->suffix);
+
+        $company = strtoupper($card->field('others', 'company'));
+        $cargo = $card->field('others', 'cargo');
+        $email = $card->field('action_contacts', 'email');
+        $web = $card->field('contact_list', 'web');
+        // $vcard->addRole('Data Protection Officer');
+        // $vcard->addAddress(null, null, 'street', 'worktown', null, 'workpostcode', 'Belgium');
+        // $vcard->addLabel('street, worktown, workpostcode Belgium');
+
+        if ($company != '') {
+            $vcard->addCompany($company);
+        }
+        if ($cargo != '') {
+            $vcard->addJobtitle($cargo);
+        }
+        if ($email != '') {
+            $vcard->addEmail($email);
+        }
+        if ($web != '') {
+            $vcard->addURL($web, 'PREF');
+        }
+
+        $phone = $card->field('action_contacts', 'phone');
+        $phone1 = $card->field('contact_list', 'phone1');
+        $phone2 = $card->field('contact_list', 'phone2');
+        $cellphone = $card->field('contact_list', 'cellphone');
+
+        if ($phone != '') {
+            $vcard->addPhoneNumber($phone, 'PREF;WORK;VOICE');
+        }
+        if ($phone1 != '') {
+            $vcard->addPhoneNumber($phone1, 'WORK;VOICE');
+        }
+        if ($phone2 != '') {
+            $vcard->addPhoneNumber($phone2, 'WORK;VOICE');
+        }
+        if ($cellphone != '') {
+            $vcard->addPhoneNumber($cellphone, 'WORK;VOICE;CELL');
+        }
+
+        $facebook = $card->field('social_list', 'facebook');
+        $instagram = $card->field('social_list', 'instagram');
+        $linkedin = $card->field('social_list', 'linkedin');
+        $twitter = $card->field('social_list', 'twitter');
+        $youtube = $card->field('social_list', 'youtube');
+
+        if ($facebook != '') {
+            $vcard->addURL($facebook, 'X-ABLabel=FACEBOOK');
+        }
+        if ($instagram != '') {
+            $vcard->addURL($instagram, 'X-ABLabel=INSTAGRAM');
+        }
+        if ($linkedin != '') {
+            $vcard->addURL($linkedin, 'X-ABLabel=LINKEDIN');
+        }
+        if ($twitter != '') {
+            $vcard->addURL($twitter, 'X-ABLabel=TWITTER');
+        }
+        if ($youtube != '') {
+            $vcard->addURL($youtube, 'X-ABLabel=YOUTUBE');
+        }
+
+        $logo = $card->field('others', 'logo');
+        $photo = $card->field('others', 'profile');
+
+        if ($logo != '') {
+            $logo_path = storage_path("app/public/cards/$logo");
+            $vcard->addLogo($logo_path);
+        }
+        if ($photo != '') {
+            $photo_path = storage_path("app/public/cards/$photo");
+            $vcard->addPhoto($photo_path);
+        }
+
+        $path = storage_path("app/public/cards/");
+        $filename = "card-{$card->slug}";
+
+        $vcard->setFilename($filename);
+        $vcard->setSavePath($path);
+        $vcard->save();
+    }
+
+    public function generateCardName(Card $card)
+    {
         $full_name = strtoupper($card->field('others', 'name'));
         $name_split = explode(' ', $full_name);
+
         $firstname = '';
         $lastname = '';
         $additional = '';
@@ -327,88 +422,12 @@ class CardsService
             $firstname = $name_split[0];
         }
 
-        $company = strtoupper($card->field('others', 'company'));
-        $cargo = $card->field('others', 'cargo');
-        $email = $card->field('action_contacts', 'email');
-        $web = $card->field('contact_list', 'web');
-
-        $logo = $card->field('others', 'logo');
-        if ($logo != '') {
-            $logo_path = storage_path('app/public/cards/' . $logo);
-            $logo_ext = strtoupper(array_reverse(explode('.', $logo_path))[0]);
-            $logo_data = base64_encode(\Storage::get("public/cards/$logo"));
-        }
-
-        $phone = $card->field('action_contacts', 'phone');
-        $phone1 = $card->field('contact_list', 'phone1');
-        $phone2 = $card->field('contact_list', 'phone2');
-
-        $cellphone = $card->field('contact_list', 'cellphone');
-        $facebook = $card->field('social_list', 'facebook');
-        $instagram = $card->field('social_list', 'instagram');
-        $linkedin = $card->field('social_list', 'linkedin');
-        $twitter = $card->field('social_list', 'twitter');
-        $youtube = $card->field('social_list', 'youtube');
-
-        if (count($name_split) == 1) {
-            $firstname = $name_split[0];
-        } else if (count($name_split) == 2) {
-            $lastname = $name_split[1];
-            $firstname = $name_split[0];
-        } else if (count($name_split) == 3) {
-            $lastname = $name_split[1];
-            $firstname = $name_split[0];
-        } else if (count($name_split) == 4) {
-            $lastname = $name_split[2];
-            $firstname = $name_split[0];
-        }
-
-        $social_networks = '';
-        $count = 1;
-
-        if ($web != '') {
-            $social_networks .= "item{$count}.URL;type=pref:$web\nitem{$count}.X-ABLabel:_$!<HomePage>!\$_\n";
-            $count++;
-        }
-        if ($facebook != '') {
-            $social_networks .= "item{$count}.URL:$facebook\nitem{$count}.X-ABLabel:Facebook\n";
-            $count++;
-        }
-        if ($instagram != '') {
-            $social_networks .= "item{$count}.URL:$instagram\nitem{$count}.X-ABLabel:Instagram\n";
-            $count++;
-        }
-        if ($linkedin != '') {
-            $social_networks .= "item{$count}.URL:$linkedin\nitem{$count}.X-ABLabel:LinkedIn\n";
-            $count++;
-        }
-        if ($twitter != '') {
-            $social_networks .= "item{$count}.URL:$twitter\nitem{$count}.X-ABLabel:Twitter\n";
-            $count++;
-        }
-        if ($youtube != '') {
-            $social_networks .= "item{$count}.URL:$youtube\nitem{$count}.X-ABLabel:Youtube\n";
-            $count++;
-        }
-
-        $content = "";
-        $content .= "BEGIN:VCARD\n";
-        $content .= "VERSION:3.0\n";
-        $content .= "PRODID:-//Apple Inc.//iPhone OS 14.4.2//EN\n";
-        $content .= "N:$lastname;$firstname;;;\n";
-        $content .= "FN:$full_name\n";
-        if ($company != '') {$content .= "ORG:$company;\n";}
-        if ($cargo != '') {$content .= "TITLE:$cargo\n";}
-        if ($email != '') {$content .= "EMAIL;type=INTERNET;type=pref:$email\n";}
-        if ($phone != '') {$content .= "TEL;type=WORK;type=VOICE;type=pref:$phone\n";}
-        if ($phone1 != '') {$content .= "TEL;type=WORK;type=VOICE:$phone1\n";}
-        if ($phone2 != '') {$content .= "TEL;type=WORK;type=VOICE:$phone2\n";}
-        if ($cellphone != '') {$content .= "TEL;type=CELL;type=VOICE:$cellphone\n";}
-        // $content .= "ADR;type=pref:;;;;;;\n";
-        $content .= $social_networks;
-        if ($logo != '') {$content .= "PHOTO;ENCODING=b;TYPE=$logo_ext:$logo_data\n";}
-        $content .= "END:VCARD\n";
-
-        \Storage::put("public/cards/card-{$card->slug}.vcf", $content);
+        return (Object) [
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'additional' => $additional,
+            'prefix' => $prefix,
+            'suffix' => $suffix,
+        ];
     }
 }
