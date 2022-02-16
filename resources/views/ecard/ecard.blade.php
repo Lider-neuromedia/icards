@@ -155,7 +155,7 @@
                             {{ $ecard->name }}<br>
                             {{ $ecard->cargo }}
                         </div>
-                        <img class="ecard-qr" src="{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="eCard">
+                        <img class="ecard-qr" src="{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="iCard">
                         <div class="ecard-action">Escanear Código QR</div>
                     </div>
                 </div> --}}
@@ -167,8 +167,8 @@
     <footer class="footer">
         <div class="wrapper">
             <p>De acuerdo a nuestra política de protección de datos no compartimos información real de nuestros clientes</p>
-            <p>Esta es una página de referencia para que visualice el funcionamiento de una eCard, nuestros créditos,
-                logotipos o páginas web nunca serán visualizados en las eCards de nuestros clientes</p>
+            <p>Esta es una página de referencia para que visualice el funcionamiento de una iCard, nuestros créditos,
+                logotipos o páginas web nunca serán visualizados en las iCards de nuestros clientes</p>
         </div>
     </footer>
 
