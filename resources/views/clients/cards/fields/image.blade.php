@@ -1,5 +1,10 @@
 <div class="mb-3">
-    <label class="form-label" for="{{ $field_key }}">{{ $field['label'] }}</label>
+    <label class="form-label" for="{{ $field_key }}">
+        {{ $field['label'] }}
+        @if (isset($field['help']))
+            <small class="text-muted">{{$field['help']}}</small>
+        @endif
+    </label>
 
     <div class="form-group">
         <div class="custom-file @error($field_key) is-invalid @enderror">

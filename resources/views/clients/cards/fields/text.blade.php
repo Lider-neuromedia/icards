@@ -1,5 +1,11 @@
 <div class="form-group">
-    <label class="form-label" for="{{$field_key}}">{{$field['label']}}</label>
+    <label class="form-label" for="{{$field_key}}">
+        {{$field['label']}}
+        @if (isset($field['help']))
+            <small class="text-muted">{{$field['help']}}</small>
+        @endif
+    </label>
+
     <input
         type="text"
         maxlength="250"
