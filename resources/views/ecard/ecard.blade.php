@@ -148,17 +148,6 @@
                         Imagen</button>
                 </div>
 
-                {{-- <div class="ecard">
-                    <div class="ecard-border">
-                        <img class="ecard-logo" width="30px" height="30px" src="{{ url("storage/cards/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}">
-                        <div class="ecard-name">
-                            {{ $ecard->name }}<br>
-                            {{ $ecard->cargo }}
-                        </div>
-                        <img class="ecard-qr" src="{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}" alt="iCard">
-                        <div class="ecard-action">Escanear Código QR</div>
-                    </div>
-                </div> --}}
             </article>
 
         </div>
@@ -166,9 +155,7 @@
 
     <footer class="footer">
         <div class="wrapper">
-            <p>De acuerdo a nuestra política de protección de datos no compartimos información real de nuestros clientes</p>
-            <p>Esta es una página de referencia para que visualice el funcionamiento de una iCard, nuestros créditos,
-                logotipos o páginas web nunca serán visualizados en las iCards de nuestros clientes</p>
+            <p>Neuromedia {{date('Y')}} &copy; Todos los derechos reservados</p>
         </div>
     </footer>
 
