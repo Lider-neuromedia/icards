@@ -31,7 +31,7 @@ if (
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"></h3>
+                    <h3 class="card-title">Tarjetas</h3>
 
                     <div class="card-tools">
                         <form action="{{ $index_route }}" method="get">
@@ -101,11 +101,59 @@ if (
                     </table>
                 </div>
 
-                @if ($cards->count() > 12)
-                    <div class="card-footer d-flex justify-content-end">
-                        {{ $cards->appends(['search' => $search])->links() }}
-                    </div>
-                @endif
+                <div class="card-footer d-flex justify-content-end">
+                    {{ $cards->appends(['search' => $search])->links() }}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Estadísticas</h3>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table">
+
+                        <thead>
+                            <th>Nombre</th>
+                            @foreach ($events as $event)
+                                <th class="text-center" title="{{$event->description}}">
+                                    {{$event->title}}
+                                </th>
+                            @endforeach
+                        </thead>
+
+                        <tbody>
+                            @if ($cards->count() == 0)
+                                <tr>
+                                    <td class="text-center" colspan="3">No hay tarjetas</td>
+                                </tr>
+                            @endif
+
+                            @foreach ($cards as $card)
+
+                                <tr>
+                                    <td>
+                                        <a target="_blank" href="{{$card->url}}">
+                                            {{$card->field('others', 'name')}}
+                                        </a>
+                                    </td>
+                                    @foreach ($events as $event)
+                                        @php
+                                            $action = $card->statistics()
+                                                ->where('action', $event->key)
+                                                ->first();
+                                        @endphp
+
+                                        <td class="text-center">
+                                            {{ $action == null ? 0 : $action->data }}
+                                        </td>
+                                    @endforeach
+                                </tr>
+
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>

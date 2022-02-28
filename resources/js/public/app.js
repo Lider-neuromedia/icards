@@ -3,7 +3,30 @@ require('./bootstrap');
 document.addEventListener('DOMContentLoaded', function () {
     trackVisit();
     trackScannig();
+    trackCustomEvents();
 });
+
+function trackCustomEvents() {
+    const elements = document.querySelectorAll('.track-event');
+    const cardId = document.querySelector('meta[name="analytics-card-id"]').content;
+
+    elements.forEach(el => {
+        el.addEventListener('click', async function (e) {
+            const event = this.dataset.event;
+
+            if (isCorrectValue(event) && isCorrectValue(cardId)) {
+                console.log(event);
+                await trackAction(event, {
+                    cardId
+                });
+            }
+        });
+    });
+}
+
+function isCorrectValue(value) {
+    return value != undefined && value != null && value.trim() != '';
+}
 
 async function trackVisit() {
     const cardId = document.querySelector('meta[name="analytics-card-id"]').content;

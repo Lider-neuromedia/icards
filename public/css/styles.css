@@ -205,15 +205,16 @@ body {
     width: 1.2rem;
 }
 
-.content-contact-list a {
+.content-contact-list a,
+.content-contact-list span {
     align-items: center;
     color: var(--text-color);
     display: flex;
     flex-flow: row nowrap;
     gap: 0.5rem;
     justify-content: center;
-    margin: 0.8rem 0;
-    padding: 0.8rem 1rem;
+    margin: 0;
+    padding: 1rem 1rem;
     text-decoration: none;
     word-break: break-all;
 }
@@ -225,7 +226,9 @@ body {
 }
 
 @media screen and (max-width:600px) {
-    .content-contact-list a {
+
+    .content-contact-list a,
+    .content-contact-list span {
         padding: 0.8rem 0;
     }
 }

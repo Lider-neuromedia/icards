@@ -18,6 +18,8 @@ class CardsService
 {
     public function cards(Request $request, User $client)
     {
+        $events = Card::analyticsEvents();
+
         $search = $request->get('search');
         $cards = $client->cards()
             ->when($search, function ($q) use ($search) {
@@ -34,7 +36,7 @@ class CardsService
             ->orderBy('slug', 'asc')
             ->paginate(12);
 
-        return view('clients.cards.index', compact('cards', 'search', 'client'));
+        return view('clients.cards.index', compact('cards', 'search', 'client', 'events'));
     }
 
     public function create(User $client)

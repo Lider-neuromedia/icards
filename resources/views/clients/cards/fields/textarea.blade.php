@@ -2,7 +2,7 @@
     <label class="form-label" for="{{$field_key}}">
         {{$field['label']}}
         @if (isset($field['help']))
-            <small class="text-muted">{{$field['help']}}</small>
+            <small class="text-muted font-italic">{{$field['help']}}</small>
         @endif
     </label>
     <textarea

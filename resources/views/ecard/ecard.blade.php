@@ -1,10 +1,14 @@
 @extends('layouts.simple')
 
-@section('meta')
+@section('title', "{$ecard->name} | {$ecard->company} | iCard")
 
+@if ($ecard->description)
+    @section('meta-description', $ecard->description)
+@endif
+
+@section('meta')
     <meta name="analytics-url" content="{{ $card->url }}">
     <meta name="analytics-card-id" content="{{ $card->id }}">
-
 @endsection
 
 @section('content')
@@ -40,22 +44,21 @@
 
                             <div class="header-action">
                                 @if ($ac_key == 'phone')
-                                    <a href="tel:{{ $value }}">
+                                    <a href="tel:{{ $value }}" class="track-event" data-event="contact-by-call">
                                         <i class="icofont-phone"></i>
                                         <span>Llamar</span>
                                     </a>
                                 @endif
 
                                 @if ($ac_key == 'email')
-                                    <a href="mailto:{{ $value }}">
+                                    <a href="mailto:{{ $value }}" class="track-event" data-event="contact-by-email">
                                         <i class="icofont-email"></i>
                                         <span>Enviar Correo</span>
                                     </a>
                                 @endif
 
                                 @if ($ac_key == 'whatsapp')
-                                    <a
-                                        href="https://api.whatsapp.com/send?phone={{ $value }}&text={!! $ecard->whatsapp_message !!}">
+                                    <a target="_blank" href="https://api.whatsapp.com/send?phone={{ $value }}&text={!! $ecard->whatsapp_message !!}" class="track-event" data-event="contact-by-whatsapp">
                                         <i class="icofont-brand-whatsapp"></i>
                                         <span>Enviar Whatsapp</span>
                                     </a>
@@ -79,7 +82,12 @@
 
             <nav class="content-contact-list">
                 <div class="content-social-actions">
-                    <a class="action-black-button" href="{{ $card->vcard }}">Guardar Contacto</a>
+                    <a
+                        class="action-black-button track-event"
+                        data-event="save-contact"
+                        href="{{ $card->vcard }}">
+                        Guardar Contacto
+                    </a>
                 </div>
                 <ul>
                     @foreach ($ecard->contact_list as $cl)
@@ -88,19 +96,45 @@
                             @if ($value)
 
                                 @php
+                                    $is_linkable = true;
                                     $link = "$value";
+                                    $track_event = "";
+
                                     if ($cl_key == 'phone1' || $cl_key == 'phone2' || $cl_key == 'cellphone') {
                                         $link = "tel:$value";
-                                    } elseif ($cl_key == 'email') {
+                                        $track_event = "contact-by-call";
+                                    } else if ($cl_key == 'email') {
                                         $link = "mailto:$value";
+                                        $track_event = "contact-by-email";
+                                    } else if ($cl_key == 'web') {
+                                        $track_event = "visit-web";
+                                    }
+
+                                    if (in_array($cl_key, ['address'])) {
+                                        $is_linkable = false;
                                     }
                                 @endphp
 
                                 <li>
-                                    <a href="{{ $link }}" @if ($cl_key == 'web') target="_blank" @endif>
-                                        <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
-                                        {{ $value }}
-                                    </a>
+                                    @if ($is_linkable)
+
+                                        <a
+                                            class="track-event"
+                                            data-event="{{$track_event}}"
+                                            href="{{ $link }}"
+                                            @if ($cl_key == 'web') target="_blank" @endif>
+                                            <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
+                                            {{ $value }}
+                                        </a>
+
+                                    @else
+
+                                        <span>
+                                            <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
+                                            {{ $value }}
+                                        </span>
+
+                                    @endif
                                 </li>
                             @endif
 
@@ -118,9 +152,12 @@
                         @foreach ($sl as $sl_key => $sl_value)
 
                             @if ($sl_value)
-
                                 <li>
-                                    <a href="{{ $sl_value }}" target="_blank">
+                                    <a
+                                        href="{{ $sl_value }}"
+                                        target="_blank"
+                                        class="track-event"
+                                        data-event="visit-{{$sl_key}}">
                                         <img width="30px" height="30px" src="{{ mix("assets/social-$sl_key.png") }}">
                                     </a>
                                 </li>
@@ -130,10 +167,19 @@
                     @endforeach
                 </ul>
                 <div class="content-social-actions">
-                    <a class="action-black-button" href="{{ $card->vcard }}">Guardar Contacto</a>
+                    <a
+                        class="action-black-button track-event"
+                        data-event="save-contact"
+                        href="{{ $card->vcard }}">
+                        Guardar Contacto
+                    </a>
                 </div>
                 <div class="content-social-actions">
-                    <a class="action-black-button" href="https://api.whatsapp.com/send?text={{ $card->vcard }}">
+                    <a
+                        class="action-black-button track-event"
+                        data-event="share-contact"
+                        target="_blank"
+                        href="https://api.whatsapp.com/send?text={{ $card->vcard }}">
                         Compartir
                     </a>
                 </div>
@@ -144,8 +190,13 @@
             <article class="content-ecard">
                 <canvas id="canvas-card" width="320" height="440"></canvas>
                 <div class="content-ecard-download-container">
-                    <button class="content-ecard-download" id="donwload-canvas-button" type="button">Descargar
-                        Imagen</button>
+                    <button
+                        class="content-ecard-download track-event"
+                        data-event="save-image"
+                        id="donwload-canvas-button"
+                        type="button">
+                        Descargar Imagen
+                    </button>
                 </div>
 
             </article>

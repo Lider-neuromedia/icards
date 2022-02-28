@@ -26,6 +26,7 @@ mix.version([
     'public/assets/contact-phone.png',
     'public/assets/contact-phone1.png',
     'public/assets/contact-phone2.png',
+    'public/assets/contact-address.png',
     'public/assets/contact-web.png',
     'public/assets/social-facebook.png',
     'public/assets/social-instagram.png',
