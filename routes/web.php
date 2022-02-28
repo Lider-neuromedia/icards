@@ -15,7 +15,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::post('analytics/track', 'AnalyticsController@trackAction');
+Route::post('analytics/track', 'AnalyticsController@trackAction')->name('analytics.track');
+
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('analytics/{client}/download', 'AnalyticsController@download')->name('analytics.download');
+});
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->group(function () {
     Route::resource('clients', 'ClientsController', ['except' => ['show']]);

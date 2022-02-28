@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Card;
 use App\CardField;
+use App\CardStatistic;
 use App\Http\Requests\ThemeRequest;
 use App\User;
 use Endroid\QrCode\Builder\Builder;
@@ -18,7 +19,7 @@ class CardsService
 {
     public function cards(Request $request, User $client)
     {
-        $events = Card::analyticsEvents();
+        $events = CardStatistic::analyticsEvents();
 
         $search = $request->get('search');
         $cards = $client->cards()

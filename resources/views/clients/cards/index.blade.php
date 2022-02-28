@@ -109,6 +109,12 @@ if (
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Estadísticas</h3>
+                    <div class="card-tools">
+                        <a href="{{route('analytics.download', $client->id)}}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            <span>Descargar</span>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body table-responsive p-0">
                     <table class="table">
