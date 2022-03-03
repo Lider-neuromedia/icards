@@ -30,6 +30,7 @@ class ClientRequest extends FormRequest
             'start_at' => ['required', "date_format:Y-m-d\TH:i"],
             'finish_at' => ['required', "date_format:Y-m-d\TH:i", 'after:start_at'],
             'cards' => ['required', 'integer', 'min:1'],
+            'seller_id' => ['required', 'integer', 'exists:sellers,id'],
         ];
 
         if ($this->has('id')) {

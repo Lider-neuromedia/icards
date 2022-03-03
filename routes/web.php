@@ -22,6 +22,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->group(function () {
+    Route::resource('sellers', 'SellersController', ['except' => ['show']]);
     Route::resource('clients', 'ClientsController', ['except' => ['show']]);
     Route::resource('clients.cards', 'CardsController', ['except' => ['show']]);
     Route::get('clients/{client}/theme', 'CardsController@theme')->name('clients.cards.theme');

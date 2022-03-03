@@ -2,6 +2,7 @@
 
 use App\Card;
 use App\CardField;
+use App\Seller;
 use App\Services\CardsService;
 use App\Subscription;
 use App\User;
@@ -33,6 +34,20 @@ class DatabaseSeeder extends Seeder
         if (Schema::hasTable('card_statistics')) {
             $this->refreshQRCodesForTrackVisits();
         }
+
+        $this->initSellers();
+    }
+
+    public function initSellers()
+    {
+        $seller1 = Seller::create(['name' => 'Juan Perez']);
+        $seller2 = Seller::create(['name' => 'Ana Rodriguez']);
+
+        $clients1 = User::whereRole(User::ROLE_CLIENT)->inRandomOrder()->limit(2)->pluck('id');
+        $clients2 = User::whereRole(User::ROLE_CLIENT)->inRandomOrder()->limit(3)->pluck('id');
+
+        $seller1->clients()->sync($clients1);
+        $seller2->clients()->sync($clients2);
     }
 
     public function initClientSlugs()

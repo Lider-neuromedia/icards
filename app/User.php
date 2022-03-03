@@ -32,6 +32,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'seller_name',
+    ];
+
+    public function sellers()
+    {
+        return $this->belongsToMany(Seller::class, 'client_seller', 'client_id', 'seller_id');
+    }
+
     public function cards()
     {
         return $this->hasMany(Card::class, 'client_id', 'id');
@@ -40,6 +49,12 @@ class User extends Authenticatable
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class, 'client_id', 'id');
+    }
+
+    public function getSellerNameAttribute()
+    {
+        $seller = $this->sellers()->first();
+        return $seller == null ? 'Sin Vendedor' : $seller->name;
     }
 
     public function getRoleDescriptionAttribute()

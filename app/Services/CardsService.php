@@ -35,7 +35,7 @@ class CardsService
             })
             ->with('statistics')
             ->orderBy('slug', 'asc')
-            ->paginate(12);
+            ->paginate(20);
 
         return view('clients.cards.index', compact('cards', 'search', 'client', 'events'));
     }

@@ -1,3 +1,4 @@
+@include('admin.clients.fields.seller')
 @include('admin.clients.fields.name')
 @include('admin.clients.fields.email')
 

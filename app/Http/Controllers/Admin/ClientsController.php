@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Mail\AccountCreated;
+use App\Seller;
 use App\Subscription;
 use App\User;
 use Carbon\Carbon;
@@ -25,20 +26,23 @@ class ClientsController extends Controller
                 });
             })
             ->orderBy('name', 'asc')
-            ->paginate(12);
+            ->paginate(20);
 
         return view('admin.clients.index', compact('clients', 'search'));
     }
 
     public function create()
     {
+        $sellers = Seller::orderBy('name', 'asc')->get();
         $client = new User(['role' => User::ROLE_CLIENT]);
+
         $subscription = new Subscription([
             'start_at' => Carbon::now(),
             'finish_at' => Carbon::now()->add('years', 1),
             'cards' => 1,
         ]);
-        return view('admin.clients.create', compact('client', 'subscription'));
+
+        return view('admin.clients.create', compact('client', 'subscription', 'sellers'));
     }
 
     public function store(ClientRequest $request)
@@ -53,6 +57,7 @@ class ClientsController extends Controller
 
     public function edit(User $client)
     {
+        $sellers = Seller::orderBy('name', 'asc')->get();
         $subscription = $client->subscriptions()->first();
 
         if (!$subscription) {
@@ -63,7 +68,7 @@ class ClientsController extends Controller
             ]);
         }
 
-        return view('admin.clients.edit', compact('client', 'subscription'));
+        return view('admin.clients.edit', compact('client', 'subscription', 'sellers'));
     }
 
     public function update(ClientRequest $request, User $client)
@@ -104,6 +109,7 @@ class ClientsController extends Controller
                 $send_mail = true;
             }
 
+            // Actualizar suscripción.
             $subscription_data = $request->only('cards', 'start_at', 'finish_at');
             $subscription_data['start_at'] = Carbon::createFromFormat('Y-m-d\TH:i', $subscription_data['start_at']);
             $subscription_data['finish_at'] = Carbon::createFromFormat('Y-m-d\TH:i', $subscription_data['finish_at']);
@@ -115,6 +121,11 @@ class ClientsController extends Controller
 
             $this->deleteClientExtraCards($client);
 
+            // Asignar vendedor
+            $seller = Seller::findOrFail($request->get('seller_id'));
+            $client->sellers()->sync($seller);
+
+            // Notificar cliente por correo.
             if ($send_mail) {
                 Mail::to($client)->send(new AccountCreated($client));
             }
