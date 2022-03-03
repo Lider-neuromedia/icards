@@ -2,12 +2,9 @@
 
 namespace App\Console;
 
-use App\Mail\RenewSubscriptionNotified;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Mail;
 
 class Kernel extends ConsoleKernel
 {
@@ -30,21 +27,8 @@ class Kernel extends ConsoleKernel
     {
         // Enviar notificaciones de vencimiento de suscripción.
         $schedule->call(function () {
-            $clients = User::query()
-                ->whereRole(User::ROLE_CLIENT)
-                ->whereHas('subscriptions', function ($q) {
-                    $q->whereDate('finish_at', Carbon::now()->addDays(15))
-                        ->orWhereDate('finish_at', Carbon::now()->addDays(30));
-                })
-                ->get();
-
-            foreach ($clients as $client) {
-                $days = $client->getSubscriptionDaysLeft();
-                if ($days == 15 || $days == 30) {
-                    Mail::to($client)->send(new RenewSubscriptionNotified($client));
-                }
-            }
-        })->dailyAt('12:00');
+            User::notifyClientsWithExpireSoonSuscriptions();
+        })->dailyAt('08:00');
     }
 
     /**

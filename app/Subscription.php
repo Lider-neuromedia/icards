@@ -10,11 +10,13 @@ class Subscription extends Model
         'cards',
         'start_at',
         'finish_at',
+        'notified_at',
     ];
 
     protected $dates = [
         'start_at',
         'finish_at',
+        'notified_at',
     ];
 
     public function client()

@@ -2,25 +2,24 @@
 
 namespace App\Mail;
 
-use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class RenewSubscriptionNotified extends Mailable
+class AdminRenewSubsNotified extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $client;
+    public $clients;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $client)
+    public function __construct($clients)
     {
-        $this->client = $client;
+        $this->clients = $clients;
     }
 
     /**
@@ -30,8 +29,7 @@ class RenewSubscriptionNotified extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.renew')
-            ->subject('iCard | Notificación de vencimiento de suscripción')
-            ->with(['days' => $this->client->getSubscriptionDaysLeft()]);
+        return $this->view('emails.admin-renew')
+            ->subject('iCard | Notificación de vencimiento de suscripciones');
     }
 }

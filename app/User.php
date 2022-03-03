@@ -2,9 +2,12 @@
 
 namespace App;
 
+use App\Mail\AdminRenewSubsNotified;
+use App\Mail\RenewSubscriptionNotified;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -85,13 +88,8 @@ class User extends Authenticatable
     public function getCardsUsageAttribute()
     {
         $subscription = $this->subscriptions()->first();
-
-        if ($subscription == null) {
-            return "0/0";
-        }
-
         $cards = $this->cards()->count();
-        return "$cards/{$subscription->cards}";
+        return $subscription != null ? "$cards/{$subscription->cards}" : "0/0";
     }
 
     /**
@@ -100,23 +98,26 @@ class User extends Authenticatable
     public function getSubscriptionDaysLeft()
     {
         $sub = $this->subscriptions()->first();
-
-        if ($sub == null) {
-            return 0;
-        }
-
-        return Carbon::now()->diffInDays($sub->finish_at);
+        return $sub != null ? Carbon::now()->diffInDays($sub->finish_at, false) : 0;
     }
 
     public function getSubscriptionStatusAttribute()
     {
         $subscription = $this->subscriptions()->first();
+        return $subscription != null ? $subscription->finish_at->format('d/m/Y h:ia') : "No tiene suscripción";
+    }
 
-        if ($subscription == null) {
-            return "No tiene suscripción";
+    public function getLastNotificationInDaysAttribute()
+    {
+        $sub = $this->subscriptions()->first();
+
+        if ($sub == null) {
+            return 365;
+        } else if ($sub->notified_at == null) {
+            return 365;
         }
 
-        return $subscription->finish_at->format('d/m/Y h:ia');
+        return Carbon::now()->diffInDays($sub->notified_at);
     }
 
     public function scopeOnlyClients($query)
@@ -135,5 +136,46 @@ class User extends Authenticatable
             self::ROLE_ADMIN => 'Administrador',
             self::ROLE_CLIENT => 'Cliente',
         ];
+    }
+
+    /**
+     * Notificar usuarios por correo cuando su suscripción está por vencer o se ha vencido.
+     * 1. Clientes con suscripción que venza dentro de 20 días o menos.
+     * 2. Clientes que no hayan sido notificados.
+     * 3. Clientes que hayan sido notificados hace 7 dias o mas.
+     */
+    public static function notifyClientsWithExpireSoonSuscriptions()
+    {
+        $clients = User::query()
+            ->whereRole(User::ROLE_CLIENT)
+            ->whereHas('subscriptions', function ($q) {
+                $q->whereDate('finish_at', '<=', Carbon::now()->addDays(20)) // 1.
+                    ->where(function ($q) {
+                        $q->whereNull('notified_at') // 2.
+                            ->orWhere('notified_at', '<=', Carbon::now()->subDays(7)); // 3.
+                    });
+            })
+            ->with('subscriptions')
+            ->get();
+
+        $count = $clients->count();
+        $now = Carbon::now()->format('Y-m-d H:i:s');
+        \Log::info("Notificar clientes ($count) con suscripción a vencer: $now.");
+
+        foreach ($clients as $client) {
+            \Log::info("Notificar cliente: {$client->id}.");
+            Mail::to($client)->send(new RenewSubscriptionNotified($client));
+
+            $client->subscriptions()
+                ->first()
+                ->update(['notified_at' => $now]);
+        }
+
+        if ($count > 0) {
+            // Enviar Notificación a administradores.
+            \Log::info("Notificar administradores");
+            $admins = User::whereRole(User::ROLE_ADMIN)->get();
+            Mail::to($admins)->send(new AdminRenewSubsNotified($clients));
+        }
     }
 }
