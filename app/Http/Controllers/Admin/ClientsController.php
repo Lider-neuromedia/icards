@@ -127,7 +127,8 @@ class ClientsController extends Controller
 
             // Notificar cliente por correo.
             if ($send_mail) {
-                Mail::to($client)->send(new AccountCreated($client));
+                $credentials = $request->only('email', 'password');
+                Mail::to($client)->send(new AccountCreated($client, $credentials));
             }
 
             \DB::commit();

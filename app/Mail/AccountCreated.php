@@ -12,15 +12,17 @@ class AccountCreated extends Mailable
     use Queueable, SerializesModels;
 
     protected $client;
+    protected $credentials;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $client)
+    public function __construct(User $client, array $credentials)
     {
         $this->client = $client;
+        $this->credentials = $credentials;
     }
 
     /**
@@ -34,6 +36,7 @@ class AccountCreated extends Mailable
             ->subject('Le damos la bienvenida a iCard')
             ->with([
                 'name' => $this->client->name,
+                'credentials' => $this->credentials,
             ]);
     }
 }
