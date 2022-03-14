@@ -20,6 +20,7 @@ class CreateClientSellerTable extends Migration
             $table->bigInteger('seller_id')->unsigned();
             $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
             $table->timestamps();
+            $table->engine = 'MyISAM';
         });
     }
 

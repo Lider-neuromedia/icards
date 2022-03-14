@@ -15,6 +15,7 @@ class AddSlugColumnToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('slug')->nullable()->after('name');
+            $table->engine = 'MyISAM';
         });
     }
 

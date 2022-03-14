@@ -21,6 +21,7 @@ class CreateSubscriptionsTable extends Migration
             $table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
+            $table->engine = 'MyISAM';
         });
     }
 
