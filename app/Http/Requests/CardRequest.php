@@ -50,6 +50,8 @@ class CardRequest extends FormRequest
                 if ($field['general'] == false) {
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
+                    } else if ($field_key == "action_contacts_email") {
+                        $validation[$field_key] = ['required', 'string', 'email', 'max:50'];
                     } else if ($field['type'] === 'image') {
                         $validation[$field_key] = ['nullable', 'file', 'mimes:jpeg,jpg,png', 'max:900'];
                     } else if ($field['type'] === 'text') {
@@ -62,5 +64,13 @@ class CardRequest extends FormRequest
         }
 
         return $validation;
+    }
+
+    public function attributes()
+    {
+        return [
+            'action_contacts_email' => 'E-mail de Contacto Principal',
+            'others_name' => 'Nombre de Datos de Tarjeta',
+        ];
     }
 }

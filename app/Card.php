@@ -53,6 +53,11 @@ class Card extends Model
         return $this->field('others', 'name') ?: '';
     }
 
+    public function getEmailAttribute()
+    {
+        return $this->field('action_contacts', 'email') ?: '';
+    }
+
     public function field($group, $key)
     {
         $field = $this->fields()

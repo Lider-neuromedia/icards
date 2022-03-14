@@ -6,6 +6,7 @@ use App\Card;
 use App\CardField;
 use App\CardStatistic;
 use App\Http\Requests\ThemeRequest;
+use App\Mail\CardCreated;
 use App\User;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -13,6 +14,7 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use JeroenDesloovere\VCard\VCard;
 
 class CardsService
@@ -161,6 +163,8 @@ class CardsService
 
             \DB::beginTransaction();
 
+            $isNewCard = $card == null;
+
             $card_id = $card != null ? $card->id : null;
             $slug = \App\Services\SlugService::generate($request->get('others_name'), 'cards', $card_id);
             $data = ['slug' => $slug];
@@ -217,6 +221,12 @@ class CardsService
             }
 
             $this->refreshCard($client, $card);
+
+            // Notificar usuario dueño de la tarjeta que su tarjeta fué creada.
+            if ($isNewCard) {
+                $clientUser = new User(['name' => $card->name, 'email' => $card->email]);
+                Mail::to($clientUser)->send(new CardCreated($card));
+            }
 
             \DB::commit();
 
