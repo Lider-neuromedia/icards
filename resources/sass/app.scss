@@ -17,6 +17,8 @@
 // Admin LTE
 @import '~admin-lte/build/scss/adminlte';
 
+@import '_page-login.scss';
+
 .pagination {
     margin-bottom: 0;
 }

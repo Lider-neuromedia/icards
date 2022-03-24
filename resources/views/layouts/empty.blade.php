@@ -29,7 +29,7 @@
         }
     </style>
 </head>
-<body>
+<body class="page @yield('body-class')">
     <main class="mt-3 mt-sm-0">
         <div class="container">
             @include('partials.messages')

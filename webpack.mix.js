@@ -33,4 +33,8 @@ mix.version([
     'public/assets/social-linkedin.png',
     'public/assets/social-twitter.png',
     'public/assets/social-youtube.png',
+    'public/assets/logo-big.svg',
+    'public/assets/logo.svg',
+    'public/assets/user-icon.svg',
+    'public/assets/password-icon.svg',
 ]);

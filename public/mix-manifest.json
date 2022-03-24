@@ -1,6 +1,6 @@
 {
     "/js/app.js": "/js/app.js?id=569af8f3100d7d489e10",
-    "/css/app.css": "/css/app.css?id=61065d1f1ee98df60697",
+    "/css/app.css": "/css/app.css?id=d93d1ed70a3afa014748",
     "/js/public.js": "/js/public.js?id=724cd5971e1b68dba495",
     "/css/styles.css": "/css/styles.css?id=07173b5ddcc71656da26",
     "/css/styles.min.css": "/css/styles.min.css?id=07173b5ddcc71656da26",
@@ -20,5 +20,9 @@
     "/assets/social-instagram.png": "/assets/social-instagram.png?id=5c84e7a837d0c48f2fd6",
     "/assets/social-linkedin.png": "/assets/social-linkedin.png?id=025312eb851406919f64",
     "/assets/social-twitter.png": "/assets/social-twitter.png?id=8827305050211622dd2f",
-    "/assets/social-youtube.png": "/assets/social-youtube.png?id=e29259afa3a420a8c1c9"
+    "/assets/social-youtube.png": "/assets/social-youtube.png?id=e29259afa3a420a8c1c9",
+    "/assets/logo-big.svg": "/assets/logo-big.svg?id=0cd38155f509ca25f168",
+    "/assets/logo.svg": "/assets/logo.svg?id=1a52fc8c9b48d25ad194",
+    "/assets/user-icon.svg": "/assets/user-icon.svg?id=f29a47f1aab255026d19",
+    "/assets/password-icon.svg": "/assets/password-icon.svg?id=8d2e5357aa81d31eb0a5"
 }
