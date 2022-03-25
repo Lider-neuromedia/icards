@@ -193,4 +193,15 @@ class User extends Authenticatable
             Mail::to($admins)->send(new AdminRenewSubsNotified($clients));
         }
     }
+
+    public static function testEmails()
+    {
+        $client = User::onlyClients()->inRandomOrder()->firstOrFail();
+        $card = $client->cards()->inRandomOrder()->firstOrFail();
+        $credentials = ['email' => $client->email, 'password' => \Str::random(12)];
+
+        Mail::to($client)->send(new \App\Mail\AccountCreated($client, $credentials));
+        Mail::to($client)->send(new \App\Mail\CardCreated($card));
+        Mail::to($client)->send(new RenewSubscriptionNotified($client));
+    }
 }
