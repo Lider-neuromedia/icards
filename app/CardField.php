@@ -81,7 +81,8 @@ class CardField extends Model
             'values' => [
                 ['key' => 'profile', 'label' => 'Foto de perfil', 'type' => 'image', 'general' => false, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900 kilobytes'],
                 ['key' => 'logo', 'label' => 'Logo', 'type' => 'image', 'general' => true, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900 kilobytes'],
-                ['key' => 'logo_bg', 'label' => 'Fondo de logo', 'type' => 'color', 'general' => true, 'default' => '#ffffff'],
+                ['key' => 'has_logo_bg', 'label' => 'Aplicar "Fondo de logo"', 'type' => 'boolean', 'general' => true, 'default' => '0', 'help' => 'Si no se marca la casilla, el logo queda sin color de fondo.', 'watch' => true],
+                ['key' => 'logo_bg', 'label' => 'Fondo de logo', 'type' => 'color', 'general' => true, 'default' => '#ffffff', 'visible_when' => 'has_logo_bg:1'],
                 ['key' => 'name', 'label' => 'Nombre', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'cargo', 'label' => 'Cargo', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'company', 'label' => 'Empresa', 'type' => 'text', 'general' => true, 'default' => ''],
@@ -122,8 +123,15 @@ class CardField extends Model
             'label' => 'Tema Visual',
             'values' => [
                 ['key' => 'main_color', 'label' => 'Color Principal', 'type' => 'color', 'general' => true, 'default' => '#ff0000'],
-                ['key' => 'header_bg_color', 'label' => 'Cabecera Color Fondo', 'type' => 'color', 'general' => true, 'default' => '#ff0000'],
-                ['key' => 'header_text_color', 'label' => 'Cabecera Color Texto', 'type' => 'color', 'general' => true, 'default' => '#ffffff'],
+                ['key' => 'header_text_color', 'label' => 'Color de Texto de Cabecera', 'type' => 'color', 'general' => true, 'default' => '#ffffff'],
+                ['key' => 'header_bg_type', 'label' => 'Tipo de Cabecera', 'type' => 'select', 'general' => true, 'default' => 'header_bg_color', 'options' => [
+                    ['id' => 'header_bg_color', 'name' => 'Color plano de fondo'],
+                    ['id' => 'header_bg_gradient', 'name' => 'Gradiente de fondo'],
+                    ['id' => 'header_bg_image', 'name' => 'Imagen de fondo'],
+                ], 'watch' => true],
+                ['key' => 'header_bg_color', 'label' => 'Fondo de Cabecera (Color)', 'type' => 'color', 'general' => true, 'default' => '#ff0000', 'visible_when' => 'header_bg_type:header_bg_color'],
+                ['key' => 'header_bg_gradient', 'label' => 'Fondo de Cabecera (Gradiente)', 'type' => 'gradient', 'general' => true, 'default' => '["#ff0000","#00ff00", "horizontal"]', 'visible_when' => 'header_bg_type:header_bg_gradient'],
+                ['key' => 'header_bg_image', 'label' => 'Fondo de Cabecera (Imagen)', 'type' => 'image', 'general' => true, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900 kilobytes', 'visible_when' => 'header_bg_type:header_bg_image'],
             ],
         ],
     ];

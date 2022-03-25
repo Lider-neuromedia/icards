@@ -1,5 +1,53 @@
 @extends('layouts.simple')
 
+@php
+    $version = env('ASSETS_VERSION', 1);
+    $headerGradient = "";
+    $headerBackground = "";
+    $headerImage = "";
+    $headerClass = "";
+    $logoClass = $ecard->has_logo_bg === "1" ? "header-logo-bg" : "";
+
+    if ($theme->header_bg_type == "header_bg_color") {
+        $headerClass = "header-bg-color";
+        $headerBackground = "{$theme->header_bg_color}";
+    } else if ($theme->header_bg_type == "header_bg_gradient") {
+        $headerClass = "header-bg-gradient";
+        $color1 = $theme->header_bg_gradient[0];
+        $color2 = $theme->header_bg_gradient[1];
+        $direction = $theme->header_bg_gradient[2];
+
+        if ($direction == "vertical") {
+            $headerGradient = "linear-gradient(to bottom, $color1, $color2)";
+        } else if ($direction == "horizontal") {
+            $headerGradient = "linear-gradient(to right, $color1, $color2)";
+        } else if ($direction == "diagonal") {
+            $headerGradient = "linear-gradient(to right bottom, $color1, $color2)";
+        } else if ($direction == "circular") {
+            $headerGradient = "radial-gradient(circle, $color1, $color2)";
+        }
+    } else if ($theme->header_bg_type == "header_bg_image") {
+        $headerClass = "header-bg-image";
+        $headerImage = url("storage/cards/{$theme->header_bg_image}");
+        $headerImage = "$headerImage?v=$version";
+        $headerImage = "url($headerImage)";
+    }
+
+    $themeStyles = "<style>
+            body {
+                --bg-light-color: #ffffff;
+                --bg-dark-color: #1d1e22;
+                --white-color: #ffffff;
+                --main-color: {$theme->main_color};
+                --header-bg-color: $headerBackground;
+                --header-bg-gradient: $headerGradient;
+                --header-bg-image: $headerImage;
+                --header-text-color: {$theme->header_text_color};
+                --logo-bg: {$ecard->logo_bg};
+            }
+        </style>";
+@endphp
+
 @section('title', "{$ecard->name} | {$ecard->company} | iCard")
 
 @if ($ecard->description)
@@ -13,12 +61,15 @@
 
 @section('content')
 
-    <header class="header">
+    <header class="header {{$headerClass}}">
         <div class="wrapper">
-            <div class="header-logo">
-                <img width="30px" height="auto"
-                    src="{{ url("storage/cards/$ecard->logo") }}?v={{ env('ASSETS_VERSION', 1) }}">
-            </div>
+
+            @if ($ecard->logo)
+                <div class="header-logo {{$logoClass}}">
+                    <img width="30px" height="auto" alt="Logo Empresa"
+                        src="{{ url("storage/cards/$ecard->logo") }}?v={{$version}}">
+                </div>
+            @endif
 
             @if ($ecard->profile)
                 @php
@@ -58,7 +109,8 @@
                                 @endif
 
                                 @if ($ac_key == 'whatsapp')
-                                    <a target="_blank" href="https://api.whatsapp.com/send?phone={{ $value }}&text={!! $ecard->whatsapp_message !!}" class="track-event" data-event="contact-by-whatsapp">
+                                    <a target="_blank" class="track-event" data-event="contact-by-whatsapp"
+                                        href="https://api.whatsapp.com/send?phone={{ $value }}&text={!! $ecard->whatsapp_message !!}">
                                         <i class="icofont-brand-whatsapp"></i>
                                         <span>Enviar Whatsapp</span>
                                     </a>
@@ -126,14 +178,14 @@
                                             data-event="{{$track_event}}"
                                             href="{{ $link }}"
                                             @if ($cl_key == 'web') target="_blank" @endif>
-                                            <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
+                                            <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}" alt="Icono dato de contacto">
                                             {{ $value }}
                                         </a>
 
                                     @else
 
                                         <span class="{{$break_word_class}}">
-                                            <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}">
+                                            <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}" alt="Icono dato de contacto">
                                             {{ $value }}
                                         </span>
 
@@ -161,7 +213,7 @@
                                         target="_blank"
                                         class="track-event"
                                         data-event="visit-{{$sl_key}}">
-                                        <img width="30px" height="30px" src="{{ mix("assets/social-$sl_key.png") }}">
+                                        <img width="30px" height="30px" src="{{ mix("assets/social-$sl_key.png") }}" alt="Icono red social">
                                     </a>
                                 </li>
                             @endif
@@ -214,32 +266,22 @@
     </footer>
 
     <!-- Imagen necesaria para generar img desde el canvas -->
-    <img id="image1" src="" alt="" style="display: none;">
+    <img id="image1" src="" alt="Canvas" style="display: none;">
 
 @endsection
 
 @section('styles')
 
     <link rel="stylesheet" href="{{ mix('icofont/icofont.min.css') }}">
-    <style>
-        body {
-            --bg-light-color: #ffffff;
-            --bg-dark-color: #1d1e22;
-            --white-color: #ffffff;
-            --main-color: <?=$theme->main_color ?>;
-            --header-bg-color: <?=$theme->header_bg_color ?>;
-            --header-text-color: <?=$theme->header_text_color ?>;
-            --logo-bg: <?=$ecard->logo_bg ?>;
-        }
 
-    </style>
+    {!! $themeStyles !!}
 
     <script src="{{ mix('js/app.js') }}" defer></script>
 
     <script>
         window.card = {
-            imageLogo: "{{ url("storage/cards/{$ecard->logo}") }}?v={{ env('ASSETS_VERSION', 1) }}",
-            imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{ env('ASSETS_VERSION', 1) }}",
+            imageLogo: "{{ url("storage/cards/{$ecard->logo}") }}?v={{$version}}",
+            imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{$version}}",
             mainColor: "<?= $theme->main_color ?>",
             name: "{{ $ecard->name }}",
             cargo: "{{ $ecard->cargo }}",

@@ -56,41 +56,60 @@ class CardsController extends Controller
 
         if (isset($template[CardField::GROUP_OTHERS])) {
             foreach ($template[CardField::GROUP_OTHERS] as $field) {
-                $ecard[$field->key] = $field->value;
+                $value = $field->value;
+                $isJson = $field->type == 'gradient';
+                $ecard[$field->key] = $isJson ? json_decode($value) : $value;
             }
         }
         if (isset($template[CardField::GROUP_THEME])) {
             foreach ($template[CardField::GROUP_THEME] as $field) {
-                $theme[$field->key] = $field->value;
+                $value = $field->value;
+                $isJson = $field->type == 'gradient';
+                $theme[$field->key] = $isJson ? json_decode($value) : $value;
             }
         }
         if (isset($template[CardField::GROUP_ACTION_CONTACTS])) {
             foreach ($template[CardField::GROUP_ACTION_CONTACTS] as $field) {
-                $ecard[CardField::GROUP_ACTION_CONTACTS][] = (Object) [$field->key => $field->value];
+                $value = $field->value;
+                $isJson = $field->type == 'gradient';
+                $ecard[CardField::GROUP_ACTION_CONTACTS][] = (Object) [
+                    $field->key => $isJson ? json_decode($value) : $value,
+                ];
             }
         }
         if (isset($template[CardField::GROUP_CONTACT_LIST])) {
             foreach ($template[CardField::GROUP_CONTACT_LIST] as $field) {
-                $ecard[CardField::GROUP_CONTACT_LIST][] = (Object) [$field->key => $field->value];
+                $value = $field->value;
+                $isJson = $field->type == 'gradient';
+                $ecard[CardField::GROUP_CONTACT_LIST][] = (Object) [
+                    $field->key => $isJson ? json_decode($value) : $value,
+                ];
             }
         }
         if (isset($template[CardField::GROUP_SOCIAL_LIST])) {
             foreach ($template[CardField::GROUP_SOCIAL_LIST] as $field) {
-                $ecard[CardField::GROUP_SOCIAL_LIST][] = (Object) [$field->key => $field->value];
+                $value = $field->value;
+                $isJson = $field->type == 'gradient';
+                $ecard[CardField::GROUP_SOCIAL_LIST][] = (Object) [
+                    $field->key => $isJson ? json_decode($value) : $value,
+                ];
             }
         }
 
         // Llenar campos que estén vacíos.
         foreach (CardField::TEMPLATE_FIELDS as $group_key => $fields) {
             foreach ($fields['values'] as $field) {
+                $isJson = $field['type'] == 'gradient';
+                $value = $field['default'];
+
                 if ($group_key == 'others') {
                     if (!isset($ecard[$field['key']])) {
-                        $ecard[$field['key']] = $field['default'];
+                        $ecard[$field['key']] = $isJson ? json_decode($value) : $value;
                     }
                 }
                 if ($group_key == 'theme') {
                     if (!isset($theme[$field['key']])) {
-                        $theme[$field['key']] = $field['default'];
+                        $theme[$field['key']] = $isJson ? json_decode($value) : $value;
                     }
                 }
             }

@@ -116,6 +116,8 @@ class CardsService
                                     $image_path = array_reverse(explode('/', $image_path))[0];
                                     $value = $image_path;
                                 }
+                            } else if ($field['type'] == 'gradient') {
+                                $value = json_encode($request->get($field_key));
                             } else {
                                 $value = $request->get($field_key);
                             }
@@ -201,6 +203,8 @@ class CardsService
                                 $image_path = array_reverse(explode('/', $image_path))[0];
                                 $value = $image_path;
                             }
+                        } else if ($field['type'] == 'gradient') {
+                            $value = json_encode($request->get($field_key));
                         } else {
                             $value = $request->get($field_key);
                         }

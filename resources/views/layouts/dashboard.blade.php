@@ -10,6 +10,7 @@
     <title>iCard</title>
 
     <!-- Scripts -->
+    @yield('pre-scripts')
     <script src="{{ mix('js/app.js') }}" defer></script>
 
     <!-- Google Font: Source Sans Pro -->

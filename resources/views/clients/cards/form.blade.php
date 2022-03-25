@@ -38,6 +38,18 @@
                                     @include('clients.cards.fields.color')
                                 @endif
 
+                                @if ($field['type'] == 'boolean')
+                                    @include('clients.cards.fields.boolean')
+                                @endif
+
+                                @if ($field['type'] == 'gradient')
+                                    @include('clients.cards.fields.gradient')
+                                @endif
+
+                                @if ($field['type'] == 'select')
+                                    @include('clients.cards.fields.select')
+                                @endif
+
                             @endif
                         @endforeach
 

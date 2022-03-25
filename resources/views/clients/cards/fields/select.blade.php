@@ -5,12 +5,24 @@
             <small class="text-muted font-italic">{{$field['help']}}</small>
         @endif
     </label>
-    <input
-        type="color"
+
+    @php
+        $value = old($field_key) ?: $card->field($group_key, $field['key']);
+    @endphp
+
+    <select
         class="form-control @error($field_key) is-invalid @enderror"
         name="{{$field_key}}"
-        id="{{$field_key}}"
-        value="{{ old($field_key) ?: $card->field($group_key, $field['key'])}}">
+        id="{{$field_key}}">
+
+        @foreach ($field['options'] as $option)
+            <option
+                @if($value == $option['id']) selected @endif
+                value="{{$option['id']}}">
+                {{$option["name"]}}
+            </option>
+        @endforeach
+    </select>
 
     @error($field_key)
         <span class="invalid-feedback" role="alert">

@@ -40,6 +40,11 @@ class ThemeRequest extends FormRequest
                         $validation[$field_key] = ['nullable', 'string', 'max:250'];
                     } else if ($field['type'] === 'textarea') {
                         $validation[$field_key] = ['nullable', 'string', 'max:10000'];
+                    } else if ($field['type'] === 'boolean') {
+                        $validation[$field_key] = ['nullable', 'string', 'in:0,1'];
+                    } else if ($field['type'] === 'gradient') {
+                        $validation[$field_key] = ['nullable', 'array', 'min:3', 'max:3'];
+                        $validation["$field_key.*"] = ['required', 'string', 'min:7', 'max:10'];
                     }
                 }
             }

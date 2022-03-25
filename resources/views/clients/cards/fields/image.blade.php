@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div class="mb-3 {{$field_key}}_wp" id="{{$field_key}}_wp">
     <label class="form-label" for="{{ $field_key }}">
         {{ $field['label'] }}
         @if (isset($field['help']))

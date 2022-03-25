@@ -70,11 +70,19 @@ class Card extends Model
 
             foreach (CardField::TEMPLATE_FIELDS[$group]['values'] as $value) {
                 if ($value['key'] == $key) {
-                    $field_value = $value['default'];
+                    if ($value['type'] == "gradient") {
+                        $field_value = json_decode($value['default']);
+                    } else {
+                        $field_value = $value['default'];
+                    }
                 }
             }
 
             return $field_value;
+        }
+
+        if ($field->type == "gradient") {
+            return json_decode($field->value);
         }
 
         return $field->value;

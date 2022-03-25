@@ -14,6 +14,14 @@
     <li class="breadcrumb-item active">Tema Visual</li>
 @endsection
 
+@section('pre-scripts')
+    <script>
+
+        window.groups = @json($groups);
+
+    </script>
+@endsection
+
 @section('content')
     <div class="container">
 
@@ -63,6 +71,18 @@
 
                                                         @if ($field['type'] == 'color')
                                                             @include('clients.cards.fields.color')
+                                                        @endif
+
+                                                        @if ($field['type'] == 'boolean')
+                                                            @include('clients.cards.fields.boolean')
+                                                        @endif
+
+                                                        @if ($field['type'] == 'gradient')
+                                                            @include('clients.cards.fields.gradient')
+                                                        @endif
+
+                                                        @if ($field['type'] == 'select')
+                                                            @include('clients.cards.fields.select')
                                                         @endif
 
                                                     @endif
