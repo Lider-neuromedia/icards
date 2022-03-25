@@ -31,7 +31,7 @@ class CardCreated extends Mailable
     public function build()
     {
         return $this->view('emails.welcome-card')
-            ->subject('iCard | Su tarjeta de presentación está disponible')
+            ->subject('Es momento de empezar a usar tu iCard')
             ->with([
                 'name' => $this->card->name,
                 'url' => $this->card->url,

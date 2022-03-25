@@ -33,7 +33,7 @@ class AccountCreated extends Mailable
     public function build()
     {
         return $this->view('emails.welcome')
-            ->subject('iCard | Le damos la bienvenida')
+            ->subject('Bienvenido a la era digital 🤖')
             ->with([
                 'name' => $this->client->name,
                 'credentials' => $this->credentials,

@@ -31,7 +31,7 @@ class RenewSubscriptionNotified extends Mailable
     public function build()
     {
         return $this->view('emails.renew')
-            ->subject('iCard | Notificación de vencimiento de suscripción')
+            ->subject('⚠️Alerta⚠️ Renueva tu mebresía de iCard')
             ->with(['days' => $this->client->getSubscriptionDaysLeft()]);
     }
 }
