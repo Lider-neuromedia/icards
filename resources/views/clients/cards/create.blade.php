@@ -17,6 +17,14 @@
     <li class="breadcrumb-item active">Crear Tarjeta</li>
 @endsection
 
+@section('pre-scripts')
+    <script>
+
+        window.groups = @json($groups);
+
+    </script>
+@endsection
+
 @section('content')
     <div class="container">
 
