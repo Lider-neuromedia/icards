@@ -281,16 +281,21 @@ class CardsService
                                     ->first();
 
                                 $value = $primary_card->field($group_key, $field['key']);
+                                $isJson = false;
+
+                                if ($field['type'] == 'gradient') {
+                                    $isJson = true;
+                                }
 
                                 if ($card_field) {
                                     $card_field->update([
-                                        'value' => $value,
+                                        'value' => $isJson ? json_encode($value) : $value,
                                     ]);
                                 } else {
                                     $card->fields()->save(new CardField([
                                         'group' => $group_key,
                                         'key' => $field['key'],
-                                        'value' => $value,
+                                        'value' => $isJson ? json_encode($value) : $value,
                                     ]));
                                 }
                             }
