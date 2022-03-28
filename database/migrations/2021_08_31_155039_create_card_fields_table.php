@@ -21,7 +21,7 @@ class CreateCardFieldsTable extends Migration
             $table->bigInteger('card_id')->unsigned();
             $table->foreign('card_id')->references('id')->on('cards')->onDelete('cascade');
             $table->timestamps();
-            $table->engine = 'MyISAM';
+            $table->engine = 'InnoDB';
         });
     }
 

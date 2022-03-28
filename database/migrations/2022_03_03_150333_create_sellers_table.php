@@ -17,7 +17,7 @@ class CreateSellersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->timestamps();
-            $table->engine = 'MyISAM';
+            $table->engine = 'InnoDB';
         });
     }
 

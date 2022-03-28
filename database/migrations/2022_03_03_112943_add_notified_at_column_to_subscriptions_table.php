@@ -15,7 +15,7 @@ class AddNotifiedAtColumnToSubscriptionsTable extends Migration
     {
         Schema::table('subscriptions', function (Blueprint $table) {
             $table->timestamp('notified_at')->nullable()->after('finish_at')->comment('Última notificación de vencimiento');
-            $table->engine = 'MyISAM';
+            $table->engine = 'InnoDB';
         });
     }
 
