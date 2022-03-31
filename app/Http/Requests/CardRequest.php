@@ -53,7 +53,8 @@ class CardRequest extends FormRequest
                     } else if ($field_key == "action_contacts_email") {
                         $validation[$field_key] = ['required', 'string', 'email', 'max:50'];
                     } else if ($field['type'] === 'image') {
-                        $validation[$field_key] = ['nullable', 'file', 'mimes:jpeg,jpg,png', 'max:900'];
+                        $max = $field['max'];
+                        $validation[$field_key] = ['nullable', 'file', 'mimes:jpeg,jpg,png', "max:$max"];
                     } else if ($field['type'] === 'text') {
                         $validation[$field_key] = ['nullable', 'string', 'max:250'];
                     } else if ($field['type'] === 'textarea') {
