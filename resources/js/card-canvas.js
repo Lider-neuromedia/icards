@@ -39,7 +39,7 @@ async function initCardCanvas(card) {
     // Título
     const textColor = getComputedStyle(document.querySelector('body')).getPropertyValue('--text-color');
     ctx.lineWidth = 1.0;
-    ctx.font = "19px 'Exo', sans-serif";
+    ctx.font = "bolder 19px 'Exo', sans-serif";
     ctx.fillStyle = textColor;
     ctx.textAlign = 'center';
 
@@ -47,13 +47,15 @@ async function initCardCanvas(card) {
     textLines(card.name).forEach(text => {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
+
+    ctx.font = "normal 16px 'Exo', sans-serif";
     textLines(card.cargo).forEach(text => {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
 
     // QR
     let w = (canvasWidth - 230) / 2;
-    let h = top + 35;
+    let h = top + 28;
     ctx.lineWidth = 4;
     ctx.drawImage(imageQR, w, h, 230, 230);
     ctx.roundRect(w, h, 230, 230, 25).stroke();
@@ -74,19 +76,27 @@ function loadImage(url) {
 
 function textLines(text) {
     if (text.length > 25) {
-        let first = text.substring(0, text.length / 2);
-        let second = text.substring(text.length / 2, text.length);
+        const words = text.split(" ");
+        const lines = [];
+        let temporal = "";
 
-        if (first.substring(first.length - 1) != ' ' && second.substring(0, 1) != ' ') {
-            first += '-';
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+
+            if ((temporal.length + word.length) >= 25) {
+                lines.push(temporal);
+                temporal = "";
+            }
+
+            temporal += temporal.length == 0 ? word : ` ${word}`;
+
+            if (i == (words.length - 1)) {
+                lines.push(temporal);
+                temporal = "";
+            }
         }
-        first = first.trim();
-        second = second.trim();
 
-        return [
-            first,
-            second,
-        ];
+        return lines;
     }
 
     return [text];
