@@ -422,27 +422,14 @@ class CardsService
 
     public function generateCardName(Card $card)
     {
-        $full_name = strtoupper($card->field('others', 'name'));
-        $name_split = explode(' ', $full_name);
+        $name = $card->field('others', 'name');
+        $name = ucwords(strtolower($name));
 
-        $firstname = '';
+        $firstname = $name;
         $lastname = '';
         $additional = '';
         $prefix = '';
         $suffix = '';
-
-        if (count($name_split) == 1) {
-            $firstname = $name_split[0];
-        } else if (count($name_split) == 2) {
-            $lastname = $name_split[1];
-            $firstname = $name_split[0];
-        } else if (count($name_split) == 3) {
-            $lastname = $name_split[2];
-            $firstname = $name_split[0];
-        } else if (count($name_split) == 4) {
-            $lastname = $name_split[2];
-            $firstname = $name_split[0];
-        }
 
         return (Object) [
             'firstname' => $firstname,
