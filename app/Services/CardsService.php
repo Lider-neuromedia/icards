@@ -94,13 +94,14 @@ class CardsService
             \DB::beginTransaction();
 
             $groups = CardField::TEMPLATE_FIELDS;
+            $cards = $client->cards()->get();
 
             foreach ($groups as $group_key => $group) {
                 foreach ($group['values'] as $field) {
                     $field_key = $group_key . '_' . $field['key'];
 
                     if ($field['general'] == true) {
-                        foreach ($client->cards as $card) {
+                        foreach ($cards as $card) {
                             $card_field = $card->fields()
                                 ->where('group', $group_key)
                                 ->where('key', $field['key'])
@@ -133,11 +134,16 @@ class CardsService
                                     'value' => $value,
                                 ]));
                             }
-
-                            $this->generateVCard($card);
                         }
                     }
                 }
+            }
+
+            // Actualizar archivos de vcards.
+            $cards = $client->cards()->get();
+
+            foreach ($cards as $card) {
+                $this->generateVCard($card);
             }
 
             \DB::commit();
