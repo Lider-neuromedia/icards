@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Card;
 use App\CardField;
 use Carbon\Carbon;
+use \Parsedown;
 
 class CardsController extends Controller
 {
@@ -39,6 +40,14 @@ class CardsController extends Controller
         return $this->cardTemplate($card);
     }
 
+    private function markdown($content)
+    {
+        $parsedown = new Parsedown();
+        $parsedown->setBreaksEnabled(true);
+        $parsedown->setSafeMode(true);
+        return $parsedown->text($content);
+    }
+
     private function cardTemplate(Card $card)
     {
         $template = $card->fields()->get()->groupBy('group');
@@ -58,7 +67,15 @@ class CardsController extends Controller
             foreach ($template[CardField::GROUP_OTHERS] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
-                $ecard[$field->key] = $isJson ? json_decode($value) : $value;
+                $isMarkdown = $field->type == 'textarea';
+
+                $ecard[$field->key] = $value;
+
+                if ($isJson) {
+                    $ecard[$field->key] = json_decode($value);
+                } else if ($isMarkdown) {
+                    $ecard[$field->key] = $this->markdown($value);
+                }
             }
         }
         if (isset($template[CardField::GROUP_THEME])) {

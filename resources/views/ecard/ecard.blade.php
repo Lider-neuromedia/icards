@@ -129,7 +129,7 @@
         <div class="wrapper">
 
             @if ($ecard->description)
-                <div class="content-description">{{ $ecard->description }}</div>
+                <div class="content-description">{!! $ecard->description !!}</div>
             @endif
 
             <nav class="content-contact-list">
