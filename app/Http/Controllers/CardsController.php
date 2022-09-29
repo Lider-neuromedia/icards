@@ -60,8 +60,8 @@ class CardsController extends Controller
         $theme = [];
 
         $whatsapp_message = $card->field(CardField::GROUP_ACTION_CONTACTS, 'whatsapp_message');
-        $whatsapp_message = $whatsapp_message != '' ? rawurlencode($whatsapp_message) : '';
-        $ecard['whatsapp_message'] = $whatsapp_message;
+        $whatsapp_message = trim($whatsapp_message) != '' ? rawurlencode($whatsapp_message) : '';
+        $ecard['whatsapp_message'] = $whatsapp_message ?: 'Hola, en que te puedo ayudar';
 
         if (isset($template[CardField::GROUP_OTHERS])) {
             foreach ($template[CardField::GROUP_OTHERS] as $field) {
@@ -135,6 +135,11 @@ class CardsController extends Controller
         $ecard = (Object) $ecard;
         $theme = (Object) $theme;
 
-        return view('ecard.ecard', compact('card', 'ecard', 'theme'));
+        $templateFiles = (Object) collect(CardField::TEMPLATES)
+            ->first(function ($x) use ($theme) {
+                return $x['id'] == $theme->template;
+            });
+
+        return view($templateFiles->templatePath, compact('card', 'ecard', 'theme', 'templateFiles'));
     }
 }

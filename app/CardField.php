@@ -75,6 +75,21 @@ class CardField extends Model
         return false;
     }
 
+    const TEMPLATES = [
+        [
+            'id' => 'default',
+            'name' => 'Plantilla por Defecto',
+            'stylesPath' => 'css/template-default.css',
+            'templatePath' => 'ecard.ecard',
+        ],
+        [
+            'id' => 'bigphoto',
+            'name' => 'Plantilla Gran Foto',
+            'stylesPath' => 'css/template-bigphoto.css',
+            'templatePath' => 'ecard.ecard-bigphoto',
+        ],
+    ];
+
     const TEMPLATE_FIELDS = [
         'others' => [
             'label' => 'Datos de Tarjeta',
@@ -122,6 +137,7 @@ class CardField extends Model
         'theme' => [
             'label' => 'Tema Visual',
             'values' => [
+                ['key' => 'template', 'label' => 'Plantilla', 'type' => 'select', 'general' => true, 'default' => 'default', 'options' => self::TEMPLATES],
                 ['key' => 'main_color', 'label' => 'Color Principal', 'type' => 'color', 'general' => true, 'default' => '#ff0000'],
                 ['key' => 'header_text_color', 'label' => 'Color de Texto de Cabecera', 'type' => 'color', 'general' => true, 'default' => '#ffffff'],
                 ['key' => 'header_bg_type', 'label' => 'Tipo de Cabecera', 'type' => 'select', 'general' => true, 'default' => 'header_bg_color', 'options' => [

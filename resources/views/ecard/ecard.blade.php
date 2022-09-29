@@ -272,6 +272,7 @@
 
 @section('styles')
 
+    <link href="{{ mix($templateFiles->stylesPath) }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ mix('icofont/icofont.min.css') }}">
 
     {!! $themeStyles !!}
