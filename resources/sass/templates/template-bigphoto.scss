@@ -81,10 +81,10 @@ body {
     img {
         height: auto;
         display: block;
-        width: 20rem;
+        width: 32rem;
 
         @media screen and (max-width:600px) {
-            width: 13rem;
+            width: 18rem;
         }
     }
 }
@@ -160,7 +160,6 @@ body {
     }
     .icon {
         align-items: center;
-        background-color: var(--white-color);
         border-radius: 50%;
         display: flex;
         flex-flow: row nowrap;
@@ -171,7 +170,7 @@ body {
 
         i {
             color: var(--main-color);
-            font-size: 1.5em;
+            font-size: 2em;
         }
     }
     .list-item-el {

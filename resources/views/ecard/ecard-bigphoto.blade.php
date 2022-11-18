@@ -132,11 +132,15 @@
             </h1>
 
             {{-- Cargo --}}
-            <div class="header-description header-cargo">{{ $ecard->cargo }}</div>
+            <div class="header-description header-cargo">
+                {{ $ecard->cargo }}
+            </div>
 
             {{-- Descripción --}}
             @if ($ecard->description)
-                <div class="content-description">{!! $ecard->description !!}</div>
+                <div class="content-description">
+                    {!! $ecard->description !!}
+                </div>
             @endif
 
             {{-- Redes --}}
@@ -163,7 +167,9 @@
             </nav>
 
             {{-- Empresa --}}
-            <div class="header-description header-company">{{ $ecard->company }}</div>
+            {{-- <div class="header-description header-company">
+                {{ $ecard->company }}
+            </div> --}}
 
             {{-- Datos --}}
             <nav class="content-contact-list">
@@ -229,7 +235,7 @@
             </nav>
 
             {{-- Actions --}}
-            <section class="header-actions">
+            {{-- <section class="header-actions">
                 @php
                     $actionPhone = getActionContactsValue($ecard->action_contacts, 'phone');
                     $actionEmail = getActionContactsValue($ecard->action_contacts, 'email');
@@ -238,7 +244,7 @@
                 @endphp
 
                 <div class="wrapper">
-                    {{-- Action Email --}}
+                    <!-- Action Email -->
                     @if ($actionEmail)
                         <a href="mailto:{{ $actionEmail }}" class="header-action track-event" data-event="contact-by-email">
                             <i class="icofont-email"></i>
@@ -246,7 +252,7 @@
                         </a>
                     @endif
 
-                    {{-- Action Web --}}
+                    <!-- Action Web -->
                     @if ($actionWeb)
                         <a target="_blank" class="header-action track-event break-word" data-event="visit-web" href="{{ $actionWeb }}">
                             <i class="icofont-globe"></i>
@@ -254,19 +260,19 @@
                         </a>
                     @endif
 
-                    {{-- Action QR --}}
-                    {{-- <button type="button" class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
+                    <!-- Action QR -->
+                    <button type="button" class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
                         <i class="icofont-qr-code"></i>
                         Muestra tu código QR!
-                    </button> --}}
+                    </button>
 
-                    {{-- Action Guardar --}}
+                    <!-- Action Guardar -->
                     <a class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
                         <i class="icofont-user-alt-2"></i>
                         Guardar Contacto
                     </a>
 
-                    {{-- Action Whatsapp --}}
+                    <!-- Action Whatsapp -->
                     @if ($actionWhatsapp)
                         <a target="_blank" class="header-action track-event" data-event="contact-by-whatsapp"
                             href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}">
@@ -275,15 +281,15 @@
                         </a>
                     @endif
 
-                    {{-- Action Phone --}}
-                    {{-- @if ($actionPhone)
+                    <!-- Action Phone -->
+                    @if ($actionPhone)
                         <a href="tel:{{ $actionPhone }}" class="header-action track-event" data-event="contact-by-call">
                             <i class="icofont-phone"></i>
                             <span>Llamar</span>
                         </a>
-                    @endif --}}
+                    @endif
                 </div>
-            </section>
+            </section> --}}
 
             {{-- Tarjeta --}}
             <section class="header-card">
@@ -336,6 +342,7 @@
 
     <script>
         window.card = {
+            canDrawLogo: false,
             imageLogo: "{{ url("storage/cards/{$ecard->logo}") }}?v={{$version}}",
             imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{$version}}",
             mainColor: "<?= $theme->main_color ?>",

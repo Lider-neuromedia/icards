@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 async function initCardCanvas(card) {
     const imageQR = await loadImage(card.imageQR);
 
+    const canDrawLogo = card.canDrawLogo == undefined || card.canDrawLogo == true;
     const imageLogo = await loadImage(card.imageLogo);
     const imageWidth = imageLogo.naturalWidth;
     const imageHeight = imageLogo.naturalHeight;
@@ -34,7 +35,9 @@ async function initCardCanvas(card) {
 
     // Logo
     const left = (canvasWidth - imageWidthResize) / 2;
-    ctx.drawImage(imageLogo, left, 40, imageWidthResize, imageHeightResize);
+    if (canDrawLogo) {
+        ctx.drawImage(imageLogo, left, 40, imageWidthResize, imageHeightResize);
+    }
 
     // Título
     const textColor = getComputedStyle(document.querySelector('body')).getPropertyValue('--text-color');
@@ -43,7 +46,7 @@ async function initCardCanvas(card) {
     ctx.fillStyle = textColor;
     ctx.textAlign = 'center';
 
-    let top = 65 + imageHeightResize;
+    let top = canDrawLogo ? 65 + imageHeightResize : 65 + imageHeightResize * 0.3;
     textLines(card.name).forEach(text => {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
@@ -55,7 +58,7 @@ async function initCardCanvas(card) {
 
     // QR
     let w = (canvasWidth - 230) / 2;
-    let h = top + 28;
+    let h = canDrawLogo ? top + 28 : top + 65;
     ctx.lineWidth = 4;
     ctx.drawImage(imageQR, w, h, 230, 230);
     ctx.roundRect(w, h, 230, 230, 25).stroke();

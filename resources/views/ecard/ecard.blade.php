@@ -281,6 +281,7 @@
 
     <script>
         window.card = {
+            canDrawLogo: true,
             imageLogo: "{{ url("storage/cards/{$ecard->logo}") }}?v={{$version}}",
             imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{$version}}",
             mainColor: "<?= $theme->main_color ?>",
