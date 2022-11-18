@@ -179,14 +179,14 @@
                                             href="{{ $link }}"
                                             @if ($cl_key == 'web') target="_blank" @endif>
                                             <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}" alt="Icono dato de contacto">
-                                            {{ $value }}
+                                            {!! $value !!}
                                         </a>
 
                                     @else
 
                                         <span class="{{$break_word_class}}">
                                             <img width="30px" height="30px" src="{{ mix("assets/contact-$cl_key.png") }}" alt="Icono dato de contacto">
-                                            {{ $value }}
+                                            {!! $value !!}
                                         </span>
 
                                     @endif
