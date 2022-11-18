@@ -213,7 +213,7 @@
                                             <span class="icon">
                                                 <i class="icofont-{{ICONS[$cl_key]}}"></i>
                                             </span>
-                                            {{ $value }}
+                                            {!! $value !!}
                                         </a>
 
                                     @else
@@ -222,7 +222,7 @@
                                             <span class="icon">
                                                 <i class="icofont-{{ICONS[$cl_key]}}"></i>
                                             </span>
-                                            {{ $value }}
+                                            {!! $value !!}
                                         </span>
 
                                     @endif

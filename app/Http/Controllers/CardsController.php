@@ -98,8 +98,18 @@ class CardsController extends Controller
             foreach ($template[CardField::GROUP_CONTACT_LIST] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
+                $isMarkdown = $field->type == 'textarea';
+
+                $tempValue = $value;
+
+                if ($isJson) {
+                    $tempValue = json_decode($value);
+                } else if ($isMarkdown) {
+                    $tempValue = $this->markdown($value);
+                }
+
                 $ecard[CardField::GROUP_CONTACT_LIST][] = (Object) [
-                    $field->key => $isJson ? json_decode($value) : $value,
+                    $field->key => $tempValue,
                 ];
             }
         }

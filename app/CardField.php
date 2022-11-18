@@ -121,7 +121,7 @@ class CardField extends Model
                 ['key' => 'phone2', 'label' => 'Teléfono 2', 'type' => 'text', 'general' => false, 'default' => '', 'help' => 'Indicativo + Número. Ej: 6011234567'],
                 ['key' => 'email', 'label' => 'E-mail', 'type' => 'text', 'general' => false, 'default' => '', 'help' => 'Ejemplo: micontacto@mail.com'],
                 ['key' => 'web', 'label' => 'Página Web', 'type' => 'text', 'general' => true, 'default' => '', 'help' => 'Ejemplo: https://mipagina.com'],
-                ['key' => 'address', 'label' => 'Dirección', 'type' => 'text', 'general' => true, 'default' => '', 'help' => 'Ubicación física de la empresa'],
+                ['key' => 'address', 'label' => 'Dirección', 'type' => 'textarea', 'general' => true, 'default' => '', 'help' => 'Ubicación física de la empresa'],
             ],
         ],
         'social_list' => [
