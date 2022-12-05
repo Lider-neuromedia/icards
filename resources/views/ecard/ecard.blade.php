@@ -279,14 +279,22 @@
 
     <script src="{{ mix('js/app.js') }}" defer></script>
 
+    @php
+        $headerLogo = $ecard->logo ? url("storage/cards/{$ecard->logo}") . "?v=$version" : null;
+        $cardLogo = $ecard->logo_card ? url("storage/cards/{$ecard->logo_card}") . "?v=$version" : null;
+        $imageLogo = $cardLogo ? $cardLogo : $headerLogo;
+    @endphp
+
     <script>
         window.card = {
             canDrawLogo: true,
-            imageLogo: "{{ url("storage/cards/{$ecard->logo}") }}?v={{$version}}",
+            canDrawCompany: false,
+            imageLogo: "{{$imageLogo}}",
             imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{$version}}",
             mainColor: "<?= $theme->main_color ?>",
             name: "{{ $ecard->name }}",
             cargo: "{{ $ecard->cargo }}",
+            company: "{{ $ecard->company }}",
         }
     </script>
 

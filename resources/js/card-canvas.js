@@ -8,6 +8,8 @@ async function initCardCanvas(card) {
     const imageQR = await loadImage(card.imageQR);
 
     const canDrawLogo = card.canDrawLogo == undefined || card.canDrawLogo == true;
+    const canDrawCompany = card.canDrawCompany == undefined || card.canDrawCompany == true;
+
     const imageLogo = await loadImage(card.imageLogo);
     const imageWidth = imageLogo.naturalWidth;
     const imageHeight = imageLogo.naturalHeight;
@@ -36,7 +38,7 @@ async function initCardCanvas(card) {
     // Logo
     const left = (canvasWidth - imageWidthResize) / 2;
     if (canDrawLogo) {
-        ctx.drawImage(imageLogo, left, 40, imageWidthResize, imageHeightResize);
+        ctx.drawImage(imageLogo, left, canDrawCompany ? 20 : 40, imageWidthResize, imageHeightResize);
     }
 
     // Título
@@ -47,6 +49,7 @@ async function initCardCanvas(card) {
     ctx.textAlign = 'center';
 
     let top = canDrawLogo ? 65 + imageHeightResize : 65 + imageHeightResize * 0.3;
+    top = canDrawLogo && canDrawCompany ? top - 40 : top;
     textLines(card.name).forEach(text => {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
@@ -56,9 +59,16 @@ async function initCardCanvas(card) {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
 
+    if (canDrawCompany) {
+        ctx.font = "bolder 19px 'Exo', sans-serif";
+        textLines(card.company).forEach(text => {
+            ctx.fillText(text, canvasWidth / 2, top += canDrawLogo ? 35 : 50);
+        });
+    }
+
     // QR
     let w = (canvasWidth - 230) / 2;
-    let h = canDrawLogo ? top + 28 : top + 65;
+    let h = canDrawLogo ? top + 28 : top + 40;
     ctx.lineWidth = 4;
     ctx.drawImage(imageQR, w, h, 230, 230);
     ctx.roundRect(w, h, 230, 230, 25).stroke();

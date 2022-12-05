@@ -94,8 +94,9 @@ class CardField extends Model
         'others' => [
             'label' => 'Datos de Tarjeta',
             'values' => [
-                ['key' => 'profile', 'label' => 'Foto de perfil', 'type' => 'image', 'general' => false, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 250 kilobytes', 'max' => 250],
-                ['key' => 'logo', 'label' => 'Logo', 'type' => 'image', 'general' => true, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900 kilobytes', 'max' => 900],
+                ['key' => 'profile', 'label' => 'Foto de perfil', 'type' => 'image', 'general' => false, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 250kb', 'max' => 250],
+                ['key' => 'logo', 'label' => 'Logo Cabecera', 'type' => 'image', 'general' => true, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900kb', 'max' => 900],
+                ['key' => 'logo_card', 'label' => 'Logo Tarjeta', 'type' => 'image', 'general' => true, 'default' => null, 'help' => 'Si no se pone, se usará el logo de la cabecera. (jpeg, jpg, png) Tamaño máximo: 900kb', 'max' => 900],
                 ['key' => 'has_logo_bg', 'label' => 'Aplicar "Fondo de logo"', 'type' => 'boolean', 'general' => true, 'default' => '0', 'help' => 'Si no se marca la casilla, el logo queda sin color de fondo.', 'watch' => true],
                 ['key' => 'logo_bg', 'label' => 'Fondo de logo', 'type' => 'color', 'general' => true, 'default' => '#ffffff', 'visible_when' => 'has_logo_bg:1'],
                 ['key' => 'name', 'label' => 'Nombre', 'type' => 'text', 'general' => false, 'default' => ''],
@@ -147,7 +148,7 @@ class CardField extends Model
                 ], 'watch' => true],
                 ['key' => 'header_bg_color', 'label' => 'Fondo de Cabecera (Color)', 'type' => 'color', 'general' => true, 'default' => '#ff0000', 'visible_when' => 'header_bg_type:header_bg_color'],
                 ['key' => 'header_bg_gradient', 'label' => 'Fondo de Cabecera (Gradiente)', 'type' => 'gradient', 'general' => true, 'default' => '["#ff0000","#00ff00", "horizontal"]', 'visible_when' => 'header_bg_type:header_bg_gradient'],
-                ['key' => 'header_bg_image', 'label' => 'Fondo de Cabecera (Imagen)', 'type' => 'image', 'general' => true, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900 kilobytes', 'max' => 900, 'visible_when' => 'header_bg_type:header_bg_image'],
+                ['key' => 'header_bg_image', 'label' => 'Fondo de Cabecera (Imagen)', 'type' => 'image', 'general' => true, 'default' => null, 'help' => '(jpeg, jpg, png) Tamaño máximo: 900kb', 'max' => 900, 'visible_when' => 'header_bg_type:header_bg_image'],
             ],
         ],
     ];
