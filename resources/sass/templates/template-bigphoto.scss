@@ -160,6 +160,7 @@ body {
     }
     .icon {
         align-items: center;
+        background-color: var(--header-text-color);
         border-radius: 50%;
         display: flex;
         flex-flow: row nowrap;

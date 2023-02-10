@@ -2,37 +2,37 @@
 
 @php
     $version = env('ASSETS_VERSION', 1);
-    $headerGradient = "";
-    $headerBackground = "";
-    $headerImage = "";
-    $headerClass = "";
-    $logoClass = $ecard->has_logo_bg === "1" ? "header-logo-bg" : "";
-
-    if ($theme->header_bg_type == "header_bg_color") {
-        $headerClass = "header-bg-color";
+    $headerGradient = '';
+    $headerBackground = '';
+    $headerImage = '';
+    $headerClass = '';
+    $logoClass = $ecard->has_logo_bg === '1' ? 'header-logo-bg' : '';
+    
+    if ($theme->header_bg_type == 'header_bg_color') {
+        $headerClass = 'header-bg-color';
         $headerBackground = "{$theme->header_bg_color}";
-    } else if ($theme->header_bg_type == "header_bg_gradient") {
-        $headerClass = "header-bg-gradient";
+    } elseif ($theme->header_bg_type == 'header_bg_gradient') {
+        $headerClass = 'header-bg-gradient';
         $color1 = $theme->header_bg_gradient[0];
         $color2 = $theme->header_bg_gradient[1];
         $direction = $theme->header_bg_gradient[2];
-
-        if ($direction == "vertical") {
+    
+        if ($direction == 'vertical') {
             $headerGradient = "linear-gradient(to bottom, $color1, $color2)";
-        } else if ($direction == "horizontal") {
+        } elseif ($direction == 'horizontal') {
             $headerGradient = "linear-gradient(to right, $color1, $color2)";
-        } else if ($direction == "diagonal") {
+        } elseif ($direction == 'diagonal') {
             $headerGradient = "linear-gradient(to right bottom, $color1, $color2)";
-        } else if ($direction == "circular") {
+        } elseif ($direction == 'circular') {
             $headerGradient = "radial-gradient(circle, $color1, $color2)";
         }
-    } else if ($theme->header_bg_type == "header_bg_image") {
-        $headerClass = "header-bg-image";
+    } elseif ($theme->header_bg_type == 'header_bg_image') {
+        $headerClass = 'header-bg-image';
         $headerImage = url("storage/cards/{$theme->header_bg_image}");
         $headerImage = "$headerImage?v=$version";
         $headerImage = "url($headerImage)";
     }
-
+    
     $themeStyles = "<style>
             body {
                 --bg-light-color: #ffffff;
@@ -46,14 +46,14 @@
                 --logo-bg: {$ecard->logo_bg};
             }
         </style>";
-
+    
     // Profile Image.
     $profileImage = null;
     if ($ecard->profile) {
         $profileImage = url("storage/cards/$ecard->profile");
         $profileImage = "url('{$profileImage}')";
     }
-
+    
     function getActionContactsValue($actions, $key)
     {
         foreach ($actions as $ac) {
@@ -67,7 +67,7 @@
         }
         return null;
     }
-
+    
     function getContactListValue($contactList, $key)
     {
         foreach ($contactList as $cl) {
@@ -79,19 +79,19 @@
         }
         return null;
     }
-
+    
     const ICONS = [
-        'cellphone' => "smart-phone",
-        'phone1' => "phone",
-        'phone2' => "phone",
-        'email' => "email",
-        'web' => "globe",
-        'address' => "location-pin",
-        'facebook' => "facebook",
-        'instagram' => "instagram",
-        'linkedin' => "linkedin",
-        'twitter' => "twitter",
-        'youtube' => "youtube-play",
+        'cellphone' => 'smart-phone',
+        'phone1' => 'phone',
+        'phone2' => 'phone',
+        'email' => 'email',
+        'web' => 'globe',
+        'address' => 'location-pin',
+        'facebook' => 'facebook',
+        'instagram' => 'instagram',
+        'linkedin' => 'linkedin',
+        'twitter' => 'twitter',
+        'youtube' => 'youtube-play',
     ];
 @endphp
 
@@ -108,16 +108,16 @@
 
 @section('content')
 
-    <div class="header-bg {{$headerClass}}"></div>
+    <div class="header-bg {{ $headerClass }}"></div>
 
     <main class="header">
         <div class="wrapper">
 
             {{-- Logo Empresa --}}
             @if ($ecard->logo)
-                <div class="header-logo {{$logoClass}}">
+                <div class="header-logo {{ $logoClass }}">
                     <img width="100px" height="auto" alt="Logo Empresa"
-                        src="{{ url("storage/cards/$ecard->logo") }}?v={{$version}}">
+                        src="{{ url("storage/cards/$ecard->logo") }}?v={{ $version }}">
                 </div>
             @endif
 
@@ -143,29 +143,6 @@
                 </div>
             @endif
 
-            {{-- Redes --}}
-            <nav class="content-social-list">
-                <ul>
-                    @foreach ($ecard->social_list as $sl)
-                        @foreach ($sl as $sl_key => $sl_value)
-
-                            @if ($sl_value)
-                                <li>
-                                    <a
-                                        href="{{ $sl_value }}"
-                                        target="_blank"
-                                        class="track-event"
-                                        data-event="visit-{{$sl_key}}">
-                                        <i class="icofont-{{ICONS[$sl_key]}}"></i>
-                                    </a>
-                                </li>
-                            @endif
-
-                        @endforeach
-                    @endforeach
-                </ul>
-            </nav>
-
             {{-- Empresa --}}
             {{-- <div class="header-description header-company">
                 {{ $ecard->company }}
@@ -173,62 +150,52 @@
 
             {{-- Datos --}}
             <nav class="content-contact-list">
-                <ul>
+                <ul style="margin-bottom: 0;">
                     @foreach ($ecard->contact_list as $cl)
                         @foreach ($cl as $cl_key => $value)
+                            @if ($value && !in_array($cl_key, ['web']))
+                                @include('ecard.partials.contact_list_item', [
+                                    'cl_key' => $cl_key,
+                                    'value' => $value,
+                                ])
+                            @endif
+                        @endforeach
+                    @endforeach
+                </ul>
+            </nav>
 
-                            @if ($value)
+            {{-- {!! cardValue($card, 'contact_list', 'address') !!} --}}
+            {{-- {!! cardValue($card, 'contact_list', 'web') !!} --}}
 
-                                @php
-                                    $is_linkable = true;
-                                    $link = "$value";
-                                    $track_event = "";
-                                    $break_word_class = "";
+            {{-- Datos: Solo Web --}}
+            <nav class="content-contact-list">
+                <ul style="margin-top: 0; margin-bottom: 0;">
+                    @foreach ($ecard->contact_list as $cl)
+                        @foreach ($cl as $cl_key => $value)
+                            @if ($value && in_array($cl_key, ['web']))
+                                @include('ecard.partials.contact_list_item', [
+                                    'cl_key' => $cl_key,
+                                    'value' => $value,
+                                ])
+                            @endif
+                        @endforeach
+                    @endforeach
+                </ul>
+            </nav>
 
-                                    if ($cl_key == 'phone1' || $cl_key == 'phone2' || $cl_key == 'cellphone') {
-                                        $link = "tel:$value";
-                                        $track_event = "contact-by-call";
-                                    } else if ($cl_key == 'email') {
-                                        $link = "mailto:$value";
-                                        $track_event = "contact-by-email";
-                                        $break_word_class = "break-word";
-                                    } else if ($cl_key == 'web') {
-                                        $track_event = "visit-web";
-                                        $break_word_class = "break-word";
-                                    }
-
-                                    if (in_array($cl_key, ['address'])) {
-                                        $is_linkable = false;
-                                    }
-                                @endphp
-
-                                <li class="contact-list-item">
-                                    @if ($is_linkable)
-
-                                        <a
-                                            class="list-item-el track-event {{$break_word_class}}"
-                                            data-event="{{$track_event}}"
-                                            href="{{ $link }}"
-                                            @if ($cl_key == 'web') target="_blank" @endif>
-                                            <span class="icon">
-                                                <i class="icofont-{{ICONS[$cl_key]}}"></i>
-                                            </span>
-                                            {!! $value !!}
-                                        </a>
-
-                                    @else
-
-                                        <span class="list-item-el {{$break_word_class}}">
-                                            <span class="icon">
-                                                <i class="icofont-{{ICONS[$cl_key]}}"></i>
-                                            </span>
-                                            {!! $value !!}
-                                        </span>
-
-                                    @endif
+            {{-- Redes --}}
+            <nav class="content-social-list">
+                <ul>
+                    @foreach ($ecard->social_list as $sl)
+                        @foreach ($sl as $sl_key => $sl_value)
+                            @if ($sl_value)
+                                <li>
+                                    <a href="{{ $sl_value }}" target="_blank" class="track-event"
+                                        data-event="visit-{{ $sl_key }}">
+                                        <i class="icofont-{{ ICONS[$sl_key] }}"></i>
+                                    </a>
                                 </li>
                             @endif
-
                         @endforeach
                     @endforeach
                 </ul>
@@ -293,18 +260,12 @@
 
             {{-- Tarjeta --}}
             <section class="header-card">
-                <a
-                    class="action-black-button track-event"
-                    data-event="share-contact"
-                    target="_blank"
+                <a class="action-black-button track-event" data-event="share-contact" target="_blank"
                     href="https://api.whatsapp.com/send?text={{ $card->vcard }}">
                     Compartir
                 </a>
 
-                <a
-                    class="action-black-button track-event"
-                    data-event="save-contact"
-                    href="{{ $card->vcard }}">
+                <a class="action-black-button track-event" data-event="save-contact" href="{{ $card->vcard }}">
                     Guardar Contacto
                 </a>
 
@@ -312,11 +273,8 @@
                     <canvas id="canvas-card" width="320" height="440"></canvas>
                 </article>
 
-                <button
-                    class="action-black-button content-ecard-download track-event"
-                    data-event="save-image"
-                    id="donwload-canvas-button"
-                    type="button">
+                <button class="action-black-button content-ecard-download track-event" data-event="save-image"
+                    id="donwload-canvas-button" type="button">
                     Descargar Imagen
                 </button>
             </section>
@@ -328,7 +286,7 @@
         <div class="wrapper">
             <p>
                 <a target="_blank" href="https://www.neuromedia.com.co/">Neuromedia</a>
-                {{date('Y')}} &copy; Todos los derechos reservados
+                {{ date('Y') }} &copy; Todos los derechos reservados
             </p>
         </div>
     </footer>
@@ -357,8 +315,8 @@
         window.card = {
             canDrawLogo: true,
             canDrawCompany: false,
-            imageLogo: "{{$imageLogo}}",
-            imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{$version}}",
+            imageLogo: "{{ $imageLogo }}",
+            imageQR: "{{ url("storage/cards/{$card->qr_code}") }}?v={{ $version }}",
             mainColor: "<?= $theme->main_color ?>",
             name: "{{ $ecard->name }}",
             cargo: "{{ $ecard->cargo }}",

@@ -58,7 +58,7 @@ class Card extends Model
         return $this->field('action_contacts', 'email') ?: '';
     }
 
-    public function field($group, $key)
+    public function field($group, $key, $withMarkdown = false)
     {
         $field = $this->fields()
             ->where('group', $group)
@@ -70,8 +70,13 @@ class Card extends Model
 
             foreach (CardField::TEMPLATE_FIELDS[$group]['values'] as $value) {
                 if ($value['key'] == $key) {
-                    if ($value['type'] == "gradient") {
+                    $isJson = $value['type'] == "gradient";
+                    $isMarkdown = $value['type'] == "textarea";
+
+                    if ($isJson) {
                         $field_value = json_decode($value['default']);
+                    } else if ($isMarkdown && $withMarkdown) {
+                        $field_value = markdown($value['default']);
                     } else {
                         $field_value = $value['default'];
                     }
@@ -81,8 +86,13 @@ class Card extends Model
             return $field_value;
         }
 
-        if ($field->type == "gradient") {
+        $isMarkdown = $field->type == "textarea";
+        $isJson = $field->type == "gradient";
+
+        if ($isJson) {
             return json_decode($field->value);
+        } else if ($isMarkdown && $withMarkdown) {
+            return markdown($field->value);
         }
 
         return $field->value;
