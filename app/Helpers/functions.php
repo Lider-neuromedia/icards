@@ -1,7 +1,6 @@
 <?php
 
 use App\Card;
-use \Parsedown;
 
 if (!function_exists('cardValue')) {
     function cardValue(Card $card, $group, $key)

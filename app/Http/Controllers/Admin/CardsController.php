@@ -58,4 +58,9 @@ class CardsController extends Controller
     {
         return $this->cardsService->storeTheme($request, $client);
     }
+
+    public function updateCardNumber(Request $request, Card $card)
+    {
+        return $this->cardsService->updateCardNumber($request, $card, $card->client);
+    }
 }

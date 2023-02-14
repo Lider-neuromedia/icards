@@ -8,6 +8,7 @@ class Card extends Model
 {
     protected $fillable = [
         'slug',
+        'slug_number',
         'qr_code',
     ];
 
@@ -41,6 +42,11 @@ class Card extends Model
     public function getUrlAttribute()
     {
         return url("{$this->client->slug}/{$this->slug}");
+    }
+
+    public function getUrlNumberAttribute()
+    {
+        return url("{$this->client->slug}/{$this->slug_number}");
     }
 
     public function getVcardAttribute()

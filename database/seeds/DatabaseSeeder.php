@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             $this->refreshQRCodesForTrackVisits();
         }
 
+        $this->updateCardNumbers();
+
         $this->initSellers();
     }
 
@@ -213,5 +215,14 @@ class DatabaseSeeder extends Seeder
             //
             new CardField(['group' => 'theme', 'key' => 'main_color', 'value' => '#e00109']),
         ]);
+    }
+
+    private function updateCardNumbers()
+    {
+        $clients = User::onlyClients()->get();
+
+        foreach ($clients as $client) {
+            CardsService::refreshClientCardNumbers($client);
+        }
     }
 }

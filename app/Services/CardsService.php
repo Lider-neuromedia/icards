@@ -13,6 +13,7 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use JeroenDesloovere\VCard\VCard;
@@ -38,6 +39,39 @@ class CardsService
             ->with('statistics')
             ->orderBy('slug', 'asc')
             ->paginate(20);
+
+        $clientCards = $client->cards()
+            ->select('slug_number')
+            ->pluck('slug_number')
+            ->unique()
+            ->count();
+
+        $subscription = $client->subscription();
+
+        $cards->setCollection(
+            $cards->getCollection()
+                ->map(function ($x) use ($clientCards, $client, $subscription) {
+                    $x->use_card_number = $x->field(CardField::GROUP_OTHERS, 'use_card_number') == 1;
+                    $card_numbers = [$x->slug_number];
+
+                    if ($subscription) {
+                        // Números de tarjetas usados.
+                        $usedNumbers = $client->cards()
+                            ->select('slug_number')
+                            ->pluck('slug_number')
+                            ->unique();
+
+                        for ($i = 1; $i <= $subscription->cards; $i++) {
+                            if (!in_array($i, $usedNumbers->toArray())) {
+                                $card_numbers[] = $i;
+                            }
+                        }
+                    }
+
+                    $x->card_numbers = array_unique($card_numbers);
+                    return $x;
+                })
+        );
 
         return view('clients.cards.index', compact('cards', 'search', 'client', 'events'));
     }
@@ -143,6 +177,7 @@ class CardsService
             $cards = $client->cards()->get();
 
             foreach ($cards as $card) {
+                self::generateQRCode($card); // TODO: Optimizar usando cron.
                 $this->generateVCard($card);
             }
 
@@ -155,7 +190,7 @@ class CardsService
             }
             return redirect()->action('Clients\CardsController@theme');
 
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             \Log::info($ex->getMessage());
             \Log::info($ex->getTraceAsString());
             \DB::rollBack();
@@ -247,7 +282,7 @@ class CardsService
             }
             return redirect()->action('Clients\CardsController@edit', $card);
 
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             \Log::info($ex->getMessage());
             \Log::info($ex->getTraceAsString());
             \DB::rollBack();
@@ -315,7 +350,9 @@ class CardsService
 
     public static function generateQRCode(Card $card)
     {
-        $qrCardUrl = "{$card->url}?action=scan";
+        $use_card_number = $card->field(CardField::GROUP_OTHERS, 'use_card_number') == 1;
+        $cardUrl = $use_card_number ? $card->url_number : $card->url;
+        $qrCardUrl = "{$cardUrl}?action=scan";
         $qrFile = "qr-{$card->slug}.png";
 
         Builder::create()
@@ -444,5 +481,84 @@ class CardsService
             'prefix' => $prefix,
             'suffix' => $suffix,
         ];
+    }
+
+    /**
+     * Actualizar los números de tarjetas de un cliente.
+     *
+     * @param User $client
+     * @return void
+     */
+    public static function refreshClientCardNumbers(User $client)
+    {
+        $cardsCount = $client->cards()->count();
+        $cardsNumbers = $client->cards()
+            ->select('slug_number')
+            ->pluck('slug_number')
+            ->unique()
+            ->count();
+
+        if ($cardsCount == 0) {
+            // Si el cliente no tiene tarjetas no hacer nada.
+            return;
+        } else if ($cardsCount == $cardsNumbers) {
+            // Si la cantidad de tarjetas y los número asignados no se repiten, no hacer nada.
+            return;
+        }
+
+        $lastCardNumber = $client->cards()
+            ->select('slug_number')
+            ->pluck('slug_number')
+            ->unique()
+            ->sort()
+            ->last();
+
+        // Obtener tarjetas agrupadas por número asignado.
+        $cards = $client->cards()
+            ->orderBy('id', 'asc')
+            ->get()
+            ->groupBy('slug_number');
+
+        // Corregir número de tarjeta de tarjetas con números repetidos.
+        foreach ($cards as $cardNumber => $nCards) {
+            if ($nCards->count() == 1) {
+                continue;
+            }
+
+            foreach ($nCards as $n => $card) {
+                if ($n == 0) {
+                    continue;
+                }
+                $card->update(['slug_number' => ++$lastCardNumber]);
+            }
+        }
+
+        foreach ($client->cards()->get() as $card) {
+            (new CardsService)->refreshCard($client, $card);
+        }
+    }
+
+    /**
+     * Actualizar número de tarjeta.
+     */
+    public function updateCardNumber(Request $request, Card $card, User $client)
+    {
+        $cardNumber = $request->get('slug_number');
+        $usedNumbers = $client->cards()
+            ->select('slug_number')
+            ->where('id', '<>', $card->id)
+            ->pluck('slug_number')
+            ->unique();
+
+        if (in_array($cardNumber, $usedNumbers->toArray())) {
+            session()->flash('message-error', "No se puede asignar el número $cardNumber a esta tarjeta.");
+            return redirect()->back();
+        }
+
+        $card->update(["slug_number" => $cardNumber]);
+        $this->refreshCard($client, $card);
+
+        session()->flash('message', "Número de tarjeta actualizado.");
+        return redirect()->back();
     }
 }

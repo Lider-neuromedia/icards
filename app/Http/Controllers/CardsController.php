@@ -12,7 +12,12 @@ class CardsController extends Controller
     public function clientCard(String $client, String $card)
     {
         $card = Card::query()
-            ->whereSlug($card)
+            ->when(!is_numeric($card), function ($q) use ($card) {
+                $q->where('slug', $card);
+            })
+            ->when(is_numeric($card), function ($q) use ($card) {
+                $q->where('slug_number', $card);
+            })
             ->whereHas('client', function ($q) use ($client) {
                 $q->whereSlug($client)
                     ->whereHas('subscriptions', function ($q) {

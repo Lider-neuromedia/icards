@@ -27,6 +27,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->
     Route::resource('clients.cards', 'CardsController', ['except' => ['show']]);
     Route::get('clients/{client}/theme', 'CardsController@theme')->name('clients.cards.theme');
     Route::post('clients/{client}/theme', 'CardsController@storeTheme')->name('clients.cards.theme-store');
+    Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('cards.number');
     Route::resource('users', 'AdminsController', ['except' => ['show']]);
 });
 
@@ -36,6 +37,7 @@ Route::prefix('clients')->middleware(['auth', 'role:client'])->namespace('Client
     Route::resource('cards', 'CardsController', ['except' => ['show']]);
     Route::get('/theme', 'CardsController@theme')->name('cards.theme');
     Route::post('/theme', 'CardsController@storeTheme')->name('cards.theme-store');
+    Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('cards.number');
 });
 
 Auth::routes(['register' => false]);

@@ -103,6 +103,7 @@ class CardField extends Model
                 ['key' => 'cargo', 'label' => 'Cargo', 'type' => 'text', 'general' => false, 'default' => ''],
                 ['key' => 'company', 'label' => 'Empresa', 'type' => 'text', 'general' => true, 'default' => ''],
                 ['key' => 'description', 'label' => 'Descripción', 'type' => 'textarea', 'general' => false, 'default' => ''],
+                ['key' => 'use_card_number', 'label' => 'Usar Número en Tarjeta', 'type' => 'boolean', 'general' => true, 'default' => '0', 'help' => 'Usando número https://icard.neuromedia.com.co/empresa/juan-hernesto-perez. Sin usar número https://icard.neuromedia.com.co/empresa/16'],
             ],
         ],
         'action_contacts' => [

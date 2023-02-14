@@ -108,6 +108,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Obtener suscripción disponible de cliente.
+     *
+     * @return Subscription $subscription
+     */
+    public function subscription()
+    {
+        $now = now()->format('Y-m-d H:i:s');
+        return $this->subscriptions()->where('finish_at', '>', $now)->first();
+    }
+
+    /**
      * Obtener la cantidad de días que le quedan de suscripción al usuario.
      */
     public function getSubscriptionDaysLeft()

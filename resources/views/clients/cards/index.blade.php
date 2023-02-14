@@ -1,15 +1,15 @@
 @php
-$index_route = route('cards.index');
-$create_route = route('cards.create');
-
-if (
-    auth()
-        ->user()
-        ->isAdmin()
-) {
-    $index_route = route('clients.cards.index', $client);
-    $create_route = route('clients.cards.create', $client);
-}
+    $index_route = route('cards.index');
+    $create_route = route('cards.create');
+    
+    if (
+        auth()
+            ->user()
+            ->isAdmin()
+    ) {
+        $index_route = route('clients.cards.index', $client);
+        $create_route = route('clients.cards.create', $client);
+    }
 @endphp
 
 @extends('layouts.dashboard')
@@ -52,14 +52,17 @@ if (
                     <table class="table text-nowrap">
                         <thead>
                             <tr>
-                                <th>URL</th>
                                 <th>Nombre</th>
+
+                                @if (!$cards->isEmpty() && $cards->first()->use_card_number)
+                                    <th># Tarjeta</th>
+                                @endif
+
                                 <th class="text-center">Total Visitas</th>
                                 <th class="text-center">QR Visitas</th>
                                 <th class="text-right">
                                     @if (!$client->isCardsLimitReached())
-                                        <a href="{{ $create_route }}" class="btn btn-primary btn-xs"
-                                            title="Crear Tarjeta">
+                                        <a href="{{ $create_route }}" class="btn btn-primary btn-xs" title="Crear Tarjeta">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </a>
                                     @endif
@@ -85,12 +88,29 @@ if (
                                     }
                                 @endphp
                                 <tr>
-                                    <td><a target="_blank" href="{{ $card->url }}">{{ $card->url }}</a></td>
-                                    <td>{{ $card->field('others', 'name') }}</td>
+                                    <td>
+                                        <div>{{ $card->field('others', 'name') }}</div>
+                                        @if ($card->use_card_number)
+                                            <a target="_blank" href="{{ $card->url_number }}">{{ $card->url_number }}</a>
+                                        @else
+                                            <a target="_blank" href="{{ $card->url }}">{{ $card->url }}</a>
+                                        @endif
+                                    </td>
+
+                                    @if ($card->use_card_number)
+                                        <td class="text-center">
+                                            @include('clients.cards.fields.card-number', [
+                                                'client' => $client,
+                                                'card' => $card,
+                                            ])
+                                        </td>
+                                    @endif
+
                                     <td class="text-center">{{ $card->visits }}</td>
                                     <td class="text-center">{{ $card->qr_visits }}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-xs btn-success" href="{{ $edit_route }}" title="Editar Tarjeta">
+                                        <a class="btn btn-xs btn-success" href="{{ $edit_route }}"
+                                            title="Editar Tarjeta">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
                                     </td>
@@ -110,7 +130,7 @@ if (
                 <div class="card-header">
                     <h3 class="card-title">Estadísticas</h3>
                     <div class="card-tools">
-                        <a href="{{route('analytics.download', $client->id)}}" class="btn btn-sm btn-primary">
+                        <a href="{{ route('analytics.download', $client->id) }}" class="btn btn-sm btn-primary">
                             <i class="fa fa-download" aria-hidden="true"></i>
                             <span>Descargar</span>
                         </a>
@@ -122,8 +142,8 @@ if (
                         <thead>
                             <th>Nombre</th>
                             @foreach ($events as $event)
-                                <th class="text-center" title="{{$event->description}}">
-                                    {{$event->title}}
+                                <th class="text-center" title="{{ $event->description }}">
+                                    {{ $event->title }}
                                 </th>
                             @endforeach
                         </thead>
@@ -136,16 +156,16 @@ if (
                             @endif
 
                             @foreach ($cards as $card)
-
                                 <tr>
                                     <td>
-                                        <a target="_blank" href="{{$card->url}}">
-                                            {{$card->field('others', 'name')}}
+                                        <a target="_blank" href="{{ $card->url }}">
+                                            {{ $card->field('others', 'name') }}
                                         </a>
                                     </td>
                                     @foreach ($events as $event)
                                         @php
-                                            $action = $card->statistics()
+                                            $action = $card
+                                                ->statistics()
                                                 ->where('action', $event->key)
                                                 ->first();
                                         @endphp
@@ -155,7 +175,6 @@ if (
                                         </td>
                                     @endforeach
                                 </tr>
-
                             @endforeach
                         </tbody>
                     </table>
