@@ -37,7 +37,9 @@ class DatabaseSeeder extends Seeder
 
         $this->updateCardNumbers();
 
-        $this->initSellers();
+        if (Seller::count() == 0) {
+            $this->initSellers();
+        }
     }
 
     public function initSellers()
