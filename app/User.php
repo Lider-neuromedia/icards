@@ -97,7 +97,7 @@ class User extends Authenticatable
             return true;
         }
 
-        return $subscription->cards == $this->cards()->count();
+        return $this->cards()->count() >= $subscription->cards;
     }
 
     public function getCardsUsageAttribute()

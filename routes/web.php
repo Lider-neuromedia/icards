@@ -25,6 +25,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->
     Route::resource('sellers', 'SellersController', ['except' => ['show']]);
     Route::resource('clients', 'ClientsController', ['except' => ['show']]);
     Route::resource('clients.cards', 'CardsController', ['except' => ['show']]);
+    Route::get('clients/{client}/cards/multiple', 'CardsController@createMultiple')->name('clients.cards.create-multiple');
+    Route::get('clients/{client}/cards/multiple/template', 'CardsController@templateMultiple')->name('clients.cards.template-multiple');
+    Route::post('clients/{client}/cards/multiple', 'CardsController@storeMultiple')->name('clients.cards.store-multiple');
     Route::get('clients/{client}/theme', 'CardsController@theme')->name('clients.cards.theme');
     Route::post('clients/{client}/theme', 'CardsController@storeTheme')->name('clients.cards.theme-store');
     Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('cards.number');
@@ -35,6 +38,9 @@ Route::prefix('clients')->middleware(['auth', 'role:client'])->namespace('Client
     Route::get('profile', 'ProfileController@index')->name('profile.index');
     Route::post('profile', 'ProfileController@store')->name('profile.store');
     Route::resource('cards', 'CardsController', ['except' => ['show']]);
+    Route::get('cards/multiple', 'CardsController@createMultiple')->name('cards.create-multiple');
+    Route::get('cards/multiple/template', 'CardsController@templateMultiple')->name('cards.template-multiple');
+    Route::post('cards/multiple', 'CardsController@storeMultiple')->name('cards.store-multiple');
     Route::get('/theme', 'CardsController@theme')->name('cards.theme');
     Route::post('/theme', 'CardsController@storeTheme')->name('cards.theme-store');
     Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('cards.number');

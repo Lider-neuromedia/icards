@@ -7,6 +7,7 @@ use App\CardField;
 use App\CardStatistic;
 use App\Http\Requests\ThemeRequest;
 use App\Mail\CardCreated;
+use App\Services\SlugService;
 use App\User;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -17,6 +18,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use JeroenDesloovere\VCard\VCard;
+use League\Csv\Reader;
+use League\Csv\Writer;
 
 class CardsService
 {
@@ -200,7 +203,7 @@ class CardsService
         }
     }
 
-    public function saveOrUpdate(Request $request, User $client, Card $card = null)
+    public function saveOrUpdate(Request $request, bool $notify, User $client, Card $card = null)
     {
         try {
 
@@ -209,7 +212,7 @@ class CardsService
             $isNewCard = $card == null;
 
             $card_id = $card != null ? $card->id : null;
-            $slug = \App\Services\SlugService::generate($request->get('others_name'), 'cards', $card_id);
+            $slug = SlugService::generate($request->get('others_name'), 'cards', $card_id);
             $data = ['slug' => $slug];
 
             if ($card != null) {
@@ -268,7 +271,7 @@ class CardsService
             $this->refreshCard($client, $card);
 
             // Notificar usuario dueño de la tarjeta que su tarjeta fué creada.
-            if ($isNewCard) {
+            if ($isNewCard && $notify) {
                 $clientUser = new User(['name' => $card->name, 'email' => $card->email]);
                 Mail::to($clientUser)->send(new CardCreated($card));
             }
@@ -560,5 +563,157 @@ class CardsService
 
         session()->flash('message', "Número de tarjeta actualizado.");
         return redirect()->back();
+    }
+
+    public function createMultiple(User $client)
+    {
+        return view('clients.cards.multiple', compact('client'));
+    }
+
+    public function templateMultiple(User $client)
+    {
+        $groups = CardField::TEMPLATE_FIELDS;
+        $record = [];
+        $headers = [];
+
+        foreach ($groups as $group_key => $group) {
+            if (CardField::hasGroupWithSpecificFields($group_key)) {
+
+                foreach ($group['values'] as $field) {
+                    if ($field['general'] == false && !in_array($field['type'], ['image'])) {
+
+                        $headers[] = $field['label'];
+                        $record[] = $field['example'];
+
+                    }
+                }
+
+            }
+        }
+
+        $filename = "tarjetas-{$client->id}.csv";
+        $path = storage_path("app/csv/$filename");
+        $csv = Writer::createFromPath($path, 'w+');
+        $csv->insertOne(array_unique($headers));
+        $csv->insertAll([
+            array_unique($record),
+            array_unique($record),
+            array_unique($record),
+        ]);
+        $csv->output('tarjetas.csv');
+        die;
+    }
+
+    public function storeMultiple(Request $request, User $client)
+    {
+        $cardsLimit = 40;
+        $request->validate([
+            'csv_file' => ['required', 'file', 'max:150'],
+        ]);
+
+        try {
+
+            \DB::beginTransaction();
+
+            $path = $request->file('csv_file')->store("csv");
+            $filename = array_reverse(explode("/", $path))[0];
+            $fullpath = storage_path("app/csv/$filename");
+
+            $csv = Reader::createFromPath($fullpath, 'r');
+            $csv->setHeaderOffset(0);
+            $header_offset = $csv->getHeaderOffset();
+            $header = $csv->getHeader();
+
+            $subscription = $client->subscription();
+
+            if (count($csv) > $cardsLimit) {
+                throw new Exception("No se pueden subir mas de $cardsLimit tarjetas a la vez.", 1);
+            }
+            if ($subscription != null && count($csv) > $subscription->cards) {
+                throw new Exception("La cantidad de tarjetas a importar sobrepasa el límite.", 1);
+            }
+
+            foreach ($csv as $listItem) {
+                $formatValue = $this->formatImportCardData($listItem);
+                $emailKey = $formatValue['action_contacts_email'];
+                $nameKey = $formatValue['others_name'];
+
+                if (!$emailKey || !$nameKey) {
+                    continue;
+                }
+
+                $card = Card::query()
+                    ->where('client_id', $client->id)
+                    ->whereHas('fields', function ($q) use ($emailKey) {
+                        $q->where('group', 'action_contacts')
+                            ->where('key', 'email')
+                            ->where('value', $emailKey);
+                    })
+                    ->first();
+
+                if ($card) {
+                    $formatValue['id'] = $card->id;
+                }
+
+                $request = new Request();
+                $request->merge($formatValue);
+                $this->saveOrUpdate($request, false, $client, $card);
+            }
+
+            // Borrar últimas tarjetas creadas que sobrepasen el límite.
+            $clientCountCards = $client->cards()->count();
+
+            if ($subscription->cards < $clientCountCards) {
+                $deleteCountCards = $clientCountCards - $subscription->cards;
+                $n = $client->cards()
+                    ->orderBy('created_at', 'desc')
+                    ->take($deleteCountCards)
+                    ->delete();
+            }
+
+            \DB::commit();
+
+            session()->flash('message', "Tarjetas guardadas correctamente.");
+
+            if (\Auth::user()->isAdmin()) {
+                return redirect()->action('Admin\CardsController@index', $client);
+            }
+            return redirect()->action('Clients\CardsController@index');
+
+        } catch (Exception $ex) {
+            \Log::info($ex->getMessage());
+            \Log::info($ex->getTraceAsString());
+            \DB::rollBack();
+
+            session()->flash('message-error', "Error interno al guardar tarjeta.");
+            return redirect()->back()->withInput($request->input());
+        }
+    }
+
+    public function formatImportCardData($data)
+    {
+        $groups = CardField::TEMPLATE_FIELDS;
+        $formatData = [];
+
+        foreach ($groups as $group_key => $group) {
+            if (CardField::hasGroupWithSpecificFields($group_key)) {
+
+                foreach ($group['values'] as $field) {
+                    $field_key = $group_key . '_' . $field['key'];
+
+                    if ($field['general'] == true) {
+                        continue;
+                    }
+
+                    if (isset($data[$field['label']])) {
+                        $value = $data[$field['label']];
+                        $formatData[$field_key] = $value != null ? trim($value) : null;
+                    }
+                }
+
+            }
+        }
+
+        return $formatData;
     }
 }

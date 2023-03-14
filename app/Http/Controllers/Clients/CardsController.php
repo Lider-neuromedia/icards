@@ -31,7 +31,7 @@ class CardsController extends Controller
 
     public function store(CardRequest $request)
     {
-        return $this->cardsService->saveOrUpdate($request, \Auth::user());
+        return $this->cardsService->saveOrUpdate($request, true, \Auth::user());
     }
 
     public function edit(Card $card)
@@ -41,7 +41,7 @@ class CardsController extends Controller
 
     public function update(CardRequest $request, Card $card)
     {
-        return $this->cardsService->saveOrUpdate($request, \Auth::user(), $card);
+        return $this->cardsService->saveOrUpdate($request, true, \Auth::user(), $card);
     }
 
     public function destroy(Card $card)
@@ -62,5 +62,20 @@ class CardsController extends Controller
     public function updateCardNumber(Request $request, Card $card)
     {
         return $this->cardsService->updateCardNumber($request, $card, \Auth::user());
+    }
+
+    public function createMultiple()
+    {
+        return $this->cardsService->createMultiple(\Auth::user());
+    }
+
+    public function templateMultiple()
+    {
+        return $this->cardsService->templateMultiple(\Auth::user());
+    }
+
+    public function storeMultiple(Request $request)
+    {
+        return $this->cardsService->storeMultiple($request, \Auth::user());
     }
 }

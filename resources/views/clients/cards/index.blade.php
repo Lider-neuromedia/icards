@@ -1,6 +1,7 @@
 @php
     $index_route = route('cards.index');
     $create_route = route('cards.create');
+    $create_multiple_route = route('cards.create-multiple');
     
     if (
         auth()
@@ -9,6 +10,7 @@
     ) {
         $index_route = route('clients.cards.index', $client);
         $create_route = route('clients.cards.create', $client);
+        $create_multiple_route = route('clients.cards.create-multiple', $client);
     }
 @endphp
 
@@ -62,8 +64,16 @@
                                 <th class="text-center">QR Visitas</th>
                                 <th class="text-right">
                                     @if (!$client->isCardsLimitReached())
-                                        <a href="{{ $create_route }}" class="btn btn-primary btn-xs" title="Crear Tarjeta">
+                                        <a href="{{ $create_multiple_route }}" class="btn btn-primary btn-sm mr-2"
+                                            title="Crear Multiples Tarjetas">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            Crear Varias
+                                        </a>
+                                        <a href="{{ $create_route }}" class="btn btn-primary btn-sm" title="Crear Tarjeta">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            Crear
                                         </a>
                                     @endif
                                 </th>
@@ -109,9 +119,10 @@
                                     <td class="text-center">{{ $card->visits }}</td>
                                     <td class="text-center">{{ $card->qr_visits }}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-xs btn-success" href="{{ $edit_route }}"
+                                        <a class="btn btn-sm btn-success" href="{{ $edit_route }}"
                                             title="Editar Tarjeta">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            Editar
                                         </a>
                                     </td>
                                 </tr>
