@@ -53,7 +53,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 if (false) {
     Route::get('/setup-storage', function () {
         $exitCode = Artisan::call('storage:link');
-        return response()->json('done', 200);
+        return response()->json(['done ', $exitCode], 200);
     });
 
     Route::get('/clear-cache', function () {
@@ -62,12 +62,12 @@ if (false) {
         $exitCode = Artisan::call('config:cache');
         $exitCode = Artisan::call('view:clear');
         $exitCode = Artisan::call('route:clear');
-        return response()->json('done', 200);
+        return response()->json(['done ', $exitCode], 200);
     });
 
     Route::get('/setup-db', function () {
-        $exitCode = Artisan::call('migrate --seed --no-interaction');
-        return response()->json('done', 200);
+        $exitCode = Artisan::call('migrate --seed --no-interaction --force');
+        return response()->json(['done ', $exitCode], 200);
     });
 }
 

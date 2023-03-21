@@ -594,6 +594,9 @@ class CardsService
         $filename = "tarjetas-{$client->id}.csv";
         $path = storage_path("app/csv/$filename");
         $csv = Writer::createFromPath($path, 'w+');
+        $csv->setDelimiter(";");
+        $csv->setOutputBOM(Reader::BOM_UTF8);
+
         $csv->insertOne(array_unique($headers));
         $csv->insertAll([
             array_unique($record),
@@ -620,6 +623,7 @@ class CardsService
             $fullpath = storage_path("app/csv/$filename");
 
             $csv = Reader::createFromPath($fullpath, 'r');
+            $csv->setDelimiter(';');
             $csv->setHeaderOffset(0);
             $header_offset = $csv->getHeaderOffset();
             $header = $csv->getHeader();
