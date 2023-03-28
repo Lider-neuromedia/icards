@@ -30,7 +30,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->
     Route::post('clients/{client}/cards/multiple', 'CardsController@storeMultiple')->name('clients.cards.store-multiple');
     Route::get('clients/{client}/theme', 'CardsController@theme')->name('clients.cards.theme');
     Route::post('clients/{client}/theme', 'CardsController@storeTheme')->name('clients.cards.theme-store');
-    Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('cards.number');
+    Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('clients.cards.number');
     Route::resource('users', 'AdminsController', ['except' => ['show']]);
 });
 

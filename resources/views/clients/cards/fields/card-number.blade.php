@@ -4,6 +4,13 @@
     $keyForm = 'card_number_' . $card->id . '_form';
     $formUrl = route('cards.number', ['card' => $card->id]);
     
+    if (
+        auth()
+            ->user()
+            ->isAdmin()
+    ) {
+        $formUrl = route('clients.cards.number', ['card' => $card->id]);
+    }
 @endphp
 
 <form method="post" id="{{ $keyForm }}" action="{{ $formUrl }}">
