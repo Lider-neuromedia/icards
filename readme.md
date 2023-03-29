@@ -1,27 +1,14 @@
-# NeuroMedia E-Card
+# NeuroMedia iCards
 
-- users
-id
-name
-email
-role
+Compilar assets.
 
-- subscription
-id
-cards
-start_at
-finish_at
-client_id
+```
+npm run dev
+npm run watch
+```
 
-- cards
-id
-slug
-qr_code
-client_id
+Compilar assets para producción.
 
-- card_fields
-id
-group
-tag
-value
-card_id
+```
+npm run prod
+```

@@ -148,6 +148,66 @@
                 {{ $ecard->company }}
             </div> --}}
 
+            {{-- Actions --}}
+            <section class="header-actions">
+                @php
+                    $actionPhone = getActionContactsValue($ecard->action_contacts, 'phone');
+                    $actionEmail = getActionContactsValue($ecard->action_contacts, 'email');
+                    $actionWhatsapp = getActionContactsValue($ecard->action_contacts, 'whatsapp');
+                    $actionWeb = getContactListValue($ecard->contact_list, 'web');
+                @endphp
+
+                <div class="wrapper">
+                    <!-- Action Phone -->
+                    @if ($actionPhone)
+                        <a href="tel:{{ $actionPhone }}" class="header-action track-event" data-event="contact-by-call">
+                            <i class="icofont-phone"></i>
+                            <span>Llamar</span>
+                        </a>
+                    @endif
+
+                    <!-- Action Email -->
+                    @if ($actionEmail)
+                        <a href="mailto:{{ $actionEmail }}" class="header-action track-event"
+                            data-event="contact-by-email">
+                            <i class="icofont-email"></i>
+                            <span>Enviar Correo</span>
+                        </a>
+                    @endif
+
+                    <!-- Action Web -->
+                    {{-- @if ($actionWeb)
+                        <a target="_blank" class="header-action track-event break-word" data-event="visit-web"
+                            href="{{ $actionWeb }}">
+                            <i class="icofont-globe"></i>
+                            <span>Visita nuestra Web</span>
+                        </a>
+                    @endif --}}
+
+                    <!-- Action QR -->
+                    {{-- <button type="button" class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
+                        <i class="icofont-qr-code"></i>
+                        Muestra tu código QR!
+                    </button> --}}
+
+                    <!-- Action Guardar -->
+                    {{-- <a class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
+                        <i class="icofont-user-alt-2"></i>
+                        Guardar Contacto
+                    </a> --}}
+
+                    <!-- Action Whatsapp -->
+                    @if ($actionWhatsapp)
+                        <a target="_blank" class="header-action track-event" data-event="contact-by-whatsapp"
+                            href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}">
+                            <i class="no-rotate icofont-brand-whatsapp"></i>
+                            <span>Enviar Whatsapp</span>
+                        </a>
+                    @endif
+                </div>
+            </section>
+
+
             {{-- Datos --}}
             <nav class="content-contact-list">
                 <ul style="margin-bottom: 0;">
@@ -200,63 +260,6 @@
                     @endforeach
                 </ul>
             </nav>
-
-            {{-- Actions --}}
-            {{-- <section class="header-actions">
-                @php
-                    $actionPhone = getActionContactsValue($ecard->action_contacts, 'phone');
-                    $actionEmail = getActionContactsValue($ecard->action_contacts, 'email');
-                    $actionWhatsapp = getActionContactsValue($ecard->action_contacts, 'whatsapp');
-                    $actionWeb = getContactListValue($ecard->contact_list, 'web');
-                @endphp
-
-                <div class="wrapper">
-                    <!-- Action Email -->
-                    @if ($actionEmail)
-                        <a href="mailto:{{ $actionEmail }}" class="header-action track-event" data-event="contact-by-email">
-                            <i class="icofont-email"></i>
-                            <span>Envianos un correo</span>
-                        </a>
-                    @endif
-
-                    <!-- Action Web -->
-                    @if ($actionWeb)
-                        <a target="_blank" class="header-action track-event break-word" data-event="visit-web" href="{{ $actionWeb }}">
-                            <i class="icofont-globe"></i>
-                            <span>Visita nuestra Web</span>
-                        </a>
-                    @endif
-
-                    <!-- Action QR -->
-                    <button type="button" class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
-                        <i class="icofont-qr-code"></i>
-                        Muestra tu código QR!
-                    </button>
-
-                    <!-- Action Guardar -->
-                    <a class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
-                        <i class="icofont-user-alt-2"></i>
-                        Guardar Contacto
-                    </a>
-
-                    <!-- Action Whatsapp -->
-                    @if ($actionWhatsapp)
-                        <a target="_blank" class="header-action track-event" data-event="contact-by-whatsapp"
-                            href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}">
-                            <i class="no-rotate icofont-brand-whatsapp"></i>
-                            <span>Enviar Whatsapp</span>
-                        </a>
-                    @endif
-
-                    <!-- Action Phone -->
-                    @if ($actionPhone)
-                        <a href="tel:{{ $actionPhone }}" class="header-action track-event" data-event="contact-by-call">
-                            <i class="icofont-phone"></i>
-                            <span>Llamar</span>
-                        </a>
-                    @endif
-                </div>
-            </section> --}}
 
             {{-- Tarjeta --}}
             <section class="header-card">
