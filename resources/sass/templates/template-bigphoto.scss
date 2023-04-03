@@ -163,6 +163,7 @@ body {
         background-color: var(--header-text-color);
         border-radius: 50%;
         display: flex;
+        flex: 0 0 auto;
         flex-flow: row nowrap;
         height: 2.6rem;
         justify-content: center;
