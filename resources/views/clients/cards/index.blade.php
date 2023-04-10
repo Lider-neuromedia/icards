@@ -2,6 +2,7 @@
     $index_route = route('cards.index');
     $create_route = route('cards.create');
     $create_multiple_route = route('cards.create-multiple');
+    $theme_route = route('cards.theme');
     
     if (
         auth()
@@ -11,6 +12,7 @@
         $index_route = route('clients.cards.index', $client);
         $create_route = route('clients.cards.create', $client);
         $create_multiple_route = route('clients.cards.create-multiple', $client);
+        $theme_route = route('clients.cards.theme', $client);
     }
 @endphp
 
@@ -63,8 +65,13 @@
                                 <th class="text-center">Total Visitas</th>
                                 <th class="text-center">QR Visitas</th>
                                 <th class="text-right">
+                                    <a href="{{ $theme_route }}" class="btn btn-success btn-sm" title="Tema General">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        Tema General
+                                    </a>
+
                                     @if (!$client->isCardsLimitReached())
-                                        <a href="{{ $create_multiple_route }}" class="btn btn-primary btn-sm mr-2"
+                                        <a href="{{ $create_multiple_route }}" class="btn btn-primary btn-sm"
                                             title="Crear Multiples Tarjetas">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                             <i class="fa fa-plus" aria-hidden="true"></i>
@@ -90,11 +97,14 @@
                             @foreach ($cards as $card)
                                 @php
                                     $edit_route = route('cards.edit', $card);
+                                    $destroy_route = route('cards.destroy', $card);
                                     $isAdmin = auth()
                                         ->user()
                                         ->isAdmin();
+                                    
                                     if ($isAdmin) {
                                         $edit_route = route('clients.cards.edit', [$client, $card]);
+                                        $destroy_route = route('clients.cards.destroy', [$client, $card]);
                                     }
                                 @endphp
                                 <tr>
@@ -124,6 +134,13 @@
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                             Editar
                                         </a>
+
+                                        @include('partials.delete', [
+                                            'id_form' => 'delete-card-form-' . $card->id,
+                                            'label' => 'Borrar Tarjeta',
+                                            'route' => $destroy_route,
+                                            'tiny' => true,
+                                        ])
                                     </td>
                                 </tr>
                             @endforeach
