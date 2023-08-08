@@ -50,18 +50,18 @@ async function initCardCanvas(card) {
 
     let top = canDrawLogo ? 65 + imageHeightResize : 65 + imageHeightResize * 0.3;
     top = canDrawLogo && canDrawCompany ? top - 40 : top;
-    textLines(card.name).forEach(text => {
+    textLines(decodeHTMLEntities(card.name)).forEach(text => {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
 
     ctx.font = "normal 16px 'Exo', sans-serif";
-    textLines(card.cargo).forEach(text => {
+    textLines(decodeHTMLEntities(card.cargo)).forEach(text => {
         ctx.fillText(text, canvasWidth / 2, top += 20);
     });
 
     if (canDrawCompany) {
         ctx.font = "bolder 19px 'Exo', sans-serif";
-        textLines(card.company).forEach(text => {
+        textLines(decodeHTMLEntities(card.company)).forEach(text => {
             ctx.fillText(text, canvasWidth / 2, top += canDrawLogo ? 35 : 50);
         });
     }
@@ -85,6 +85,13 @@ function loadImage(url) {
         image.onload = () => resolve(image);
         image.onerror = reject
     });
+}
+
+function decodeHTMLEntities(text) {
+    const el = document.createElement('textarea');
+    el.innerHTML = text;
+    const value = el.value;
+    return value;
 }
 
 function textLines(text) {
