@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\GroupField;
 use App\Mail\AdminRenewSubsNotified;
 use App\Mail\RenewSubscriptionNotified;
 use Carbon\Carbon;
@@ -13,8 +14,9 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const ROLE_ADMIN = "admin"; // Administradores de neuromedia.
-    const ROLE_CLIENT = "client"; // Clientes que han pagado suscripción.
+    // TODO: Mover a EnumClass
+    public const ROLE_ADMIN = "admin"; // Administradores de neuromedia.
+    public const ROLE_CLIENT = "client"; // Clientes que han pagado suscripción.
 
     protected $fillable = [
         'name',
@@ -71,7 +73,7 @@ class User extends Authenticatable
                     $q->where('id', $myself);
                 });
             })
-            ->where('group', CardField::GROUP_OTHERS)
+            ->where('group', GroupField::OTHERS)
             ->where('key', 'logo')
             ->whereNotNull('value')
             ->first();
@@ -139,7 +141,7 @@ class User extends Authenticatable
 
         if ($sub == null) {
             return 365;
-        } else if ($sub->notified_at == null) {
+        } elseif ($sub->notified_at == null) {
             return 365;
         }
 
@@ -156,6 +158,9 @@ class User extends Authenticatable
         return $query->whereRole(self::ROLE_ADMIN);
     }
 
+    /**
+     * TODO: Mover a EnumClass
+     */
     public static function roles()
     {
         return [

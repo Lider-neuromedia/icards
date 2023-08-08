@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Card;
 use App\CardField;
 use App\CardStatistic;
+use App\Enums\GroupField;
 use App\Http\Requests\ThemeRequest;
 use App\Mail\CardCreated;
 use App\Services\SlugService;
@@ -20,9 +21,18 @@ use Illuminate\Support\Facades\Mail;
 use JeroenDesloovere\VCard\VCard;
 use League\Csv\Reader;
 use League\Csv\Writer;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class CardsService
 {
+    /**
+     * @param Request $request
+     * @param User|Authenticatable $client
+     * @return Factory|View
+     */
     public function cards(Request $request, User $client)
     {
         $events = CardStatistic::analyticsEvents();
@@ -33,7 +43,7 @@ class CardsService
                 $q->where(function ($q) use ($search) {
                     $q->where('slug', 'like', "%$search%")
                         ->orWhereHas('fields', function ($q) use ($search) {
-                            $q->where('group', 'others')
+                            $q->where('group', GroupField::OTHERS)
                                 ->where('key', 'name')
                                 ->where('value', 'like', "%$search%");
                         });
@@ -54,7 +64,7 @@ class CardsService
         $cards->setCollection(
             $cards->getCollection()
                 ->map(function ($x) use ($clientCards, $client, $subscription) {
-                    $x->use_card_number = $x->field(CardField::GROUP_OTHERS, 'use_card_number') == 1;
+                    $x->use_card_number = $x->field(GroupField::OTHERS, 'use_card_number') == 1;
                     $card_numbers = [$x->slug_number];
 
                     if ($subscription) {
@@ -79,6 +89,10 @@ class CardsService
         return view('clients.cards.index', compact('cards', 'search', 'client', 'events'));
     }
 
+    /**
+     * @param User|Authenticatable $client
+     * @return Factory|View
+     */
     public function create(User $client)
     {
         $groups = CardField::TEMPLATE_FIELDS;
@@ -86,6 +100,11 @@ class CardsService
         return view('clients.cards.create', compact('card', 'groups', 'client'));
     }
 
+    /**
+     * @param User|Authenticatable $client
+     * @param Card $card
+     * @return Factory|View|RedirectResponse
+     */
     public function edit(User $client, Card $card)
     {
         if (\Auth::user()->isClient() && $card->client->id != $client->id) {
@@ -99,6 +118,11 @@ class CardsService
         return view('clients.cards.edit', compact('card', 'groups', 'client'));
     }
 
+    /**
+     * @param User|Authenticatable $client
+     * @param Card $card
+     * @return RedirectResponse
+     */
     public function destroy(User $client, Card $card)
     {
         if (\Auth::user()->isClient() && $card->client->id != $client->id) {
@@ -117,6 +141,10 @@ class CardsService
         return redirect()->action('Clients\CardsController@index');
     }
 
+    /**
+     * @param User|Authenticatable $client
+     * @return Factory|View
+     */
     public function theme(User $client)
     {
         $groups = CardField::TEMPLATE_FIELDS;
@@ -124,6 +152,11 @@ class CardsService
         return view('clients.cards.theme', compact('card', 'groups', 'client'));
     }
 
+    /**
+     * @param ThemeRequest $request
+     * @param User|Authenticatable $client
+     * @return RedirectResponse
+     */
     public function storeTheme(ThemeRequest $request, User $client)
     {
         try {
@@ -154,7 +187,7 @@ class CardsService
                                     $image_path = array_reverse(explode('/', $image_path))[0];
                                     $value = $image_path;
                                 }
-                            } else if ($field['type'] == 'gradient') {
+                            } elseif ($field['type'] == 'gradient') {
                                 $value = json_encode($request->get($field_key));
                             } else {
                                 $value = $request->get($field_key);
@@ -203,6 +236,13 @@ class CardsService
         }
     }
 
+    /**
+     * @param Request $request
+     * @param boolean $notify
+     * @param User|Authenticatable $client
+     * @param Card|null $card
+     * @return RedirectResponse
+     */
     public function saveOrUpdate(Request $request, bool $notify, User $client, Card $card = null)
     {
         try {
@@ -247,7 +287,7 @@ class CardsService
                                 $image_path = array_reverse(explode('/', $image_path))[0];
                                 $value = $image_path;
                             }
-                        } else if ($field['type'] == 'gradient') {
+                        } elseif ($field['type'] == 'gradient') {
                             $value = json_encode($request->get($field_key));
                         } else {
                             $value = $request->get($field_key);
@@ -295,6 +335,11 @@ class CardsService
         }
     }
 
+    /**
+     * @param User|Authenticatable $client
+     * @param Card $card
+     * @return void
+     */
     public function refreshCard(User $client, Card $card)
     {
         $this->updateCardFields($client);
@@ -304,6 +349,8 @@ class CardsService
 
     /**
      * Actualizar los datos generales de todas las tarjetas para que sean iguales.
+     * @param User|Authenticatable $client
+     * @return void
      */
     private function updateCardFields(User $client)
     {
@@ -351,9 +398,13 @@ class CardsService
         }
     }
 
+    /**
+     * @param Card $card
+     * @return void
+     */
     public static function generateQRCode(Card $card)
     {
-        $use_card_number = $card->field(CardField::GROUP_OTHERS, 'use_card_number') == 1;
+        $use_card_number = $card->field(GroupField::OTHERS, 'use_card_number') == 1;
         $cardUrl = $use_card_number ? $card->url_number : $card->url;
         $qrCardUrl = "{$cardUrl}?action=scan";
         $qrFile = "qr-{$card->slug}.png";
@@ -373,6 +424,10 @@ class CardsService
         $card->update(['qr_code' => $qrFile]);
     }
 
+    /**
+     * @param Card $card
+     * @return void
+     */
     private function generateVCard(Card $card)
     {
         $vcard = new VCard();
@@ -383,12 +438,13 @@ class CardsService
             $cardName->firstname,
             $cardName->additional,
             $cardName->prefix,
-            $cardName->suffix);
+            $cardName->suffix
+        );
 
-        $company = strtoupper($card->field('others', 'company'));
-        $cargo = $card->field('others', 'cargo');
-        $email = $card->field('action_contacts', 'email');
-        $web = $card->field('contact_list', 'web');
+        $company = strtoupper($card->field(GroupField::OTHERS, 'company'));
+        $cargo = $card->field(GroupField::OTHERS, 'cargo');
+        $email = $card->field(GroupField::ACTION_CONTACTS, 'email');
+        $web = $card->field(GroupField::CONTACT_LIST, 'web');
         // $vcard->addRole('Data Protection Officer');
         // $vcard->addAddress(null, null, 'street', 'worktown', null, 'workpostcode', 'Belgium');
         // $vcard->addLabel('street, worktown, workpostcode Belgium');
@@ -406,10 +462,10 @@ class CardsService
             $vcard->addURL($web, 'PREF');
         }
 
-        $phone = $card->field('action_contacts', 'phone');
-        $phone1 = $card->field('contact_list', 'phone1');
-        $phone2 = $card->field('contact_list', 'phone2');
-        $cellphone = $card->field('contact_list', 'cellphone');
+        $phone = $card->field(GroupField::ACTION_CONTACTS, 'phone');
+        $phone1 = $card->field(GroupField::CONTACT_LIST, 'phone1');
+        $phone2 = $card->field(GroupField::CONTACT_LIST, 'phone2');
+        $cellphone = $card->field(GroupField::CONTACT_LIST, 'cellphone');
 
         if ($phone != '') {
             $vcard->addPhoneNumber($phone, 'PREF;WORK;VOICE');
@@ -424,11 +480,11 @@ class CardsService
             $vcard->addPhoneNumber($cellphone, 'WORK;VOICE;CELL');
         }
 
-        $facebook = $card->field('social_list', 'facebook');
-        $instagram = $card->field('social_list', 'instagram');
-        $linkedin = $card->field('social_list', 'linkedin');
-        $twitter = $card->field('social_list', 'twitter');
-        $youtube = $card->field('social_list', 'youtube');
+        $facebook = $card->field(GroupField::SOCIAL_LIST, 'facebook');
+        $instagram = $card->field(GroupField::SOCIAL_LIST, 'instagram');
+        $linkedin = $card->field(GroupField::SOCIAL_LIST, 'linkedin');
+        $twitter = $card->field(GroupField::SOCIAL_LIST, 'twitter');
+        $youtube = $card->field(GroupField::SOCIAL_LIST, 'youtube');
 
         if ($facebook != '') {
             $vcard->addURL($facebook, 'X-ABLabel=FACEBOOK');
@@ -446,8 +502,8 @@ class CardsService
             $vcard->addURL($youtube, 'X-ABLabel=YOUTUBE');
         }
 
-        $logo = $card->field('others', 'logo');
-        $photo = $card->field('others', 'profile');
+        $logo = $card->field(GroupField::OTHERS, 'logo');
+        $photo = $card->field(GroupField::OTHERS, 'profile');
 
         if ($logo != '') {
             $logoContent = \Storage::get("public/cards/$logo");
@@ -466,9 +522,13 @@ class CardsService
         $vcard->save();
     }
 
+    /**
+     * @param Card $card
+     * @return object
+     */
     public function generateCardName(Card $card)
     {
-        $name = $card->field('others', 'name');
+        $name = $card->field(GroupField::OTHERS, 'name');
         $name = ucwords(strtolower($name));
 
         $firstname = $name;
@@ -477,7 +537,7 @@ class CardsService
         $prefix = '';
         $suffix = '';
 
-        return (Object) [
+        return (object) [
             'firstname' => $firstname,
             'lastname' => $lastname,
             'additional' => $additional,
@@ -504,7 +564,7 @@ class CardsService
         if ($cardsCount == 0) {
             // Si el cliente no tiene tarjetas no hacer nada.
             return;
-        } else if ($cardsCount == $cardsNumbers) {
+        } elseif ($cardsCount == $cardsNumbers) {
             // Si la cantidad de tarjetas y los número asignados no se repiten, no hacer nada.
             return;
         }
@@ -537,12 +597,16 @@ class CardsService
         }
 
         foreach ($client->cards()->get() as $card) {
-            (new CardsService)->refreshCard($client, $card);
+            (new CardsService())->refreshCard($client, $card);
         }
     }
 
     /**
      * Actualizar número de tarjeta.
+     * @param Request $request
+     * @param Card $card
+     * @param User|Authenticatable $client
+     * @return RedirectResponse
      */
     public function updateCardNumber(Request $request, Card $card, User $client)
     {
@@ -565,11 +629,18 @@ class CardsService
         return redirect()->back();
     }
 
+    /**
+     * @param User|Authenticatable $client
+     * @return Factory|View
+     */
     public function createMultiple(User $client)
     {
         return view('clients.cards.multiple', compact('client'));
     }
 
+    /**
+     * @param User|Authenticatable $client
+     */
     public function templateMultiple(User $client)
     {
         $groups = CardField::TEMPLATE_FIELDS;
@@ -607,6 +678,11 @@ class CardsService
         die;
     }
 
+    /**
+     * @param Request $request
+     * @param User|Authenticatable $client
+     * @return RedirectResponse
+     */
     public function storeMultiple(Request $request, User $client)
     {
         $cardsLimit = 40;
@@ -649,7 +725,7 @@ class CardsService
                 $card = Card::query()
                     ->where('client_id', $client->id)
                     ->whereHas('fields', function ($q) use ($emailKey) {
-                        $q->where('group', 'action_contacts')
+                        $q->where('group', GroupField::ACTION_CONTACTS)
                             ->where('key', 'email')
                             ->where('value', $emailKey);
                     })
@@ -694,6 +770,10 @@ class CardsService
         }
     }
 
+    /**
+     * @param mixed $data
+     * @return array
+     */
     public function formatImportCardData($data)
     {
         $groups = CardField::TEMPLATE_FIELDS;

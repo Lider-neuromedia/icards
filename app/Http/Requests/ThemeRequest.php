@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\CardField;
+use App\Enums\FieldType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ThemeRequest extends FormRequest
@@ -34,16 +35,16 @@ class ThemeRequest extends FormRequest
                 if ($field['general'] == true) {
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
-                    } else if ($field['type'] === 'image') {
+                    } elseif ($field['type'] === FieldType::IMAGE) {
                         $max = $field['max'];
                         $validation[$field_key] = ['nullable', 'file', 'mimes:jpeg,jpg,png', "max:$max"];
-                    } else if ($field['type'] === 'text') {
+                    } elseif ($field['type'] === FieldType::TEXT) {
                         $validation[$field_key] = ['nullable', 'string', 'max:250'];
-                    } else if ($field['type'] === 'textarea') {
+                    } elseif ($field['type'] === FieldType::TEXTAREA) {
                         $validation[$field_key] = ['nullable', 'string', 'max:10000'];
-                    } else if ($field['type'] === 'boolean') {
+                    } elseif ($field['type'] === FieldType::BOOLEAN) {
                         $validation[$field_key] = ['nullable', 'string', 'in:0,1'];
-                    } else if ($field['type'] === 'gradient') {
+                    } elseif ($field['type'] === FieldType::GRADIENT) {
                         $validation[$field_key] = ['nullable', 'array', 'min:3', 'max:3'];
                         $validation["$field_key.*"] = ['required', 'string', 'min:7', 'max:10'];
                     }

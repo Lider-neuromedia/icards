@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use App\Card;
 use App\CardField;
+use App\Enums\FieldType;
+use App\Models\Field;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CardRequest extends FormRequest
@@ -25,7 +27,7 @@ class CardRequest extends FormRequest
                 if (\Auth::user()->isCardsLimitReached()) {
                     return false;
                 }
-            } else if (Card::whereId($id)->exists() && !\Auth::user()->cards()->whereId($id)->exists()) {
+            } elseif (Card::whereId($id)->exists() && !\Auth::user()->cards()->whereId($id)->exists()) {
                 return false;
             }
         }
@@ -47,21 +49,21 @@ class CardRequest extends FormRequest
             foreach ($group['values'] as $field) {
                 $field_key = $group_key . '_' . $field['key'];
 
-                if ($field['general'] == false) {
+                if ($field['general'] == Field::SPECIFIC) {
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
-                    } else if ($field_key == "action_contacts_email") {
+                    } elseif ($field_key == "action_contacts_email") {
                         $validation[$field_key] = ['required', 'string', 'email', 'max:50'];
-                    } else if ($field['type'] === 'image') {
+                    } elseif ($field['type'] === FieldType::IMAGE) {
                         $max = $field['max'];
                         $validation[$field_key] = ['nullable', 'file', 'mimes:jpeg,jpg,png', "max:$max"];
-                    } else if ($field['type'] === 'text') {
+                    } elseif ($field['type'] === FieldType::TEXT) {
                         $validation[$field_key] = ['nullable', 'string', 'max:250'];
-                    } else if ($field['type'] === 'textarea') {
+                    } elseif ($field['type'] === FieldType::TEXTAREA) {
                         $validation[$field_key] = ['nullable', 'string', 'max:10000'];
-                    } else if ($field['type'] === 'boolean') {
+                    } elseif ($field['type'] === FieldType::BOOLEAN) {
                         $validation[$field_key] = ['nullable', 'string', 'in:0,1'];
-                    } else if ($field['type'] === 'gradient') {
+                    } elseif ($field['type'] === FieldType::GRADIENT) {
                         $validation[$field_key] = ['nullable', 'array', 'min:3', 'max:3'];
                         $validation["$field_key.*"] = ['required', 'string', 'min:7', 'max:10'];
                     }

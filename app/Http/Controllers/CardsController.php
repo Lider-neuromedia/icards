@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Card;
 use App\CardField;
+use App\Enums\GroupField;
 use Carbon\Carbon;
-use \Parsedown;
+use Parsedown;
 
 class CardsController extends Controller
 {
@@ -58,18 +59,18 @@ class CardsController extends Controller
         $template = $card->fields()->get()->groupBy('group');
 
         $ecard = [
-            CardField::GROUP_ACTION_CONTACTS => [],
-            CardField::GROUP_CONTACT_LIST => [],
-            CardField::GROUP_SOCIAL_LIST => [],
+            GroupField::ACTION_CONTACTS => [],
+            GroupField::CONTACT_LIST => [],
+            GroupField::SOCIAL_LIST => [],
         ];
         $theme = [];
 
-        $whatsapp_message = $card->field(CardField::GROUP_ACTION_CONTACTS, 'whatsapp_message');
+        $whatsapp_message = $card->field(GroupField::ACTION_CONTACTS, 'whatsapp_message');
         $whatsapp_message = trim($whatsapp_message) != '' ? rawurlencode($whatsapp_message) : '';
         $ecard['whatsapp_message'] = $whatsapp_message ?: 'Hola, en que te puedo ayudar';
 
-        if (isset($template[CardField::GROUP_OTHERS])) {
-            foreach ($template[CardField::GROUP_OTHERS] as $field) {
+        if (isset($template[GroupField::OTHERS])) {
+            foreach ($template[GroupField::OTHERS] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
                 $isMarkdown = $field->type == 'textarea';
@@ -78,29 +79,30 @@ class CardsController extends Controller
 
                 if ($isJson) {
                     $ecard[$field->key] = json_decode($value);
-                } else if ($isMarkdown) {
+                } elseif ($isMarkdown) {
                     $ecard[$field->key] = $this->markdown($value);
                 }
             }
         }
-        if (isset($template[CardField::GROUP_THEME])) {
-            foreach ($template[CardField::GROUP_THEME] as $field) {
+
+        if (isset($template[GroupField::THEME])) {
+            foreach ($template[GroupField::THEME] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
                 $theme[$field->key] = $isJson ? json_decode($value) : $value;
             }
         }
-        if (isset($template[CardField::GROUP_ACTION_CONTACTS])) {
-            foreach ($template[CardField::GROUP_ACTION_CONTACTS] as $field) {
+        if (isset($template[GroupField::ACTION_CONTACTS])) {
+            foreach ($template[GroupField::ACTION_CONTACTS] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
-                $ecard[CardField::GROUP_ACTION_CONTACTS][] = (Object) [
+                $ecard[GroupField::ACTION_CONTACTS][] = (object) [
                     $field->key => $isJson ? json_decode($value) : $value,
                 ];
             }
         }
-        if (isset($template[CardField::GROUP_CONTACT_LIST])) {
-            foreach ($template[CardField::GROUP_CONTACT_LIST] as $field) {
+        if (isset($template[GroupField::CONTACT_LIST])) {
+            foreach ($template[GroupField::CONTACT_LIST] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
                 $isMarkdown = $field->type == 'textarea';
@@ -109,20 +111,20 @@ class CardsController extends Controller
 
                 if ($isJson) {
                     $tempValue = json_decode($value);
-                } else if ($isMarkdown) {
+                } elseif ($isMarkdown) {
                     $tempValue = $this->markdown($value);
                 }
 
-                $ecard[CardField::GROUP_CONTACT_LIST][] = (Object) [
+                $ecard[GroupField::CONTACT_LIST][] = (object) [
                     $field->key => $tempValue,
                 ];
             }
         }
-        if (isset($template[CardField::GROUP_SOCIAL_LIST])) {
-            foreach ($template[CardField::GROUP_SOCIAL_LIST] as $field) {
+        if (isset($template[GroupField::SOCIAL_LIST])) {
+            foreach ($template[GroupField::SOCIAL_LIST] as $field) {
                 $value = $field->value;
                 $isJson = $field->type == 'gradient';
-                $ecard[CardField::GROUP_SOCIAL_LIST][] = (Object) [
+                $ecard[GroupField::SOCIAL_LIST][] = (object) [
                     $field->key => $isJson ? json_decode($value) : $value,
                 ];
             }
@@ -134,12 +136,12 @@ class CardsController extends Controller
                 $isJson = $field['type'] == 'gradient';
                 $value = $field['default'];
 
-                if ($group_key == 'others') {
+                if ($group_key == GroupField::OTHERS) {
                     if (!isset($ecard[$field['key']])) {
                         $ecard[$field['key']] = $isJson ? json_decode($value) : $value;
                     }
                 }
-                if ($group_key == 'theme') {
+                if ($group_key == GroupField::THEME) {
                     if (!isset($theme[$field['key']])) {
                         $theme[$field['key']] = $isJson ? json_decode($value) : $value;
                     }
@@ -147,13 +149,15 @@ class CardsController extends Controller
             }
         }
 
-        $ecard = (Object) $ecard;
-        $theme = (Object) $theme;
+        $ecard = (object) $ecard;
+        $theme = (object) $theme;
 
-        $templateFiles = (Object) collect(CardField::TEMPLATES)
+        $templateFiles = (object) collect(CardField::TEMPLATES)
             ->first(function ($x) use ($theme) {
                 return $x['id'] == $theme->template;
             });
+
+        app()->setLocale($ecard->default_lang);
 
         return view($templateFiles->templatePath, compact('card', 'ecard', 'theme', 'templateFiles'));
     }

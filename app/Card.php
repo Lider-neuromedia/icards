@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\GroupField;
 use Illuminate\Database\Eloquent\Model;
 
 class Card extends Model
@@ -56,12 +57,12 @@ class Card extends Model
 
     public function getNameAttribute()
     {
-        return $this->field('others', 'name') ?: '';
+        return $this->field(GroupField::OTHERS, 'name') ?: '';
     }
 
     public function getEmailAttribute()
     {
-        return $this->field('action_contacts', 'email') ?: '';
+        return $this->field(GroupField::ACTION_CONTACTS, 'email') ?: '';
     }
 
     public function field($group, $key, $withMarkdown = false)
@@ -81,7 +82,7 @@ class Card extends Model
 
                     if ($isJson) {
                         $field_value = json_decode($value['default']);
-                    } else if ($isMarkdown && $withMarkdown) {
+                    } elseif ($isMarkdown && $withMarkdown) {
                         $field_value = markdown($value['default']);
                     } else {
                         $field_value = $value['default'];
@@ -97,7 +98,7 @@ class Card extends Model
 
         if ($isJson) {
             return json_decode($field->value);
-        } else if ($isMarkdown && $withMarkdown) {
+        } elseif ($isMarkdown && $withMarkdown) {
             return markdown($field->value);
         }
 

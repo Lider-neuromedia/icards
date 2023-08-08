@@ -20,18 +20,19 @@ class CardStatistic extends Model
     public static function analyticsEvents()
     {
         return [
-            (Object) ['key' => 'contact-by-call', 'description' => 'Contactos por Teléfono', 'title' => 'Teléfono'],
-            (Object) ['key' => 'contact-by-email', 'description' => 'Contactos por Correo', 'title' => 'Correo'],
-            (Object) ['key' => 'contact-by-whatsapp', 'description' => 'Contactos por Whatsapp', 'title' => 'Whatsapp'],
-            (Object) ['key' => 'save-contact', 'description' => 'Veces Guardado', 'title' => 'Guardar'],
-            (Object) ['key' => 'share-contact', 'description' => 'Veces Compartido', 'title' => 'Compartido'],
-            (Object) ['key' => 'save-image', 'description' => 'Veces Imagen Guardada', 'title' => 'Imagen'],
-            (Object) ['key' => 'visit-web', 'description' => 'Página Visitada', 'title' => 'Web'],
-            (Object) ['key' => 'visit-facebook', 'description' => 'Facebook Visitado', 'title' => 'Facebook'],
-            (Object) ['key' => 'visit-instagram', 'description' => 'Instagram Visitado', 'title' => 'Instagram'],
-            (Object) ['key' => 'visit-linkedin', 'description' => 'Linkedin Visitado', 'title' => 'LinkedIn'],
-            (Object) ['key' => 'visit-twitter', 'description' => 'Twitter Visitado', 'title' => 'Twitter'],
-            (Object) ['key' => 'visit-youtube', 'description' => 'YouTube Visitado', 'title' => 'YouTube'],
+            // TODO: Reemplazar por DTO.
+            (object) ['key' => 'contact-by-call', 'description' => 'Contactos por Teléfono', 'title' => 'Teléfono'],
+            (object) ['key' => 'contact-by-email', 'description' => 'Contactos por Correo', 'title' => 'Correo'],
+            (object) ['key' => 'contact-by-whatsapp', 'description' => 'Contactos por Whatsapp', 'title' => 'Whatsapp'],
+            (object) ['key' => 'save-contact', 'description' => 'Veces Guardado', 'title' => 'Guardar'],
+            (object) ['key' => 'share-contact', 'description' => 'Veces Compartido', 'title' => 'Compartido'],
+            (object) ['key' => 'save-image', 'description' => 'Veces Imagen Guardada', 'title' => 'Imagen'],
+            (object) ['key' => 'visit-web', 'description' => 'Página Visitada', 'title' => 'Web'],
+            (object) ['key' => 'visit-facebook', 'description' => 'Facebook Visitado', 'title' => 'Facebook'],
+            (object) ['key' => 'visit-instagram', 'description' => 'Instagram Visitado', 'title' => 'Instagram'],
+            (object) ['key' => 'visit-linkedin', 'description' => 'Linkedin Visitado', 'title' => 'LinkedIn'],
+            (object) ['key' => 'visit-twitter', 'description' => 'Twitter Visitado', 'title' => 'Twitter'],
+            (object) ['key' => 'visit-youtube', 'description' => 'YouTube Visitado', 'title' => 'YouTube'],
         ];
     }
 

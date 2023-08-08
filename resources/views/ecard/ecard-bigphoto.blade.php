@@ -113,37 +113,37 @@
     <main class="header">
         <div class="wrapper">
 
-            {{-- Logo Empresa --}}
+            {{-- Company Logo --}}
             @if ($ecard->logo)
                 <div class="header-logo {{ $logoClass }}">
-                    <img width="100px" height="auto" alt="Logo Empresa"
+                    <img width="100px" height="auto" alt="{{ __('Company Logo') }}"
                         src="{{ url("storage/cards/$ecard->logo") }}?v={{ $version }}">
                 </div>
             @endif
 
-            {{-- Logo Usuario --}}
+            {{-- User Logo --}}
             @if ($profileImage)
                 <div class="header-profile" style="--profile-image: {{ $profileImage }};"></div>
             @endif
 
-            {{-- Nombre --}}
+            {{-- Name --}}
             <h1 class="header-description header-name">
                 <strong>{{ $ecard->name }}</strong>
             </h1>
 
-            {{-- Cargo --}}
+            {{-- Role --}}
             <div class="header-description header-cargo">
                 {{ $ecard->cargo }}
             </div>
 
-            {{-- Descripción --}}
+            {{-- Description --}}
             @if ($ecard->description)
                 <div class="content-description">
                     {!! $ecard->description !!}
                 </div>
             @endif
 
-            {{-- Empresa --}}
+            {{-- Company --}}
             {{-- <div class="header-description header-company">
                 {{ $ecard->company }}
             </div> --}}
@@ -162,7 +162,7 @@
                     @if ($actionPhone)
                         <a href="tel:{{ $actionPhone }}" class="header-action track-event" data-event="contact-by-call">
                             <i class="icofont-phone"></i>
-                            <span>Llamar</span>
+                            <span>{{ __('Call') }}</span>
                         </a>
                     @endif
 
@@ -171,7 +171,7 @@
                         <a href="mailto:{{ $actionEmail }}" class="header-action track-event"
                             data-event="contact-by-email">
                             <i class="icofont-email"></i>
-                            <span>Enviar Correo</span>
+                            <span>{{ __('Send Email') }}</span>
                         </a>
                     @endif
 
@@ -180,20 +180,20 @@
                         <a target="_blank" class="header-action track-event break-word" data-event="visit-web"
                             href="{{ $actionWeb }}">
                             <i class="icofont-globe"></i>
-                            <span>Visita nuestra Web</span>
+                            <span>{{ __('Visit our site') }}</span>
                         </a>
                     @endif --}}
 
                     <!-- Action QR -->
                     {{-- <button type="button" class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
                         <i class="icofont-qr-code"></i>
-                        Muestra tu código QR!
+                        {{ __('Show your QR code!') }}
                     </button> --}}
 
                     <!-- Action Guardar -->
                     {{-- <a class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
                         <i class="icofont-user-alt-2"></i>
-                        Guardar Contacto
+                        {{ __('Save Contact') }}
                     </a> --}}
 
                     <!-- Action Whatsapp -->
@@ -201,7 +201,7 @@
                         <a target="_blank" class="header-action track-event" data-event="contact-by-whatsapp"
                             href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}">
                             <i class="no-rotate icofont-brand-whatsapp"></i>
-                            <span>Enviar Whatsapp</span>
+                            <span>{{ __('Send Whatsapp') }}</span>
                         </a>
                     @endif
                 </div>
@@ -243,7 +243,7 @@
                 </ul>
             </nav>
 
-            {{-- Redes --}}
+            {{-- Social Media --}}
             <nav class="content-social-list">
                 <ul>
                     @foreach ($ecard->social_list as $sl)
@@ -261,15 +261,15 @@
                 </ul>
             </nav>
 
-            {{-- Tarjeta --}}
+            {{-- Card --}}
             <section class="header-card">
                 <a class="action-black-button track-event" data-event="share-contact" target="_blank"
                     href="https://api.whatsapp.com/send?text={{ $card->vcard }}">
-                    Compartir
+                    {{ __('Share') }}
                 </a>
 
                 <a class="action-black-button track-event" data-event="save-contact" href="{{ $card->vcard }}">
-                    Guardar Contacto
+                    {{ __('Save Contact') }}
                 </a>
 
                 <article class="content-ecard">
@@ -278,7 +278,7 @@
 
                 <button class="action-black-button content-ecard-download track-event" data-event="save-image"
                     id="donwload-canvas-button" type="button">
-                    Descargar Imagen
+                    {{ __('Download Image') }}
                 </button>
             </section>
 
@@ -288,8 +288,9 @@
     <footer class="footer">
         <div class="wrapper">
             <p>
-                <a target="_blank" href="https://www.neuromedia.com.co/">Neuromedia</a>
-                {{ date('Y') }} &copy; Todos los derechos reservados
+                <a target="_blank" href="https://www.neuromedia.com.co/">
+                    {!! __('Neuromedia :year &copy; All rights reserved', ['year' => date('Y')]) !!}
+                </a>
             </p>
         </div>
     </footer>

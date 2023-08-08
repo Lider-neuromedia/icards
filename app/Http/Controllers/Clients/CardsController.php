@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CardRequest;
 use App\Http\Requests\ThemeRequest;
 use App\Services\CardsService;
-use App\User;
 use Illuminate\Http\Request;
 
 class CardsController extends Controller
