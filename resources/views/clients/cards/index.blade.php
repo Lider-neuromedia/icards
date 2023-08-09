@@ -4,11 +4,7 @@
     $create_multiple_route = route('cards.create-multiple');
     $theme_route = route('cards.theme');
     
-    if (
-        auth()
-            ->user()
-            ->isAdmin()
-    ) {
+    if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
         $create_route = route('clients.cards.create', $client);
         $create_multiple_route = route('clients.cards.create-multiple', $client);
@@ -21,6 +17,9 @@
 @section('title', 'Tarjetas')
 
 @section('breadcrumbs')
+    @if (isUserAdmin())
+        <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
+    @endif
     <li class="breadcrumb-item active">Tarjetas</li>
 @endsection
 
@@ -98,11 +97,8 @@
                                 @php
                                     $edit_route = route('cards.edit', $card);
                                     $destroy_route = route('cards.destroy', $card);
-                                    $isAdmin = auth()
-                                        ->user()
-                                        ->isAdmin();
                                     
-                                    if ($isAdmin) {
+                                    if (isUserAdmin()) {
                                         $edit_route = route('clients.cards.edit', [$client, $card]);
                                         $destroy_route = route('clients.cards.destroy', [$client, $card]);
                                     }

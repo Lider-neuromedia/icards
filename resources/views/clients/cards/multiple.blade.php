@@ -4,11 +4,7 @@
     $back_route = route('cards.index');
     $template_route = route('cards.template-multiple');
     
-    if (
-        auth()
-            ->user()
-            ->isAdmin()
-    ) {
+    if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
         $create_multiple_route = route('clients.cards.store-multiple', $client);
         $back_route = route('clients.cards.index', $client);
@@ -21,6 +17,9 @@
 @section('title', 'Crear Multiples Tarjetas')
 
 @section('breadcrumbs')
+    @if (isUserAdmin())
+        <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
+    @endif
     <li class="breadcrumb-item"><a href="{{ $index_route }}">Tarjetas</a></li>
     <li class="breadcrumb-item active">Crear Multiples Tarjetas</li>
 @endsection

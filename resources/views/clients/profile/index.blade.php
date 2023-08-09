@@ -14,7 +14,7 @@
 
                 <form action="{{ route('profile.store') }}" method="post">
                     @csrf
-                    <input type="hidden" name="id" value="{{$client->id}}">
+                    <input type="hidden" name="id" value="{{ $client->id }}">
 
                     @include('clients.profile.fields.name')
                     @include('clients.profile.fields.email')

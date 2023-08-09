@@ -15,6 +15,14 @@ npm run prod
 
 ---
 
+Cambiar la contraseña de todos los usuarios para pruebas.
+
+```php
+\DB::table('users')->update(['password' => \Hash::make('secret')]);
+```
+
+---
+
 Ejemplo API para generar los campos de las plantillas.
 
 ```php

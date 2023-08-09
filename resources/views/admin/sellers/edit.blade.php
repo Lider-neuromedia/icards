@@ -3,7 +3,7 @@
 @section('title', 'Editar Vendedor')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{route('sellers.index')}}">Vendedores</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('sellers.index') }}">Vendedores</a></li>
     <li class="breadcrumb-item active">Editar Vendedor</li>
 @endsection
 
@@ -18,7 +18,7 @@
                 <form action="{{ route('sellers.update', $seller) }}" method="post">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" name="id" value="{{$seller->id}}">
+                    <input type="hidden" name="id" value="{{ $seller->id }}">
                     @include('admin.sellers.form')
                 </form>
 
@@ -27,7 +27,7 @@
                 @include('partials.delete', [
                     'id_form' => 'delete-seller-form',
                     'label' => 'Borrar Vendedor',
-                    'route' => route('sellers.destroy', $seller->id)
+                    'route' => route('sellers.destroy', $seller->id),
                 ])
 
             </div>
@@ -50,7 +50,8 @@
                         @foreach ($seller->clients as $client)
                             <tr>
                                 <td class="text-center">
-                                    <a target="_blank" href="{{url('/admin/clients')}}?search={{$client->name}}">{{$client->name}}</a>
+                                    <a target="_blank"
+                                        href="{{ url('/admin/clients') }}?search={{ $client->name }}">{{ $client->name }}</a>
                                 </td>
 
                             </tr>

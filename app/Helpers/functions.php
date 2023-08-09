@@ -19,3 +19,23 @@ if (!function_exists('markdown')) {
         return $parsedown->text($content);
     }
 }
+
+if (!function_exists('isUserAdmin')) {
+    function isUserAdmin()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return auth()->user()->isAdmin();
+    }
+}
+
+if (!function_exists('isUserClient')) {
+    function isUserClient()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return auth()->user()->isClient();
+    }
+}

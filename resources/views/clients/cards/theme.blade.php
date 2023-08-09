@@ -1,11 +1,7 @@
 @php
     $store_route = route('cards.theme-store');
     
-    if (
-        auth()
-            ->user()
-            ->isAdmin()
-    ) {
+    if (isUserAdmin()) {
         $store_route = route('clients.cards.theme-store', $client);
     }
 @endphp
@@ -15,6 +11,9 @@
 @section('title', 'Tema Visual')
 
 @section('breadcrumbs')
+    @if (isUserAdmin())
+        <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
+    @endif
     <li class="breadcrumb-item active">Tema Visual</li>
 @endsection
 

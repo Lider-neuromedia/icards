@@ -16,9 +16,10 @@
                     <h3 class="card-title"></h3>
 
                     <div class="card-tools">
-                        <form action="{{route('users.index')}}" method="get">
+                        <form action="{{ route('users.index') }}" method="get">
                             <div class="input-group input-group-sm" style="max-width: 300px;">
-                                <input value="{{$search}}" type="search" name="search" class="form-control float-right" placeholder="Buscar">
+                                <input value="{{ $search }}" type="search" name="search"
+                                    class="form-control float-right" placeholder="Buscar">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search" aria-hidden="true"></i>
@@ -37,7 +38,8 @@
                                 <th>E-mail</th>
                                 <th>Rol</th>
                                 <th class="text-right">
-                                    <a href="{{route('users.create')}}" class="btn btn-primary btn-xs" title="Crear Usuario">
+                                    <a href="{{ route('users.create') }}" class="btn btn-primary btn-xs"
+                                        title="Crear Usuario">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </a>
                                 </th>
@@ -47,11 +49,12 @@
 
                             @foreach ($users as $user)
                                 <tr>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$user->email}}</td>
-                                    <td>{{$user->role_description}}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->role_description }}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-xs btn-success" href="{{route('users.edit', $user->id)}}" title="Editar Usuario">
+                                        <a class="btn btn-xs btn-success" href="{{ route('users.edit', $user->id) }}"
+                                            title="Editar Usuario">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
                                     </td>
@@ -63,7 +66,7 @@
                 </div>
 
                 <div class="card-footer d-flex justify-content-end">
-                    {{$users->appends(['search' => $search])->links()}}
+                    {{ $users->appends(['search' => $search])->links() }}
                 </div>
             </div>
 

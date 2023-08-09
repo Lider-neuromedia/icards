@@ -3,7 +3,7 @@
 @section('title', 'Editar Cliente')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{route('clients.index')}}">Clientes</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
     <li class="breadcrumb-item active">Editar Cliente</li>
 @endsection
 
@@ -18,7 +18,7 @@
                 <form action="{{ route('clients.update', $client) }}" method="post">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" name="id" value="{{$client->id}}">
+                    <input type="hidden" name="id" value="{{ $client->id }}">
                     @include('admin.clients.form')
                 </form>
 
@@ -27,7 +27,7 @@
                 @include('partials.delete', [
                     'id_form' => 'delete-client-form',
                     'label' => 'Borrar Cliente',
-                    'route' => route('clients.destroy', $client->id)
+                    'route' => route('clients.destroy', $client->id),
                 ])
 
             </div>

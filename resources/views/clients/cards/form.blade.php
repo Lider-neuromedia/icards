@@ -1,11 +1,7 @@
 @php
     $back_route = route('cards.index');
     
-    if (
-        auth()
-            ->user()
-            ->isAdmin()
-    ) {
+    if (isUserAdmin()) {
         $back_route = route('clients.cards.index', $client);
     }
 @endphp
