@@ -53,17 +53,12 @@ class CardsService
             ->orderBy('slug', 'asc')
             ->paginate(20);
 
-        $clientCards = $client->cards()
-            ->select('slug_number')
-            ->pluck('slug_number')
-            ->unique()
-            ->count();
 
         $subscription = $client->subscription();
 
         $cards->setCollection(
             $cards->getCollection()
-                ->map(function ($x) use ($clientCards, $client, $subscription) {
+                ->map(function ($x) use ($client, $subscription) {
                     $x->use_card_number = $x->field(GroupField::OTHERS, 'use_card_number') == 1;
                     $card_numbers = [$x->slug_number];
 
@@ -103,14 +98,30 @@ class CardsService
     /**
      * @param User|Authenticatable $client
      * @param Card $card
+     * @return bool
+     */
+    private function canAccessCard(User $client, Card $card): bool
+    {
+        if (auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        $clientIsCardOwner = $card->client->id == $client->id;
+        $clientHasAccessToCard = $client->allowedAccounts()
+            ->where('allowed_account_id', $card->client->id)
+            ->exists();
+
+        return $clientIsCardOwner || $clientHasAccessToCard;
+    }
+
+    /**
+     * @param User|Authenticatable $client
+     * @param Card $card
      * @return Factory|View|RedirectResponse
      */
     public function edit(User $client, Card $card)
     {
-        if (\Auth::user()->isClient() && $card->client->id != $client->id) {
-            if (\Auth::user()->isAdmin()) {
-                return redirect()->action('Admin\CardsController@index', $client);
-            }
+        if (!$this->canAccessCard($client, $card)) {
             return redirect()->action('Clients\CardsController@index');
         }
 
@@ -125,17 +136,14 @@ class CardsService
      */
     public function destroy(User $client, Card $card)
     {
-        if (\Auth::user()->isClient() && $card->client->id != $client->id) {
-            if (\Auth::user()->isAdmin()) {
-                return redirect()->action('Admin\CardsController@index', $client);
-            }
+        if (!$this->canAccessCard($client, $card)) {
             return redirect()->action('Clients\CardsController@index');
         }
 
         $card->delete();
         session()->flash('message', "Tarjeta borrada.");
 
-        if (\Auth::user()->isAdmin()) {
+        if (auth()->user()->isAdmin()) {
             return redirect()->action('Admin\CardsController@index', $client);
         }
         return redirect()->action('Clients\CardsController@index');
@@ -221,7 +229,7 @@ class CardsService
 
             session()->flash('message', "Tema guardado correctamente.");
 
-            if (\Auth::user()->isAdmin()) {
+            if (auth()->user()->isAdmin()) {
                 return redirect()->action('Admin\CardsController@theme', $client);
             }
             return redirect()->action('Clients\CardsController@theme');
@@ -320,7 +328,7 @@ class CardsService
 
             session()->flash('message', "Tarjeta guardada correctamente.");
 
-            if (\Auth::user()->isAdmin()) {
+            if (auth()->user()->isAdmin()) {
                 return redirect()->action('Admin\CardsController@edit', [$client, $card]);
             }
             return redirect()->action('Clients\CardsController@edit', $card);
@@ -755,7 +763,7 @@ class CardsService
 
             session()->flash('message', "Tarjetas guardadas correctamente.");
 
-            if (\Auth::user()->isAdmin()) {
+            if (auth()->user()->isAdmin()) {
                 return redirect()->action('Admin\CardsController@index', $client);
             }
             return redirect()->action('Clients\CardsController@index');

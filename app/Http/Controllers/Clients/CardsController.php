@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class CardsController extends Controller
 {
+    /**
+     * @var CardsService
+     */
     protected $cardsService;
 
     public function __construct()
@@ -20,61 +23,61 @@ class CardsController extends Controller
 
     public function index(Request $request)
     {
-        return $this->cardsService->cards($request, \Auth::user());
+        return $this->cardsService->cards($request, auth()->user());
     }
 
     public function create()
     {
-        return $this->cardsService->create(\Auth::user());
+        return $this->cardsService->create(auth()->user());
     }
 
     public function store(CardRequest $request)
     {
-        return $this->cardsService->saveOrUpdate($request, true, \Auth::user());
+        return $this->cardsService->saveOrUpdate($request, true, auth()->user());
     }
 
     public function edit(Card $card)
     {
-        return $this->cardsService->edit(\Auth::user(), $card);
+        return $this->cardsService->edit(auth()->user(), $card);
     }
 
     public function update(CardRequest $request, Card $card)
     {
-        return $this->cardsService->saveOrUpdate($request, true, \Auth::user(), $card);
+        return $this->cardsService->saveOrUpdate($request, true, auth()->user(), $card);
     }
 
     public function destroy(Card $card)
     {
-        return $this->cardsService->destroy(\Auth::user(), $card);
+        return $this->cardsService->destroy(auth()->user(), $card);
     }
 
     public function theme()
     {
-        return $this->cardsService->theme(\Auth::user());
+        return $this->cardsService->theme(auth()->user());
     }
 
     public function storeTheme(ThemeRequest $request)
     {
-        return $this->cardsService->storeTheme($request, \Auth::user());
+        return $this->cardsService->storeTheme($request, auth()->user());
     }
 
     public function updateCardNumber(Request $request, Card $card)
     {
-        return $this->cardsService->updateCardNumber($request, $card, \Auth::user());
+        return $this->cardsService->updateCardNumber($request, $card, auth()->user());
     }
 
     public function createMultiple()
     {
-        return $this->cardsService->createMultiple(\Auth::user());
+        return $this->cardsService->createMultiple(auth()->user());
     }
 
     public function templateMultiple()
     {
-        return $this->cardsService->templateMultiple(\Auth::user());
+        return $this->cardsService->templateMultiple(auth()->user());
     }
 
     public function storeMultiple(Request $request)
     {
-        return $this->cardsService->storeMultiple($request, \Auth::user());
+        return $this->cardsService->storeMultiple($request, auth()->user());
     }
 }

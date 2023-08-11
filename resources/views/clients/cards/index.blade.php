@@ -65,7 +65,7 @@
                                 <th class="text-center">QR Visitas</th>
                                 <th class="text-right">
                                     <a href="{{ $theme_route }}" class="btn btn-success btn-sm" title="Tema General">
-                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        <i class="nav-icon far fa fa-palette" aria-hidden="true"></i>
                                         Tema General
                                     </a>
 
@@ -107,9 +107,13 @@
                                     <td>
                                         <div>{{ $card->field('others', 'name') }}</div>
                                         @if ($card->use_card_number)
-                                            <a target="_blank" href="{{ $card->url_number }}">{{ $card->url_number }}</a>
+                                            <a class="text-sm" target="_blank" href="{{ $card->url_number }}">
+                                                {{ $card->url_number }}
+                                            </a>
                                         @else
-                                            <a target="_blank" href="{{ $card->url }}">{{ $card->url }}</a>
+                                            <a class="text-sm" target="_blank" href="{{ $card->url }}">
+                                                {{ $card->url }}
+                                            </a>
                                         @endif
                                     </td>
 
