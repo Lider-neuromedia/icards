@@ -89,7 +89,7 @@
 
                             @if ($cards->count() == 0)
                                 <tr>
-                                    <td class="text-center" colspan="3">No hay tarjetas</td>
+                                    <td class="text-center" colspan="5">No hay tarjetas</td>
                                 </tr>
                             @endif
 
@@ -179,7 +179,7 @@
                         <tbody>
                             @if ($cards->count() == 0)
                                 <tr>
-                                    <td class="text-center" colspan="3">No hay tarjetas</td>
+                                    <td class="text-center" colspan="{{ 1 + count($events) }}">No hay tarjetas</td>
                                 </tr>
                             @endif
 
