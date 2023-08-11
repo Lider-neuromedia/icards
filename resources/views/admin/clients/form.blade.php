@@ -12,7 +12,23 @@
     </div>
 </div>
 
-@include('admin.clients.fields.password')
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Cuentas Habilitadas</h3>
+    </div>
+    <div class="card-body">
+        @include('admin.clients.fields.allowed-accounts')
+    </div>
+</div>
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Contraseña</h3>
+    </div>
+    <div class="card-body">
+        @include('admin.clients.fields.password')
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12 my-5">

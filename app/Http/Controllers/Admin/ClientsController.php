@@ -25,6 +25,7 @@ class ClientsController extends Controller
                         ->orWhere('email', 'like', "%$search%");
                 });
             })
+            ->with('allowedAccounts')
             ->orderBy('name', 'asc')
             ->paginate(20);
 
@@ -42,7 +43,19 @@ class ClientsController extends Controller
             'cards' => 1,
         ]);
 
-        return view('admin.clients.create', compact('client', 'subscription', 'sellers'));
+        $allowedAccounts = [];
+        $accounts = User::query()
+            ->select('id', 'name', 'email')
+            ->where('role', User::ROLE_CLIENT)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->map(function ($x) {
+                $x->enabled = false;
+                $x->setHidden(['seller_name']);
+                return $x;
+            });
+
+        return view('admin.clients.create', compact('client', 'subscription', 'sellers', 'accounts', 'allowedAccounts'));
     }
 
     public function store(ClientRequest $request)
@@ -68,7 +81,20 @@ class ClientsController extends Controller
             ]);
         }
 
-        return view('admin.clients.edit', compact('client', 'subscription', 'sellers'));
+        $allowedAccounts = $client->allowedAccounts()->get()->pluck('id')->toArray();
+        $accounts = User::query()
+            ->select('id', 'name', 'email')
+            ->where('role', User::ROLE_CLIENT)
+            ->where('id', '!=', $client->id)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->map(function ($x) use ($allowedAccounts) {
+                $x->enabled = false;
+                $x->setHidden(['seller_name']);
+                return $x;
+            });
+
+        return view('admin.clients.edit', compact('client', 'subscription', 'sellers', 'accounts', 'allowedAccounts'));
     }
 
     public function update(ClientRequest $request, User $client)
@@ -120,6 +146,14 @@ class ClientsController extends Controller
             $subscription->save();
 
             $this->deleteClientExtraCards($client);
+
+            // Habilitar/Deshabilitar cuentas.
+            $allowed_accounts = $request->get('allowed_accounts');
+            if ($allowed_accounts) {
+                $client->allowedAccounts()->sync($allowed_accounts);
+            } else {
+                $client->allowedAccounts()->detach();
+            }
 
             // Asignar vendedor
             $seller = Seller::findOrFail($request->get('seller_id'));

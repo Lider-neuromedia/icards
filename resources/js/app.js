@@ -1,5 +1,6 @@
 require('./bootstrap');
 require('./card-canvas');
+require('./allowed-accounts');
 
 window.Vue = require('vue');
 

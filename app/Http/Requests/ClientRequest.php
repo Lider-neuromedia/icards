@@ -31,6 +31,8 @@ class ClientRequest extends FormRequest
             'finish_at' => ['required', "date_format:Y-m-d\TH:i", 'after:start_at'],
             'cards' => ['required', 'integer', 'min:1'],
             'seller_id' => ['required', 'integer', 'exists:sellers,id'],
+            'allowed_accounts' => ['nullable', 'array'],
+            'allowed_accounts.*' => ['required', 'integer', 'exists:users,id'],
         ];
 
         if ($this->has('id')) {

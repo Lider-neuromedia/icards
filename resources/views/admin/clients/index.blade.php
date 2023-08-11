@@ -35,8 +35,8 @@
                         <thead>
                             <tr>
                                 <th>Vendedor</th>
-                                <th>Nombre</th>
-                                <th>E-mail</th>
+                                <th>Cuenta</th>
+                                <th>Cuentas Habilitadas</th>
                                 <th title="Fecha de vencimiento">Suscripción</th>
                                 <th class="text-center">Tarjetas</th>
                                 <th class="text-right">
@@ -52,10 +52,25 @@
                             @foreach ($clients as $client)
                                 <tr>
                                     <td>{{ $client->seller_name }}</td>
-                                    <td>{{ $client->name }}</td>
-                                    <td>{{ $client->email }}</td>
+                                    <td>
+                                        <div>{{ $client->name }}</div>
+                                        <div class="text-gray">{{ $client->email }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-gray">Cuentas: {{ $client->allowedAccounts->count() }}</div>
+                                        <ul class="pl-0 overflow-auto" style="line-height: 1.1rem; max-height: 200px;">
+                                            @foreach ($client->allowedAccounts as $account)
+                                                <li class="mb-2">
+                                                    <div>{{ $account->name }}</div>
+                                                    <div><span class="text-gray">{{ $account->email }}</span></div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
                                     <td>{{ $client->subscription_status }}</td>
-                                    <td class="text-center">{{ $client->cards_usage }}</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-dark">{{ $client->cards_usage }}</span>
+                                    </td>
                                     <td class="text-right">
                                         <a class="btn btn-xs btn-primary"
                                             href="{{ route('clients.cards.theme', $client) }}">Tema</a>

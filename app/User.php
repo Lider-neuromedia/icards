@@ -53,6 +53,22 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class, 'client_id', 'id');
     }
 
+    /**
+     * Cuentas a las que esta cuenta puede acceder.
+     */
+    public function allowedAccounts()
+    {
+        return $this->belongsToMany(User::class, 'allowed_accounts', 'client_id', 'allowed_account_id');
+    }
+
+    /**
+     * Cuentas que pueden acceder a esta cuenta.
+     */
+    public function allowedClients()
+    {
+        return $this->belongsToMany(User::class, 'allowed_accounts', 'allowed_account_id', 'client_id');
+    }
+
     public function getSellerNameAttribute()
     {
         $seller = $this->sellers()->first();
