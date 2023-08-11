@@ -50,7 +50,7 @@ Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-if (false) {
+if (env('MAINTENANCE_URLS') === true) {
     Route::get('/setup-storage', function () {
         $exitCode = Artisan::call('storage:link');
         return response()->json(['done ', $exitCode], 200);

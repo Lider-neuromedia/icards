@@ -46,7 +46,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ route('home') }}" class="brand-link text-center">
+            <a href="{{ route('home') }}" class="brand-link pl-4" style="white-space: normal;">
                 <span class="brand-text font-weight-light">{{ \Auth::user()->name }}</span>
             </a>
 
