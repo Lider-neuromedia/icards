@@ -11,73 +11,63 @@ use Illuminate\Http\Request;
 
 class CardsController extends Controller
 {
-    /**
-     * @var CardsService
-     */
-    protected $cardsService;
-
-    public function __construct()
-    {
-        $this->cardsService = new CardsService();
-    }
-
     public function index(Request $request)
     {
-        return $this->cardsService->cards($request, auth()->user());
+        return (new CardsService())->cards($request, auth()->user());
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return $this->cardsService->create(auth()->user());
+        return (new CardsService())->create($request, auth()->user());
     }
 
     public function store(CardRequest $request)
     {
-        return $this->cardsService->saveOrUpdate($request, true, auth()->user());
+        return (new CardsService())->saveOrUpdate($request, true, auth()->user());
     }
 
-    public function edit(Card $card)
+    public function edit(Request $request, Card $card)
     {
-        return $this->cardsService->edit(auth()->user(), $card);
+        return (new CardsService())->edit($request, auth()->user(), $card);
     }
 
     public function update(CardRequest $request, Card $card)
     {
-        return $this->cardsService->saveOrUpdate($request, true, auth()->user(), $card);
+        return (new CardsService())->saveOrUpdate($request, true, auth()->user(), $card);
     }
 
     public function destroy(Card $card)
     {
-        return $this->cardsService->destroy(auth()->user(), $card);
+        return (new CardsService())->destroy(auth()->user(), $card);
     }
 
-    public function theme()
+    public function theme(Request $request)
     {
-        return $this->cardsService->theme(auth()->user());
+        return (new CardsService())->theme($request, auth()->user());
     }
 
     public function storeTheme(ThemeRequest $request)
     {
-        return $this->cardsService->storeTheme($request, auth()->user());
+        return (new CardsService())->storeTheme($request, auth()->user());
     }
 
     public function updateCardNumber(Request $request, Card $card)
     {
-        return $this->cardsService->updateCardNumber($request, $card, auth()->user());
+        return (new CardsService())->updateCardNumber($request, $card, auth()->user());
     }
 
-    public function createMultiple()
+    public function createMultiple(Request $request)
     {
-        return $this->cardsService->createMultiple(auth()->user());
+        return (new CardsService())->createMultiple($request, auth()->user());
     }
 
-    public function templateMultiple()
+    public function templateMultiple(Request $request)
     {
-        return $this->cardsService->templateMultiple(auth()->user());
+        return (new CardsService())->templateMultiple();
     }
 
     public function storeMultiple(Request $request)
     {
-        return $this->cardsService->storeMultiple($request, auth()->user());
+        return (new CardsService())->storeMultiple($request, auth()->user());
     }
 }

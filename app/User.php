@@ -118,6 +118,57 @@ class User extends Authenticatable
         return $this->cards()->count() >= $subscription->cards;
     }
 
+    /**
+     * El usuario tiene asociada o es la cuenta pasada por parámetro.
+     * @param User|Authenticatable $account
+     * @return boolean
+     */
+    public function hasAllowedAccount(User $account): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        } elseif ($this->id == $account->id) {
+            return true;
+        }
+        $hasAccount = $this->allowedAccounts()
+            ->where('allowed_account_id', $account->id)
+            ->exists();
+        return $hasAccount;
+    }
+
+    /**
+     * El usuario tiene asociada o es dueño de la tarjeta pasada por parámetro.
+     *
+     * @param Card $card
+     * @return boolean
+     */
+    public function hasAllowedCard(Card $card): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        $hasCard = $this->hasAllowedAccount($card->client()->first());
+        return $hasCard;
+    }
+
+    /**
+     * @param User|Authenticatable $account
+     * @return boolean
+     */
+    public function hasNotAllowedAccount(User $account): bool
+    {
+        return !$this->hasAllowedAccount($account);
+    }
+
+    /**
+     * @param Card $card
+     * @return boolean
+     */
+    public function hasNotAllowedCard(Card $card): bool
+    {
+        return !$this->hasAllowedCard($card);
+    }
+
     public function getCardsUsageAttribute()
     {
         $subscription = $this->subscriptions()->first();

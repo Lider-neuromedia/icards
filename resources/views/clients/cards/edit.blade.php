@@ -60,6 +60,11 @@
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="id" value="{{ $card->id }}">
+
+                    @if (isUserClient() && auth()->user()->id != $card->client_id)
+                        <input type="hidden" name="account" value="{{ $card->client_id }}" />
+                    @endif
+
                     @include('clients.cards.form')
                 </form>
 

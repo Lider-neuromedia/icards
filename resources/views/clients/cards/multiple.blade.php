@@ -57,6 +57,10 @@
                 <form action="{{ $create_multiple_route }}" method="post" enctype="multipart/form-data">
                     @csrf
 
+                    @if (isUserClient() && $filters->account)
+                        <input type="hidden" name="account" value="{{ $filters->account }}" />
+                    @endif
+
                     <div class="row">
                         <div class="col-12">
                             <div class="card">

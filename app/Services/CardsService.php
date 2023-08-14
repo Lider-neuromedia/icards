@@ -6,6 +6,7 @@ use App\Card;
 use App\CardField;
 use App\CardStatistic;
 use App\Enums\GroupField;
+use App\Filters\CardsFilter;
 use App\Http\Requests\ThemeRequest;
 use App\Mail\CardCreated;
 use App\Services\SlugService;
@@ -35,36 +36,35 @@ class CardsService
      */
     public function cards(Request $request, User $client)
     {
-        $events = CardStatistic::analyticsEvents();
+        $cardsFilter = new CardsFilter($request, $client);
+        $filters = $cardsFilter->getFilters();
+        $filtersLists = $cardsFilter->getFiltersLists();
 
-        $search = $request->get('search');
-        $cards = $client->cards()
-            ->when($search, function ($q) use ($search) {
-                $q->where(function ($q) use ($search) {
-                    $q->where('slug', 'like', "%$search%")
-                        ->orWhereHas('fields', function ($q) use ($search) {
-                            $q->where('group', GroupField::OTHERS)
-                                ->where('key', 'name')
-                                ->where('value', 'like', "%$search%");
-                        });
-                });
+        $clientAccount = $client;
+        if ($cardsFilter->account) {
+            $clientAccount = $cardsFilter->selectedAccount();
+        }
+
+        $events = CardStatistic::analyticsEvents();
+        $subscription = $clientAccount->subscription();
+
+        $cards = $this->clientCardQuery($client, $cardsFilter)
+            ->when($cardsFilter->search, function ($q) use ($cardsFilter) {
+                $q->search($cardsFilter->search);
             })
             ->with('statistics')
             ->orderBy('slug', 'asc')
             ->paginate(20);
 
-
-        $subscription = $client->subscription();
-
         $cards->setCollection(
             $cards->getCollection()
-                ->map(function ($x) use ($client, $subscription) {
+                ->map(function ($x) use ($clientAccount, $subscription) {
                     $x->use_card_number = $x->field(GroupField::OTHERS, 'use_card_number') == 1;
                     $card_numbers = [$x->slug_number];
 
                     if ($subscription) {
                         // Números de tarjetas usados.
-                        $usedNumbers = $client->cards()
+                        $usedNumbers = $clientAccount->cards()
                             ->select('slug_number')
                             ->pluck('slug_number')
                             ->unique();
@@ -81,37 +81,31 @@ class CardsService
                 })
         );
 
-        return view('clients.cards.index', compact('cards', 'search', 'client', 'events'));
+        if ($cardsFilter->account) {
+            $client = $clientAccount;
+        }
+
+        return view('clients.cards.index', compact('cards', 'client', 'events', 'filters', 'filtersLists'));
     }
 
     /**
      * @param User|Authenticatable $client
      * @return Factory|View
      */
-    public function create(User $client)
+    public function create(Request $request, User $client)
     {
-        $groups = CardField::TEMPLATE_FIELDS;
-        $card = new Card([]);
-        return view('clients.cards.create', compact('card', 'groups', 'client'));
-    }
+        $cardsFilter = new CardsFilter($request, $client);
+        $filters = $cardsFilter->getFilters();
 
-    /**
-     * @param User|Authenticatable $client
-     * @param Card $card
-     * @return bool
-     */
-    private function canAccessCard(User $client, Card $card): bool
-    {
-        if (auth()->user()->isAdmin()) {
-            return true;
+        if ($cardsFilter->account) {
+            if (!$this->canAccessAccount($cardsFilter->selectedAccount())) {
+                return redirect()->action('Clients\CardsController@index');
+            }
         }
 
-        $clientIsCardOwner = $card->client->id == $client->id;
-        $clientHasAccessToCard = $client->allowedAccounts()
-            ->where('allowed_account_id', $card->client->id)
-            ->exists();
-
-        return $clientIsCardOwner || $clientHasAccessToCard;
+        $groups = CardField::TEMPLATE_FIELDS;
+        $card = new Card([]);
+        return view('clients.cards.create', compact('card', 'groups', 'client', 'filters'));
     }
 
     /**
@@ -119,7 +113,7 @@ class CardsService
      * @param Card $card
      * @return Factory|View|RedirectResponse
      */
-    public function edit(User $client, Card $card)
+    public function edit(Request $request, User $client, Card $card)
     {
         if (!$this->canAccessCard($client, $card)) {
             return redirect()->action('Clients\CardsController@index');
@@ -150,14 +144,25 @@ class CardsService
     }
 
     /**
+     * @param Request $request
      * @param User|Authenticatable $client
      * @return Factory|View
      */
-    public function theme(User $client)
+    public function theme(Request $request, User $client)
     {
+        $cardsFilter = new CardsFilter($request, $client);
+
+        if ($cardsFilter->account) {
+            if (!$this->canAccessAccount($cardsFilter->selectedAccount())) {
+                return redirect()->action('Clients\CardsController@index');
+            }
+        }
+
         $groups = CardField::TEMPLATE_FIELDS;
-        $card = $client->cards()->first();
-        return view('clients.cards.theme', compact('card', 'groups', 'client'));
+        $filters = $cardsFilter->getFilters();
+        $card = $this->clientCardQuery($client, $cardsFilter)->first();
+
+        return view('clients.cards.theme', compact('card', 'groups', 'client', 'filters'));
     }
 
     /**
@@ -172,7 +177,15 @@ class CardsService
             \DB::beginTransaction();
 
             $groups = CardField::TEMPLATE_FIELDS;
-            $cards = $client->cards()->get();
+            $cardsFilter = new CardsFilter($request, $client);
+
+            if ($cardsFilter->account) {
+                if (!$this->canAccessAccount($cardsFilter->selectedAccount())) {
+                    throw new Exception("No puede modificar este tema.", 1);
+                }
+            }
+
+            $cards = $this->clientCardQuery($client, $cardsFilter)->get();
 
             foreach ($groups as $group_key => $group) {
                 foreach ($group['values'] as $field) {
@@ -218,7 +231,7 @@ class CardsService
             }
 
             // Actualizar archivos de vcards.
-            $cards = $client->cards()->get();
+            $cards = $this->clientCardQuery($client, $cardsFilter)->get();
 
             foreach ($cards as $card) {
                 self::generateQRCode($card); // TODO: Optimizar usando cron.
@@ -232,7 +245,10 @@ class CardsService
             if (auth()->user()->isAdmin()) {
                 return redirect()->action('Admin\CardsController@theme', $client);
             }
-            return redirect()->action('Clients\CardsController@theme');
+            return redirect()->action(
+                'Clients\CardsController@theme',
+                $cardsFilter->account ? ['account' => $cardsFilter->account] : []
+            );
 
         } catch (Exception $ex) {
             \Log::info($ex->getMessage());
@@ -258,18 +274,24 @@ class CardsService
             \DB::beginTransaction();
 
             $isNewCard = $card == null;
+            $isEditCard = $card != null;
+            $cardsFilter = new CardsFilter($request, $client);
 
-            $card_id = $card != null ? $card->id : null;
+            $card_id = $isEditCard ? $card->id : null;
             $slug = SlugService::generate($request->get('others_name'), 'cards', $card_id);
             $data = ['slug' => $slug];
 
-            if ($card != null) {
+            if ($isEditCard) {
                 \Storage::delete("public/cards/card-{$card->slug}.vcf");
                 \Storage::delete("public/cards/qr-{$card->slug}.png");
                 $card->update($data);
             } else {
+                $accountClient = $client;
+                if (isUserClient() && $cardsFilter->account) {
+                    $accountClient = $cardsFilter->selectedAccount();
+                }
                 $card = new Card($data);
-                $card->client()->associate($client);
+                $card->client()->associate($accountClient);
                 $card->save();
             }
 
@@ -316,7 +338,7 @@ class CardsService
                 }
             }
 
-            $this->refreshCard($client, $card);
+            $this->refreshCard($card);
 
             // Notificar usuario dueño de la tarjeta que su tarjeta fué creada.
             if ($isNewCard && $notify) {
@@ -331,7 +353,12 @@ class CardsService
             if (auth()->user()->isAdmin()) {
                 return redirect()->action('Admin\CardsController@edit', [$client, $card]);
             }
-            return redirect()->action('Clients\CardsController@edit', $card);
+            return redirect()->action(
+                'Clients\CardsController@edit',
+                $cardsFilter->account
+                    ? ['card' => $card, 'account' => $cardsFilter->account]
+                    : ['card' => $card]
+            );
 
         } catch (Exception $ex) {
             \Log::info($ex->getMessage());
@@ -348,9 +375,9 @@ class CardsService
      * @param Card $card
      * @return void
      */
-    public function refreshCard(User $client, Card $card)
+    public function refreshCard(Card $card): void
     {
-        $this->updateCardFields($client);
+        $this->updateCardFields($card->client);
         self::generateQRCode($card);
         $this->generateVCard($card);
     }
@@ -365,9 +392,11 @@ class CardsService
         $groups = CardField::TEMPLATE_FIELDS;
         $primary_card = $client->cards()->first();
 
-        if ($primary_card && $client->cards()->count() > 1) { // Validar que haya mas de una tarjeta.
+        // Validar que haya mas de una tarjeta.
+        if ($primary_card && $client->cards()->count() > 1) {
             foreach ($client->cards as $card) {
-                if ($primary_card->id != $card->id) { // Validar que no sea la misma tarjeta que la principal.
+                // Validar que no sea la misma tarjeta que la principal.
+                if ($primary_card->id != $card->id) {
 
                     foreach ($groups as $group_key => $group) {
                         foreach ($group['values'] as $field) {
@@ -556,6 +585,7 @@ class CardsService
 
     /**
      * Actualizar los números de tarjetas de un cliente.
+     * Solo tarjetas que le pertenecen, no tarjetas de cuentas habilitadas.
      *
      * @param User $client
      * @return void
@@ -605,7 +635,7 @@ class CardsService
         }
 
         foreach ($client->cards()->get() as $card) {
-            (new CardsService())->refreshCard($client, $card);
+            (new CardsService())->refreshCard($card);
         }
     }
 
@@ -618,20 +648,23 @@ class CardsService
      */
     public function updateCardNumber(Request $request, Card $card, User $client)
     {
+        $cardsFilter = new CardsFilter($request, $client);
         $cardNumber = $request->get('slug_number');
-        $usedNumbers = $client->cards()
+
+        $usedNumbers = $this->clientCardQuery($client, $cardsFilter)
             ->select('slug_number')
             ->where('id', '<>', $card->id)
             ->pluck('slug_number')
-            ->unique();
+            ->unique()
+            ->toArray();
 
-        if (in_array($cardNumber, $usedNumbers->toArray())) {
+        if (in_array($cardNumber, $usedNumbers)) {
             session()->flash('message-error', "No se puede asignar el número $cardNumber a esta tarjeta.");
             return redirect()->back();
         }
 
         $card->update(["slug_number" => $cardNumber]);
-        $this->refreshCard($client, $card);
+        $this->refreshCard($card);
 
         session()->flash('message', "Número de tarjeta actualizado.");
         return redirect()->back();
@@ -641,15 +674,22 @@ class CardsService
      * @param User|Authenticatable $client
      * @return Factory|View
      */
-    public function createMultiple(User $client)
+    public function createMultiple(Request $request, User $client)
     {
-        return view('clients.cards.multiple', compact('client'));
+        $cardsFilter = new CardsFilter($request, $client);
+        $filters = $cardsFilter->getFilters();
+
+        if ($cardsFilter->account) {
+            $client = $cardsFilter->selectedAccount();
+        }
+
+        return view('clients.cards.multiple', compact('client', 'filters'));
     }
 
     /**
-     * @param User|Authenticatable $client
+     * Descargar plantilla para registrar multiples tarjetas.
      */
-    public function templateMultiple(User $client)
+    public function templateMultiple()
     {
         $groups = CardField::TEMPLATE_FIELDS;
         $record = [];
@@ -657,20 +697,17 @@ class CardsService
 
         foreach ($groups as $group_key => $group) {
             if (CardField::hasGroupWithSpecificFields($group_key)) {
-
                 foreach ($group['values'] as $field) {
                     if ($field['general'] == false && !in_array($field['type'], ['image'])) {
-
                         $headers[] = $field['label'];
                         $record[] = $field['example'];
-
                     }
                 }
-
             }
         }
 
-        $filename = "tarjetas-{$client->id}.csv";
+        $timestamp = now()->format('YmdHis');
+        $filename = "plantilla-tarjetas-{$timestamp}.csv";
         $path = storage_path("app/csv/$filename");
         $csv = Writer::createFromPath($path, 'w+');
         $csv->setDelimiter(";");
@@ -682,7 +719,7 @@ class CardsService
             array_unique($record),
             array_unique($record),
         ]);
-        $csv->output('tarjetas.csv');
+        $csv->output($filename);
         die;
     }
 
@@ -693,6 +730,13 @@ class CardsService
      */
     public function storeMultiple(Request $request, User $client)
     {
+        $cardsFilter = new CardsFilter($request, $client);
+
+        $accountClient = $client;
+        if (isUserClient() && $cardsFilter->account) {
+            $accountClient = $cardsFilter->selectedAccount();
+        }
+
         $cardsLimit = 40;
         $request->validate([
             'csv_file' => ['required', 'file', 'max:150'],
@@ -702,6 +746,9 @@ class CardsService
 
             \DB::beginTransaction();
 
+            // TODO: Al importar multiples tarjetas no está teniendo
+            // encuenta cuando son por numero y no por slug.
+
             $path = $request->file('csv_file')->store("csv");
             $filename = array_reverse(explode("/", $path))[0];
             $fullpath = storage_path("app/csv/$filename");
@@ -709,10 +756,10 @@ class CardsService
             $csv = Reader::createFromPath($fullpath, 'r');
             $csv->setDelimiter(';');
             $csv->setHeaderOffset(0);
-            $header_offset = $csv->getHeaderOffset();
-            $header = $csv->getHeader();
+            // $header_offset = $csv->getHeaderOffset();
+            // $header = $csv->getHeader();
 
-            $subscription = $client->subscription();
+            $subscription = $accountClient->subscription();
 
             if (count($csv) > $cardsLimit) {
                 throw new Exception("No se pueden subir mas de $cardsLimit tarjetas a la vez.", 1);
@@ -731,7 +778,7 @@ class CardsService
                 }
 
                 $card = Card::query()
-                    ->where('client_id', $client->id)
+                    ->where('client_id', $accountClient->id)
                     ->whereHas('fields', function ($q) use ($emailKey) {
                         $q->where('group', GroupField::ACTION_CONTACTS)
                             ->where('key', 'email')
@@ -743,17 +790,18 @@ class CardsService
                     $formatValue['id'] = $card->id;
                 }
 
-                $request = new Request();
-                $request->merge($formatValue);
-                $this->saveOrUpdate($request, false, $client, $card);
+                $request2 = new Request();
+                $request2->merge($formatValue);
+
+                $this->saveOrUpdate($request2, false, $accountClient, $card);
             }
 
             // Borrar últimas tarjetas creadas que sobrepasen el límite.
-            $clientCountCards = $client->cards()->count();
+            $clientCountCards = $accountClient->cards()->count();
 
             if ($subscription->cards < $clientCountCards) {
                 $deleteCountCards = $clientCountCards - $subscription->cards;
-                $n = $client->cards()
+                $accountClient->cards()
                     ->orderBy('created_at', 'desc')
                     ->take($deleteCountCards)
                     ->delete();
@@ -807,5 +855,71 @@ class CardsService
         }
 
         return $formatData;
+    }
+
+    /**
+     * Validar si el usuario ($client) logueado tiene acceso
+     * a una tarjeta solo si esta le pertenece o le
+     * pertenece a las cuentas asociadas.
+     * @param User|Authenticatable $client
+     * @param Card $card
+     * @return bool
+     */
+    private function canAccessCard(User $client, Card $card): bool
+    {
+        if (auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        $clientIsCardOwner = $card->client->id == $client->id;
+        $clientHasAccessToCard = $client->allowedAccounts()
+            ->where('allowed_account_id', $card->client->id)
+            ->exists();
+
+        return $clientIsCardOwner || $clientHasAccessToCard;
+    }
+
+    /**
+     * Validar si el usuario logueado tiene acceso a la cuenta a editar.
+     *
+     * @param User $account
+     * @return boolean
+     */
+    private function canAccessAccount(User $account): bool
+    {
+        if (auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        $isSameAccount = auth()->user()->id == $account->id;
+        $userHasAccessToAccount = auth()->user()
+            ->allowedAccounts()
+            ->where('allowed_account_id', $account->id)
+            ->exists();
+
+        return $isSameAccount || $userHasAccessToAccount;
+    }
+
+    /**
+     * @param User|Authenticatable $client
+     * @param CardsFilter $cardsFilter
+     * @return \Illuminate\Database\Eloquent\Builder|mixed
+     */
+    private function clientCardQuery(User $client, CardsFilter $cardsFilter)
+    {
+        return Card::query()
+            ->when(isUserAdmin(), function ($q) use ($client) {
+                $q->where('client_id', $client->id);
+            })
+            ->when(isUserClient(), function ($q) use ($client, $cardsFilter) {
+                $q
+                    ->when($cardsFilter->account, function ($q) use ($cardsFilter) {
+                        $q->whereIn('client_id', $cardsFilter->accounts_ids)
+                            ->where('client_id', $cardsFilter->account);
+                    })
+                    ->when(!$cardsFilter->account, function ($q) use ($client) {
+                        $q->where('client_id', $client->id);
+                    });
+            });
     }
 }

@@ -1,12 +1,6 @@
 @php
-    
     $key = 'card_number_' . $card->id;
     $keyForm = 'card_number_' . $card->id . '_form';
-    $formUrl = route('cards.number', ['card' => $card->id]);
-    
-    if (isUserAdmin()) {
-        $formUrl = route('clients.cards.number', ['card' => $card->id]);
-    }
 @endphp
 
 <form method="post" id="{{ $keyForm }}" action="{{ $formUrl }}">

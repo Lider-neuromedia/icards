@@ -50,7 +50,7 @@ class AnalyticsController extends Controller
 
     public function download(User $client)
     {
-        if (!auth()->user()->isAdmin() && $client->id != auth()->user()->id) {
+        if (auth()->user()->hasNotAllowedAccount($client)) {
             return abort(401);
         }
 

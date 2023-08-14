@@ -17,22 +17,36 @@ class CardRequest extends FormRequest
      */
     public function authorize()
     {
-        $id = trim($this->get('id'));
+        $id = trim($this->get('id')) ?: null;
 
-        if (!\Auth::check()) {
+        if (!auth()->check()) {
             return false;
-        }
-        if (!\Auth::user()->isAdmin()) {
-            if ($id == null || $id == '') {
-                if (\Auth::user()->isCardsLimitReached()) {
-                    return false;
-                }
-            } elseif (Card::whereId($id)->exists() && !\Auth::user()->cards()->whereId($id)->exists()) {
-                return false;
-            }
+        } elseif (isUserAdmin()) {
+            return true;
+        } elseif ($id == null || $id == '') {
+            // Si es nueva tarjeta.
+            $cardsLimitReached = auth()->user()->isCardsLimitReached();
+            return !$cardsLimitReached;
         }
 
-        return true;
+        // Si es editar tarjeta.
+        $allowedAccounts = auth()->user()
+            ->allowedAccounts()
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        $allowedAccounts = array_merge(
+            [auth()->user()->id],
+            $allowedAccounts
+        );
+
+        $canAccessCard = Card::query()
+            ->whereIn('client_id', $allowedAccounts)
+            ->where('id', $id)
+            ->exists();
+
+        return $canAccessCard;
     }
 
     /**

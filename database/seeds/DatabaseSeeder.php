@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
 
             foreach ($client->cards as $card) {
                 $cardsService = new CardsService();
-                $cardsService->refreshCard($client, $card);
+                $cardsService->refreshCard($card);
             }
         }
     }

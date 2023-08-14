@@ -3,6 +3,15 @@
     $create_route = route('cards.create');
     $create_multiple_route = route('cards.create-multiple');
     $theme_route = route('cards.theme');
+    $extraParams = '';
+    
+    if (isUserClient() && $filters->account) {
+        $extraParams = "?account={$filters->account}";
+        // $index_route = route('cards.index');
+        $create_route = route('cards.create') . $extraParams;
+        $create_multiple_route = route('cards.create-multiple') . $extraParams;
+        $theme_route = route('cards.theme') . $extraParams;
+    }
     
     if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
@@ -28,8 +37,12 @@
     <div class="row">
         <div class="col-12">
 
-            <div class="alert alert-light text-center border-primary bg-white">
-                Límite de tarjetas ({{ $client->cards_usage }})
+            <div class="d-flex justify-content-between alert alert-light border-primary bg-white text-gray">
+                <span>
+                    <strong>{{ $client->name }}</strong>
+                    <span>{{ $client->email }}</span>
+                </span>
+                <strong>({{ $client->cards_usage }})</strong>
             </div>
 
             <div class="card">
@@ -38,9 +51,25 @@
 
                     <div class="card-tools">
                         <form action="{{ $index_route }}" method="get">
-                            <div class="input-group input-group-sm" style="max-width: 300px;">
-                                <input value="{{ $search }}" type="search" name="search"
+                            <div class="input-group input-group-sm">
+                                {{-- Cuentas --}}
+                                @if (isUserClient() && count($filtersLists->accounts) > 0)
+                                    <select class="form-control float-right" name="account">
+                                        <option value="">Mis Tarjetas</option>
+                                        @foreach ($filtersLists->accounts as $faccount)
+                                            <option value="{{ $faccount->id }}"
+                                                @if ($filters->account == $faccount->id) selected @endif>
+                                                {{ $faccount->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @endif
+
+                                {{-- Search --}}
+                                <input value="{{ $filters->search }}" type="search" name="search"
                                     class="form-control float-right" placeholder="Buscar">
+
+                                {{-- Action Search --}}
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search" aria-hidden="true"></i>
@@ -119,9 +148,20 @@
 
                                     @if ($card->use_card_number)
                                         <td class="text-center">
+                                            @php
+                                                $cardNumberFormUrl = null;
+                                                if (isUserClient() && $filters->account) {
+                                                    $cardNumberFormUrl = route('cards.number', ['card' => $card->id]) . $extraParams;
+                                                } elseif (isUserClient()) {
+                                                    $cardNumberFormUrl = route('cards.number', ['card' => $card->id]);
+                                                } elseif (isUserAdmin()) {
+                                                    $cardNumberFormUrl = route('clients.cards.number', ['card' => $card->id]);
+                                                }
+                                            @endphp
+
                                             @include('clients.cards.fields.card-number', [
-                                                'client' => $client,
                                                 'card' => $card,
+                                                'formUrl' => $cardNumberFormUrl,
                                             ])
                                         </td>
                                     @endif
@@ -150,7 +190,7 @@
                 </div>
 
                 <div class="card-footer d-flex justify-content-end">
-                    {{ $cards->appends(['search' => $search])->links() }}
+                    {{ $cards->appends((array) $filters)->links() }}
                 </div>
             </div>
 

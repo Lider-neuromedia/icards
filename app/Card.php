@@ -28,6 +28,18 @@ class Card extends Model
         return $this->hasMany(CardStatistic::class);
     }
 
+    public function scopeSearch($query, string $search)
+    {
+        $query->where(function ($q) use ($search) {
+            $q->where('slug', 'like', "%$search%")
+                ->orWhereHas('fields', function ($q) use ($search) {
+                    $q->where('group', GroupField::OTHERS)
+                        ->where('key', 'name')
+                        ->where('value', 'like', "%$search%");
+                });
+        });
+    }
+
     public function getVisitsAttribute()
     {
         $visits = $this->statistics()->where('action', 'visit-card')->first();

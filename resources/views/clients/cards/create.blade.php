@@ -34,6 +34,11 @@
 
                 <form action="{{ $create_route }}" method="post" enctype="multipart/form-data">
                     @csrf
+
+                    @if (isUserClient() && $filters->account)
+                        <input type="hidden" name="account" value="{{ $filters->account }}" />
+                    @endif
+
                     @include('clients.cards.form')
                 </form>
 
