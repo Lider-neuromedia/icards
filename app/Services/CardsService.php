@@ -342,8 +342,15 @@ class CardsService
 
             // Notificar usuario dueño de la tarjeta que su tarjeta fué creada.
             if ($isNewCard && $notify) {
-                $clientUser = new User(['name' => $card->name, 'email' => $card->email]);
-                Mail::to($clientUser)->send(new CardCreated($card));
+                try {
+
+                    $clientUser = new User(['name' => $card->name, 'email' => $card->email]);
+                    Mail::to($clientUser)->send(new CardCreated($card));
+
+                } catch (Exception $ex) {
+                    \Log::info($ex->getMessage());
+                    \Log::info($ex->getTraceAsString());
+                }
             }
 
             \DB::commit();
@@ -760,9 +767,10 @@ class CardsService
             // $header = $csv->getHeader();
 
             $subscription = $accountClient->subscription();
+            $countCSV = count($csv);
 
-            if (count($csv) > $cardsLimit) {
-                throw new Exception("No se pueden subir mas de $cardsLimit tarjetas a la vez.", 1);
+            if ($countCSV > $cardsLimit) {
+                throw new Exception("No se pueden subir mas de $cardsLimit tarjetas a la vez. Conteo: $countCSV", 1);
             }
             if ($subscription != null && count($csv) > $subscription->cards) {
                 throw new Exception("La cantidad de tarjetas a importar sobrepasa el límite.", 1);
