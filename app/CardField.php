@@ -44,34 +44,6 @@ class CardField extends Model
         return 'text';
     }
 
-    public static function hasGroupWithGeneralFields($group)
-    {
-        foreach (self::TEMPLATE_FIELDS as $key => $fields_group) {
-            if ($key == $group) {
-                foreach ($fields_group['values'] as $value) {
-                    if ($value['general'] === true) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public static function hasGroupWithSpecificFields($group)
-    {
-        foreach (self::TEMPLATE_FIELDS as $key => $fields_group) {
-            if ($key == $group) {
-                foreach ($fields_group['values'] as $value) {
-                    if ($value['general'] === false) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     // TODO: Usar DTO y mover a un servicio aparte.
     public const TEMPLATES = [
         [

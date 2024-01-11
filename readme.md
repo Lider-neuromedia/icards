@@ -46,3 +46,45 @@ public const TEMPLATE_FIELDS = [
     ]),
 ];
 ```
+
+
+```php
+
+// desde
+
+$fields = [
+    GroupField::OTHERS => [
+        'label' => 'Datos de Tarjeta',
+        'values' => [
+            [
+                'key' => 'default_lang',
+                'label' => 'Idioma de tarjetas',
+                'type' => FieldType::SELECT,
+                'general' => Field::GENERAL,
+                'default' => 'es',
+                'options' => [
+                    ['id' => 'es', 'name' => 'Español'],
+                    ['id' => 'en', 'name' => 'Inglés'],
+                ],
+                'example' => 'es',
+            ],
+        ],
+    ],
+];
+
+// hacia
+
+$fields = [
+    (new Group(GroupField::OTHERS, 'Datos de Tarjeta'))
+        ->fields([
+            (new Field('default_lang', 'Idioma de tarjetas'))
+                ->select([
+                    new SelectOption('es', 'Español'),
+                    new SelectOption('en', 'Inglés'),
+                ])
+                ->general()
+                ->default('es')
+                ->example('es'),
+        ]),
+];
+```

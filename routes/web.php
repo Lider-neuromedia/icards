@@ -24,6 +24,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->group(function () {
     Route::resource('sellers', 'SellersController', ['except' => ['show']]);
     Route::resource('clients', 'ClientsController', ['except' => ['show']]);
+
     Route::resource('clients.cards', 'CardsController', ['except' => ['show']]);
     Route::get('clients/{client}/cards/multiple', 'CardsController@createMultiple')->name('clients.cards.create-multiple');
     Route::get('clients/{client}/cards/multiple/template', 'CardsController@templateMultiple')->name('clients.cards.template-multiple');
@@ -31,6 +32,11 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->namespace('Admin')->
     Route::get('clients/{client}/theme', 'CardsController@theme')->name('clients.cards.theme');
     Route::post('clients/{client}/theme', 'CardsController@storeTheme')->name('clients.cards.theme-store');
     Route::post('cards/{card}/number', 'CardsController@updateCardNumber')->name('clients.cards.number');
+
+    Route::get('clients/{client}/fields/scopes', 'FieldsController@scopes')->name('clients.fields.scopes');
+    Route::post('clients/{client}/fields/scopes', 'FieldsController@storeScopes')->name('clients.fields.scopes-stores');
+    Route::match(['PUT', 'PATCH'], 'clients/{client}/fields/scopes', 'FieldsController@resetScopes')->name('clients.fields.scopes-reset');
+
     Route::resource('users', 'AdminsController', ['except' => ['show']]);
 });
 

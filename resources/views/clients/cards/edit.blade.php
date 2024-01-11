@@ -3,7 +3,7 @@
     $edit_route = route('cards.update', $card);
     $destroy_route = route('cards.destroy', $card);
     $theme_route = route('cards.theme');
-    
+
     if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
         $edit_route = route('clients.cards.update', [$client, $card]);

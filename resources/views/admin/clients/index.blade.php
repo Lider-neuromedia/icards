@@ -38,7 +38,16 @@
                                 <th>Cuenta</th>
                                 <th>Cuentas Habilitadas</th>
                                 <th title="Fecha de vencimiento">Suscripción</th>
-                                <th class="text-center">Tarjetas</th>
+                                <th class="text-center">
+                                    {{-- Tarjetas --}}
+                                    <i class="nav-icon far fa-address-card"></i>
+                                </th>
+                                <th class="text-center">
+                                    <i class="nav-icon far fa-edit"></i>
+                                </th>
+                                <th class="text-center">
+                                    <i class="nav-icon far fa-list-alt"></i>
+                                </th>
                                 <th class="text-right">
                                     <a href="{{ route('clients.create') }}" class="btn btn-primary btn-xs"
                                         title="Crear Cliente">
@@ -71,11 +80,17 @@
                                     <td class="text-center">
                                         <span class="badge badge-dark">{{ $client->cards_usage }}</span>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-center">
                                         <a class="btn btn-xs btn-primary"
                                             href="{{ route('clients.cards.theme', $client) }}">Tema</a>
                                         <a class="btn btn-xs btn-primary"
                                             href="{{ route('clients.cards.index', $client) }}">Tarjetas</a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-xs btn-primary"
+                                            href="{{ route('clients.fields.scopes', $client) }}">Rango de Campos</a>
+                                    </td>
+                                    <td class="text-right">
                                         <a class="btn btn-xs btn-primary"
                                             href="{{ route('clients.edit', $client) }}">Editar Cliente</a>
                                     </td>

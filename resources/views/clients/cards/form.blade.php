@@ -1,6 +1,6 @@
 @php
     $back_route = route('cards.index');
-    
+
     if (isUserAdmin()) {
         $back_route = route('clients.cards.index', $client);
     }
@@ -8,14 +8,18 @@
 
 <div class="row">
     @foreach ($groups as $group_key => $group)
-        @if (\App\CardField::hasGroupWithSpecificFields($group_key))
+        @if (hasGroupWithSpecificFields($client, $group_key))
             <div class="col-12">
                 <div class="card">
                     <div class="card-header text-primary">{{ $group['label'] }}</div>
                     <div class="card-body">
 
                         @foreach ($group['values'] as $field)
-                            @if ($field['general'] == false)
+                            @php
+                                $isFieldSpecific = isFieldSpecific($client, $group_key, $field['key']);
+                            @endphp
+
+                            @if ($isFieldSpecific)
                                 @php
                                     $field_key = $group_key . '_' . $field['key'];
                                 @endphp

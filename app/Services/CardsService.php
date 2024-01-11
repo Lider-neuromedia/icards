@@ -10,6 +10,7 @@ use App\Filters\CardsFilter;
 use App\Http\Requests\ThemeRequest;
 use App\Mail\CardCreated;
 use App\Services\SlugService;
+use App\Services\FieldService;
 use App\User;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -190,8 +191,9 @@ class CardsService
             foreach ($groups as $group_key => $group) {
                 foreach ($group['values'] as $field) {
                     $field_key = $group_key . '_' . $field['key'];
+                    $isFieldGeneral = FieldService::isFieldGeneral($client, $group_key, $field['key']);
 
-                    if ($field['general'] == true) {
+                    if ($isFieldGeneral) {
                         foreach ($cards as $card) {
                             $card_field = $card->fields()
                                 ->where('group', $group_key)
@@ -300,8 +302,9 @@ class CardsService
             foreach ($groups as $group_key => $group) {
                 foreach ($group['values'] as $field) {
                     $field_key = $group_key . '_' . $field['key'];
+                    $isFieldSpecific = FieldService::isFieldSpecific($client, $group_key, $field['key']);
 
-                    if ($field['general'] == false) {
+                    if ($isFieldSpecific) {
                         $card_field = $card->fields()
                             ->where('group', $group_key)
                             ->where('key', $field['key'])
@@ -408,8 +411,9 @@ class CardsService
                     foreach ($groups as $group_key => $group) {
                         foreach ($group['values'] as $field) {
                             $field_key = $group_key . '_' . $field['key'];
+                            $isFieldGeneral = FieldService::isFieldGeneral($client, $group_key, $field['key']);
 
-                            if ($field['general'] == true) {
+                            if ($isFieldGeneral) {
                                 $card_field = $card->fields()
                                     ->where('group', $group_key)
                                     ->where('key', $field['key'])
@@ -696,16 +700,17 @@ class CardsService
     /**
      * Descargar plantilla para registrar multiples tarjetas.
      */
-    public function templateMultiple()
+    public function templateMultiple(User $client)
     {
         $groups = CardField::TEMPLATE_FIELDS;
         $record = [];
         $headers = [];
 
         foreach ($groups as $group_key => $group) {
-            if (CardField::hasGroupWithSpecificFields($group_key)) {
+            if (FieldService::hasGroupWithSpecificFields($client, $group_key)) {
                 foreach ($group['values'] as $field) {
-                    if ($field['general'] == false && !in_array($field['type'], ['image'])) {
+                    $isFieldSpecific = FieldService::isFieldSpecific($client, $group_key, $field['key']);
+                    if ($isFieldSpecific && !in_array($field['type'], ['image'])) {
                         $headers[] = $field['label'];
                         $record[] = $field['example'];
                     }
@@ -777,7 +782,7 @@ class CardsService
             }
 
             foreach ($csv as $listItem) {
-                $formatValue = $this->formatImportCardData($listItem);
+                $formatValue = $this->formatImportCardData($accountClient, $listItem);
                 $emailKey = $formatValue['action_contacts_email'];
                 $nameKey = $formatValue['others_name'];
 
@@ -838,18 +843,19 @@ class CardsService
      * @param mixed $data
      * @return array
      */
-    public function formatImportCardData($data)
+    public function formatImportCardData(User $client, $data): array
     {
         $groups = CardField::TEMPLATE_FIELDS;
         $formatData = [];
 
         foreach ($groups as $group_key => $group) {
-            if (CardField::hasGroupWithSpecificFields($group_key)) {
+            if (FieldService::hasGroupWithSpecificFields($client, $group_key)) {
 
                 foreach ($group['values'] as $field) {
                     $field_key = $group_key . '_' . $field['key'];
+                    $isFieldGeneral = FieldService::isFieldGeneral($client, $group_key, $field['key']);
 
-                    if ($field['general'] == true) {
+                    if ($isFieldGeneral) {
                         continue;
                     }
 

@@ -64,7 +64,7 @@ class CardsController extends Controller
 
     public function templateMultiple(Request $request, User $client)
     {
-        return (new CardsService())->templateMultiple();
+        return (new CardsService())->templateMultiple($client);
     }
 
     public function storeMultiple(Request $request, User $client)

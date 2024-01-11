@@ -1,6 +1,6 @@
 @php
     $store_route = route('cards.theme-store');
-    
+
     if (isUserAdmin()) {
         $store_route = route('clients.cards.theme-store', $client);
     }
@@ -45,14 +45,18 @@
 
                         <div class="row">
                             @foreach ($groups as $group_key => $group)
-                                @if (\App\CardField::hasGroupWithGeneralFields($group_key))
+                                @if (hasGroupWithGeneralFields($client, $group_key))
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header text-primary">{{ $group['label'] }}</div>
                                             <div class="card-body">
 
                                                 @foreach ($group['values'] as $field)
-                                                    @if ($field['general'] == true)
+                                                    @php
+                                                        $isFieldGeneral = isFieldGeneral($client, $group_key, $field['key']);
+                                                    @endphp
+
+                                                    @if ($isFieldGeneral)
                                                         @php
                                                             $field_key = $group_key . '_' . $field['key'];
                                                         @endphp

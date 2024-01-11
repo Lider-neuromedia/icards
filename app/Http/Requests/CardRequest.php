@@ -7,6 +7,7 @@ use App\CardField;
 use App\Enums\FieldType;
 use App\Models\Field;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Services\FieldService;
 
 class CardRequest extends FormRequest
 {
@@ -56,14 +57,20 @@ class CardRequest extends FormRequest
      */
     public function rules()
     {
+        $client = $this->route('client');
+        if (!$client) {
+            $client = auth()->user();
+        }
+
         $groups = CardField::TEMPLATE_FIELDS;
         $validation = [];
 
         foreach ($groups as $group_key => $group) {
             foreach ($group['values'] as $field) {
                 $field_key = $group_key . '_' . $field['key'];
+                $isFieldSpecific = FieldService::isFieldSpecific($client, $group_key, $field['key']);
 
-                if ($field['general'] == Field::SPECIFIC) {
+                if ($isFieldSpecific) {
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
                     } elseif ($field_key == "action_contacts_email") {

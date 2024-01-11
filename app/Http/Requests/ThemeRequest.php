@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\CardField;
 use App\Enums\FieldType;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Services\FieldService;
 
 class ThemeRequest extends FormRequest
 {
@@ -25,14 +26,20 @@ class ThemeRequest extends FormRequest
      */
     public function rules()
     {
+        $client = $this->route('client');
+        if (!$client) {
+            $client = auth()->user();
+        }
+
         $groups = CardField::TEMPLATE_FIELDS;
         $validation = [];
 
         foreach ($groups as $group_key => $group) {
             foreach ($group['values'] as $field) {
                 $field_key = $group_key . '_' . $field['key'];
+                $isFieldGeneral = FieldService::isFieldGeneral($client, $group_key, $field['key']);
 
-                if ($field['general'] == true) {
+                if ($isFieldGeneral) {
                     if ($field_key == "others_name") {
                         $validation[$field_key] = ['required', 'string', 'max:100'];
                     } elseif ($field['type'] === FieldType::IMAGE) {

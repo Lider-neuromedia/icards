@@ -1,6 +1,8 @@
 <?php
 
 use App\Card;
+use App\User;
+use App\Services\FieldService;
 
 if (!function_exists('cardValue')) {
     function cardValue(Card $card, $group, $key)
@@ -37,5 +39,33 @@ if (!function_exists('isUserClient')) {
             return false;
         }
         return auth()->user()->isClient();
+    }
+}
+
+if (!function_exists('hasGroupWithGeneralFields')) {
+    function hasGroupWithGeneralFields(User $client, string $group): bool
+    {
+        return FieldService::hasGroupWithGeneralFields($client, $group);
+    }
+}
+
+if (!function_exists('hasGroupWithSpecificFields')) {
+    function hasGroupWithSpecificFields(User $client, string $group): bool
+    {
+        return FieldService::hasGroupWithSpecificFields($client, $group);
+    }
+}
+
+if (!function_exists('isFieldGeneral')) {
+    function isFieldGeneral(User $client, String $groupKey, String $fieldKey): bool
+    {
+        return FieldService::isFieldGeneral($client, $groupKey, $fieldKey);
+    }
+}
+
+if (!function_exists('isFieldSpecific')) {
+    function isFieldSpecific(User $client, String $groupKey, String $fieldKey): bool
+    {
+        return FieldService::isFieldSpecific($client, $groupKey, $fieldKey);
     }
 }
