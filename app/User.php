@@ -202,6 +202,12 @@ class User extends Authenticatable
         return $subscription != null ? $subscription->finish_at->format('d/m/Y h:ia') : "No tiene suscripción";
     }
 
+    public function getIsSubscriptionActiveAttribute()
+    {
+        $left = $this->getSubscriptionDaysLeft();
+        return $left == null || $left <= 0 ? false : true;
+    }
+
     public function getLastNotificationInDaysAttribute()
     {
         $sub = $this->subscriptions()->first();
