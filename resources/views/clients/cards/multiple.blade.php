@@ -33,7 +33,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header text-primary">Pantilla</div>
+                            <div class="card-header text-primary">Plantilla</div>
                             <div class="card-body text-center">
 
                                 <a class="ml-auto btn btn-primary" href="{{ $template_route }}">
