@@ -12,63 +12,63 @@ use App\User;
 
 class CardsController extends Controller
 {
-    public function index(Request $request, User $client)
+    public function index(Request $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->cards($request, $client);
+        return $cardsService->cards($request, $client);
     }
 
-    public function create(Request $request, User $client)
+    public function create(Request $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->create($request, $client);
+        return $cardsService->create($request, $client);
     }
 
-    public function store(CardRequest $request, User $client)
+    public function store(CardRequest $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->saveOrUpdate($request, true, $client);
+        return $cardsService->saveOrUpdate($request, true, $client);
     }
 
-    public function edit(Request $request, User $client, Card $card)
+    public function edit(Request $request, User $client, Card $card, CardsService $cardsService)
     {
-        return (new CardsService())->edit($request, $client, $card);
+        return $cardsService->edit($request, $client, $card);
     }
 
-    public function update(CardRequest $request, User $client, Card $card)
+    public function update(CardRequest $request, User $client, Card $card, CardsService $cardsService)
     {
-        return (new CardsService())->saveOrUpdate($request, true, $client, $card);
+        return $cardsService->saveOrUpdate($request, true, $client, $card);
     }
 
-    public function destroy(User $client, Card $card)
+    public function destroy(User $client, Card $card, CardsService $cardsService)
     {
-        return (new CardsService())->destroy($client, $card);
+        return $cardsService->destroy($client, $card);
     }
 
-    public function theme(Request $request, User $client)
+    public function theme(Request $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->theme($request, $client);
+        return $cardsService->theme($request, $client);
     }
 
-    public function storeTheme(ThemeRequest $request, User $client)
+    public function storeTheme(ThemeRequest $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->storeTheme($request, $client);
+        return $cardsService->storeTheme($request, $client);
     }
 
-    public function updateCardNumber(Request $request, Card $card)
+    public function updateCardNumber(Request $request, Card $card, CardsService $cardsService)
     {
-        return (new CardsService())->updateCardNumber($request, $card, $card->client);
+        return $cardsService->updateCardNumber($request, $card, $card->client);
     }
 
-    public function createMultiple(Request $request, User $client)
+    public function createMultiple(Request $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->createMultiple($request, $client);
+        return $cardsService->createMultiple($request, $client);
     }
 
-    public function templateMultiple(Request $request, User $client)
+    public function templateMultiple(Request $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->templateMultiple($client);
+        return $cardsService->templateMultiple($client);
     }
 
-    public function storeMultiple(Request $request, User $client)
+    public function storeMultiple(Request $request, User $client, CardsService $cardsService)
     {
-        return (new CardsService())->storeMultiple($request, $client);
+        return $cardsService->storeMultiple($request, $client);
     }
 }
