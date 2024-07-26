@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SellerRequest;
 use App\Seller;
-use Illuminate\Http\Request;
 
 class SellersController extends Controller
 {
@@ -59,7 +61,7 @@ class SellersController extends Controller
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $data = $request->only('name');
 
@@ -69,15 +71,14 @@ class SellersController extends Controller
                 $seller = Seller::create($data);
             }
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Registro guardado correctamente.");
             return redirect()->action('Admin\SellersController@edit', $seller->id);
-
         } catch (\Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar registro.");
             return redirect()->back()->withInput($request->input());

@@ -6,11 +6,12 @@
         type="email"
         name="email"
         id="email"
-        value="{{ old('email') ?: $client->email }}" >
+        value="{{ old('email') ?: $client->email }}"
+    >
 
     @error('email')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>

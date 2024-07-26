@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Card;
-use App\CardField;
-use App\Enums\FieldType;
-use App\Models\Field;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Services\FieldService;
+use App\Enums\FieldType;
+use App\Card;
+use App\CardField;
+use App\User;
 
 class CardRequest extends FormRequest
 {
@@ -24,14 +24,19 @@ class CardRequest extends FormRequest
             return false;
         } elseif (isUserAdmin()) {
             return true;
-        } elseif ($id == null || $id == '') {
+        }
+
+        /** @var User */
+        $authUser = auth()->user();
+
+        if ($id == null || $id == '') {
             // Si es nueva tarjeta.
-            $cardsLimitReached = auth()->user()->isCardsLimitReached();
+            $cardsLimitReached = $authUser->isCardsLimitReached();
             return !$cardsLimitReached;
         }
 
         // Si es editar tarjeta.
-        $allowedAccounts = auth()->user()
+        $allowedAccounts = $authUser
             ->allowedAccounts()
             ->get()
             ->pluck('id')

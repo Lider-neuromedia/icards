@@ -2,31 +2,34 @@
 
 namespace App\Services;
 
-use App\Card;
-use App\CardField;
-use App\CardStatistic;
-use App\Enums\GroupField;
-use App\Filters\CardsFilter;
-use App\Http\Requests\ThemeRequest;
-use App\Mail\CardCreated;
-use App\Services\SlugService;
-use App\Services\FieldService;
-use App\User;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use JeroenDesloovere\VCard\VCard;
 use League\Csv\Reader;
 use League\Csv\Writer;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Filters\CardsFilter;
+use App\Http\Requests\ThemeRequest;
+use App\Services\SlugService;
+use App\Services\FieldService;
+use App\Mail\CardCreated;
+use App\Enums\GroupField;
+use App\User;
+use App\Card;
+use App\CardField;
+use App\CardStatistic;
+use Exception;
 
 class CardsService
 {
@@ -131,6 +134,9 @@ class CardsService
      */
     public function destroy(User $client, Card $card)
     {
+        /** @var User */
+        $authUser = auth()->user();
+
         if (!$this->canAccessCard($client, $card)) {
             return redirect()->action('Clients\CardsController@index');
         }
@@ -138,7 +144,7 @@ class CardsService
         $card->delete();
         session()->flash('message', "Tarjeta borrada.");
 
-        if (auth()->user()->isAdmin()) {
+        if ($authUser->isAdmin()) {
             return redirect()->action('Admin\CardsController@index', $client);
         }
         return redirect()->action('Clients\CardsController@index');
@@ -175,7 +181,7 @@ class CardsService
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $groups = CardField::TEMPLATE_FIELDS;
             $cardsFilter = new CardsFilter($request, $client);
@@ -240,22 +246,24 @@ class CardsService
                 $this->generateVCard($card);
             }
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Tema guardado correctamente.");
 
-            if (auth()->user()->isAdmin()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isAdmin()) {
                 return redirect()->action('Admin\CardsController@theme', $client);
             }
             return redirect()->action(
                 'Clients\CardsController@theme',
                 $cardsFilter->account ? ['account' => $cardsFilter->account] : []
             );
-
         } catch (Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar tema.");
             return redirect()->back()->withInput($request->input());
@@ -273,7 +281,7 @@ class CardsService
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $isNewCard = $card == null;
             $isEditCard = $card != null;
@@ -284,8 +292,8 @@ class CardsService
             $data = ['slug' => $slug];
 
             if ($isEditCard) {
-                \Storage::delete("public/cards/card-{$card->slug}.vcf");
-                \Storage::delete("public/cards/qr-{$card->slug}.png");
+                Storage::delete("public/cards/card-{$card->slug}.vcf");
+                Storage::delete("public/cards/qr-{$card->slug}.png");
                 $card->update($data);
             } else {
                 $accountClient = $client;
@@ -349,18 +357,20 @@ class CardsService
 
                     $clientUser = new User(['name' => $card->name, 'email' => $card->email]);
                     Mail::to($clientUser)->send(new CardCreated($card));
-
                 } catch (Exception $ex) {
-                    \Log::info($ex->getMessage());
-                    \Log::info($ex->getTraceAsString());
+                    Log::info($ex->getMessage());
+                    Log::info($ex->getTraceAsString());
                 }
             }
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Tarjeta guardada correctamente.");
 
-            if (auth()->user()->isAdmin()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isAdmin()) {
                 return redirect()->action('Admin\CardsController@edit', [$client, $card]);
             }
             return redirect()->action(
@@ -369,11 +379,10 @@ class CardsService
                     ? ['card' => $card, 'account' => $cardsFilter->account]
                     : ['card' => $card]
             );
-
         } catch (Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar tarjeta.");
             return redirect()->back()->withInput($request->input());
@@ -440,7 +449,6 @@ class CardsService
                             }
                         }
                     }
-
                 }
             }
         }
@@ -554,11 +562,13 @@ class CardsService
         $photo = $card->field(GroupField::OTHERS, 'profile');
 
         if ($logo != '') {
-            $logoContent = \Storage::get("public/cards/$logo");
+            /** @var string */
+            $logoContent = Storage::get("public/cards/$logo");
             $vcard->addLogoContent($logoContent);
         }
         if ($photo != '') {
-            $photoContent = \Storage::get("public/cards/$photo");
+            /** @var string */
+            $photoContent = Storage::get("public/cards/$photo");
             $vcard->addPhotoContent($photoContent);
         }
 
@@ -756,7 +766,7 @@ class CardsService
 
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             // TODO: Al importar multiples tarjetas no está teniendo
             // encuenta cuando son por numero y no por slug.
@@ -820,19 +830,21 @@ class CardsService
                     ->delete();
             }
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Tarjetas guardadas correctamente.");
 
-            if (auth()->user()->isAdmin()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isAdmin()) {
                 return redirect()->action('Admin\CardsController@index', $client);
             }
             return redirect()->action('Clients\CardsController@index');
-
         } catch (Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar tarjeta.");
             return redirect()->back()->withInput($request->input());
@@ -864,7 +876,6 @@ class CardsService
                         $formatData[$field_key] = $value != null ? trim($value) : null;
                     }
                 }
-
             }
         }
 
@@ -881,7 +892,10 @@ class CardsService
      */
     private function canAccessCard(User $client, Card $card): bool
     {
-        if (auth()->user()->isAdmin()) {
+        /** @var User */
+        $authUser = auth()->user();
+
+        if ($authUser->isAdmin()) {
             return true;
         }
 
@@ -901,12 +915,15 @@ class CardsService
      */
     private function canAccessAccount(User $account): bool
     {
-        if (auth()->user()->isAdmin()) {
+        /** @var User */
+        $authUser = auth()->user();
+
+        if ($authUser->isAdmin()) {
             return true;
         }
 
-        $isSameAccount = auth()->user()->id == $account->id;
-        $userHasAccessToAccount = auth()->user()
+        $isSameAccount = $authUser->id == $account->id;
+        $userHasAccessToAccount = $authUser
             ->allowedAccounts()
             ->where('allowed_account_id', $account->id)
             ->exists();

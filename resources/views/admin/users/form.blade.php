@@ -5,7 +5,10 @@
 
 <div class="row">
     <div class="col-md-12 my-5">
-        <a class="btn btn-dark" href="{{ route('users.index') }}">Volver</a>
+        <a class="btn btn-dark" href="{{ route('users.index') }}">
+            {{-- TODO: __() --}}
+            Volver
+        </a>
         <button class="btn btn-primary" type="submit">
             Guardar
         </button>

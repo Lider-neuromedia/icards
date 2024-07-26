@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\CardField;
-use App\Enums\FieldType;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Services\FieldService;
+use App\Enums\FieldType;
+use App\CardField;
 
 class ThemeRequest extends FormRequest
 {
@@ -16,7 +16,7 @@ class ThemeRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**

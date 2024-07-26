@@ -8,6 +8,7 @@
 
 @extends('layouts.dashboard')
 
+{{-- TODO: __() --}}
 @section('title', 'Tema Visual')
 
 @section('breadcrumbs')
@@ -36,11 +37,19 @@
                 @else
                     {{-- Formulario de editar --}}
 
-                    <form action="{{ $store_route }}" method="post" enctype="multipart/form-data">
+                    <form
+                        action="{{ $store_route }}"
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
                         @csrf
 
                         @if (isUserClient() && $filters->account)
-                            <input type="hidden" name="account" value="{{ $filters->account }}" />
+                            <input
+                                type="hidden"
+                                name="account"
+                                value="{{ $filters->account }}"
+                            />
                         @endif
 
                         <div class="row">
@@ -53,7 +62,11 @@
 
                                                 @foreach ($group['values'] as $field)
                                                     @php
-                                                        $isFieldGeneral = isFieldGeneral($client, $group_key, $field['key']);
+                                                        $isFieldGeneral = isFieldGeneral(
+                                                            $client,
+                                                            $group_key,
+                                                            $field['key'],
+                                                        );
                                                     @endphp
 
                                                     @if ($isFieldGeneral)

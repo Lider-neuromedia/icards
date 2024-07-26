@@ -4,13 +4,16 @@
 
 @if (!$is_required)
     <div class="alert alert-warning mt-5">
+        {{-- TODO: __() --}}
         Solo llene los campos de contraseña si piensa cambiarla.
     </div>
 @endif
 
 <div class="form-group">
     <label class="form-label" for="password">
-        @if ($is_required) * @endif
+        @if ($is_required)
+            *
+        @endif
         Contraseña
     </label>
 
@@ -20,18 +23,21 @@
         name="password"
         id="password"
         minlength="8"
-        @if ($is_required) required @endif>
+        @if ($is_required) required @endif
+    >
 
     @error('password')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>
 
 <div class="form-group">
     <label class="form-label" for="password_confirmation">
-        @if ($is_required) * @endif
+        @if ($is_required)
+            *
+        @endif
         Repetir Contraseña
     </label>
 
@@ -40,11 +46,12 @@
         type="password"
         name="password_confirmation"
         id="password_confirmation"
-        @if ($is_required) required @endif>
+        @if ($is_required) required @endif
+    >
 
     @error('password_confirmation')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>

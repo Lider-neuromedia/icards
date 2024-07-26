@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Mail\AccountCreated;
 use App\Seller;
 use App\Subscription;
 use App\User;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class ClientsController extends Controller
 {
@@ -38,8 +41,8 @@ class ClientsController extends Controller
         $client = new User(['role' => User::ROLE_CLIENT]);
 
         $subscription = new Subscription([
-            'start_at' => Carbon::now(),
-            'finish_at' => Carbon::now()->add('years', 1),
+            'start_at' => now(),
+            'finish_at' => now()->add('years', 1),
             'cards' => 1,
         ]);
 
@@ -75,8 +78,8 @@ class ClientsController extends Controller
 
         if (!$subscription) {
             $subscription = new Subscription([
-                'start_at' => Carbon::now(),
-                'finish_at' => Carbon::now()->add('years', 1),
+                'start_at' => now(),
+                'finish_at' => now()->add('years', 1),
                 'cards' => 1,
             ]);
         }
@@ -113,14 +116,14 @@ class ClientsController extends Controller
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $data = $request->only('name', 'email');
             $data['role'] = User::ROLE_CLIENT;
             $send_mail = false;
 
             if ($request->has('password') && $request->get('password')) {
-                $data['password'] = \Hash::make($request->get('password'));
+                $data['password'] = Hash::make($request->get('password'));
             }
 
             $client_id = $client != null ? $client->id : null;
@@ -165,15 +168,14 @@ class ClientsController extends Controller
                 Mail::to($client)->send(new AccountCreated($client, $credentials));
             }
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Registro guardado correctamente.");
             return redirect()->action('Admin\ClientsController@edit', $client->id);
-
         } catch (\Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar registro.");
             return redirect()->back()->withInput($request->input());
@@ -192,7 +194,6 @@ class ClientsController extends Controller
             do {
 
                 $client->cards()->orderBy('created_at', 'desc')->first()->delete();
-
             } while ($client->cards()->count() > $max);
         }
     }

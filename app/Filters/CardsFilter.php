@@ -2,10 +2,9 @@
 
 namespace App\Filters;
 
-use App\Filters\CardsFilterListsDTO;
-use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
+use App\User;
 use stdClass;
 
 class CardsFilter
@@ -63,6 +62,7 @@ class CardsFilter
      */
     public function selectedAccount(): User
     {
+        /** @var User */
         $client = User::query()
             ->whereIn('id', $this->accounts_ids)
             ->where('id', $this->account)

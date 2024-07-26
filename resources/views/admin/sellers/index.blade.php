@@ -3,7 +3,10 @@
 @section('title', 'Vendedores')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item active">Vendedores</li>
+    <li class="breadcrumb-item active">
+        {{-- TODO: __() --}}
+        Vendedores
+    </li>
 @endsection
 
 @section('content')
@@ -18,8 +21,13 @@
                     <div class="card-tools">
                         <form action="{{ route('sellers.index') }}" method="get">
                             <div class="input-group input-group-sm" style="max-width: 300px;">
-                                <input value="{{ $search }}" type="search" name="search"
-                                    class="form-control float-right" placeholder="Buscar">
+                                <input
+                                    value="{{ $search }}"
+                                    type="search"
+                                    name="search"
+                                    class="form-control float-right"
+                                    placeholder="Buscar"
+                                >
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search" aria-hidden="true"></i>
@@ -35,10 +43,15 @@
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th class="text-center">Clientes</th>
+                                <th class="text-center">
+                                    Clientes
+                                </th>
                                 <th class="text-right">
-                                    <a href="{{ route('sellers.create') }}" class="btn btn-primary btn-xs"
-                                        title="Crear Vendedor">
+                                    <a
+                                        href="{{ route('sellers.create') }}"
+                                        class="btn btn-primary btn-xs"
+                                        title="Crear Vendedor"
+                                    >
                                         Crear Vendedor
                                     </a>
                                 </th>
@@ -51,8 +64,9 @@
                                     <td>{{ $seller->name }}</td>
                                     <td class="text-center">{{ $seller->clients()->count() }}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-xs btn-primary"
-                                            href="{{ route('sellers.edit', $seller) }}">Editar</a>
+                                        <a class="btn btn-xs btn-primary" href="{{ route('sellers.edit', $seller) }}">
+                                            Editar
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

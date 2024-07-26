@@ -3,7 +3,11 @@
     $keyForm = 'card_number_' . $card->id . '_form';
 @endphp
 
-<form method="post" id="{{ $keyForm }}" action="{{ $formUrl }}">
+<form
+    method="post"
+    id="{{ $keyForm }}"
+    action="{{ $formUrl }}"
+>
     @csrf
 
     <div class="form-group @error('slug_number') has-error has-feedback @enderror">

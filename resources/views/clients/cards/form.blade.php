@@ -63,7 +63,10 @@
 
 <div class="row">
     <div class="col-md-12 my-5">
-        <a class="btn btn-dark" href="{{ $back_route }}">Volver</a>
+        {{-- TODO: __() --}}
+        <a class="btn btn-dark" href="{{ $back_route }}">
+            Volver
+        </a>
         <button class="btn btn-primary" type="submit">
             Guardar
         </button>

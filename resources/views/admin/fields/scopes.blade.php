@@ -3,8 +3,15 @@
 @section('title', $client->name . ' / Configuración de Campos')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
-    <li class="breadcrumb-item active">Configuración de Campos</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('clients.index') }}">
+            {{-- TODO: __() --}}
+            Clientes
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        Configuración de Campos
+    </li>
 @endsection
 
 @section('content')
@@ -16,7 +23,9 @@
             <div class="row">
                 <div class="col-md-12 my-2 pb-2 border-bottom">
                     <div class="d-flex justify-content-between">
-                        <a class="btn btn-dark" href="{{ route('clients.index') }}">Volver</a>
+                        <a class="btn btn-dark" href="{{ route('clients.index') }}">
+                            Volver
+                        </a>
                         <button class="btn btn-primary" type="submit">
                             Guardar Cambios
                         </button>
@@ -55,18 +64,28 @@
 
                                             <tr>
                                                 <td class="text-nowrap">
-                                                    <label class="font-weight-normal" role="button" for="scopes[{{$fullKey}}][general]">
+                                                    <label
+                                                        class="font-weight-normal"
+                                                        role="button"
+                                                        for="scopes[{{ $fullKey }}][general]"
+                                                    >
                                                         {{ $value['label'] }}
                                                     </label>
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="hidden" name="scopes[{{$fullKey}}][key]" value="{{ $fullKey }}" />
+                                                    <input
+                                                        type="hidden"
+                                                        name="scopes[{{ $fullKey }}][key]"
+                                                        value="{{ $fullKey }}"
+                                                    />
                                                     <input
                                                         @if ($scopes[$fullKey]) checked @endif
-                                                        role="button" type="checkbox"
-                                                        id="scopes[{{$fullKey}}][general]"
-                                                        name="scopes[{{$fullKey}}][general]"
-                                                        value="1" />
+                                                        role="button"
+                                                        type="checkbox"
+                                                        id="scopes[{{ $fullKey }}][general]"
+                                                        name="scopes[{{ $fullKey }}][general]"
+                                                        value="1"
+                                                    />
                                                 </td>
                                             </tr>
                                         @endforeach

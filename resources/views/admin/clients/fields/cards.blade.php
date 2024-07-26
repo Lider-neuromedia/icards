@@ -8,11 +8,12 @@
         step="1"
         name="cards"
         id="cards"
-        value="{{ old('cards') ?: $subscription->cards }}" >
+        value="{{ old('cards') ?: $subscription->cards }}"
+    >
 
     @error('cards')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>

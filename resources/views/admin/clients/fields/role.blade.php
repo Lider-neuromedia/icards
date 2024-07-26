@@ -5,19 +5,21 @@
         $selected_role = old('role') ?: $client->role;
     @endphp
 
-    <select class="form-control @error('role') is-invalid @enderror" id="role" name="role">
+    <select
+        class="form-control @error('role') is-invalid @enderror"
+        id="role"
+        name="role"
+    >
         @foreach ($roles as $role_id => $role_name)
-            <option
-                @if($role_id == $selected_role) selected @endif
-                value="{{$role_id}}">
-                {{$role_name}}
+            <option @if ($role_id == $selected_role) selected @endif value="{{ $role_id }}">
+                {{ $role_name }}
             </option>
         @endforeach
     </select>
 
     @error('role')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>

@@ -3,7 +3,7 @@
     $link = "$value";
     $track_event = '';
     $break_word_class = '';
-    
+
     if (in_array($cl_key, ['phone1', 'phone2', 'cellphone'])) {
         $link = "tel:$value";
         $track_event = 'contact-by-call';
@@ -15,7 +15,7 @@
         $track_event = 'visit-web';
         $break_word_class = 'break-word';
     }
-    
+
     if (in_array($cl_key, ['address'])) {
         $is_linkable = false;
     }
@@ -23,8 +23,12 @@
 
 <li class="contact-list-item">
     @if ($is_linkable)
-        <a class="list-item-el track-event {{ $break_word_class }}" data-event="{{ $track_event }}"
-            href="{{ $link }}" @if ($cl_key == 'web') target="_blank" @endif>
+        <a
+            class="list-item-el track-event {{ $break_word_class }}"
+            data-event="{{ $track_event }}"
+            href="{{ $link }}"
+            @if ($cl_key == 'web') target="_blank" @endif
+        >
             <span class="icon">
                 <i class="icofont-{{ ICONS[$cl_key] }}"></i>
             </span>

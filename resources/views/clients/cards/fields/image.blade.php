@@ -1,16 +1,25 @@
-<div class="mb-3 {{$field_key}}_wp" id="{{$field_key}}_wp">
+<div class="mb-3 {{ $field_key }}_wp" id="{{ $field_key }}_wp">
     <label class="form-label" for="{{ $field_key }}">
         {{ $field['label'] }}
         @if (isset($field['help']))
-            <small class="text-muted font-italic">{{$field['help']}}</small>
+            <small class="text-muted font-italic">
+                {{ $field['help'] }}
+            </small>
         @endif
     </label>
 
     <div class="form-group">
         <div class="custom-file @error($field_key) is-invalid @enderror">
-            <input name="{{ $field_key }}" id="{{ $field_key }}" type="file" class="custom-file-input file-field"
-                lang="es" accept="image/png, image/jpeg">
+            <input
+                name="{{ $field_key }}"
+                id="{{ $field_key }}"
+                type="file"
+                class="custom-file-input file-field"
+                lang="es"
+                accept="image/png, image/jpeg"
+            >
             <label class="custom-file-label" for="{{ $field_key }}">
+                {{-- TODO: __() --}}
                 Seleccionar imagen
             </label>
         </div>
@@ -29,14 +38,25 @@
 
     @if ($url != '')
         <div class="d-flex align-items-end g-1" id="{{ $currentWrapper }}">
-            <input type="hidden" name="{{ $field_key }}_current"
-                value="{{ $card->field($group_key, $field['key']) }}">
+            <input
+                type="hidden"
+                name="{{ $field_key }}_current"
+                value="{{ $card->field($group_key, $field['key']) }}"
+            >
 
-            <img src="{{ url('storage/cards/' . $card->field($group_key, $field['key'])) }}" class="img-thumbnail"
-                width="200px" height="auto" alt="imagen">
+            <img
+                src="{{ url('storage/cards/' . $card->field($group_key, $field['key'])) }}"
+                class="img-thumbnail"
+                width="200px"
+                height="auto"
+                alt="imagen"
+            >
 
-            <button type="button" class="btn btn-sm btn-dark ml-1"
-                onclick="document.getElementById('{{ $currentWrapper }}').remove();">
+            <button
+                type="button"
+                class="btn btn-sm btn-dark ml-1"
+                onclick="document.getElementById('{{ $currentWrapper }}').remove();"
+            >
                 <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
         </div>

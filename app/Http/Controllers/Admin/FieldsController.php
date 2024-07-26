@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\FieldService;
 use App\User;
 use App\CardField;
-use App\Services\FieldService;
 
 class FieldsController extends Controller
 {
@@ -55,7 +57,7 @@ class FieldsController extends Controller
 
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             foreach ($request->get('scopes') as $key => $scopeData) {
                 $generalChecked = isset($scopeData['general']) && $scopeData['general'];
@@ -65,20 +67,19 @@ class FieldsController extends Controller
                 }
             }
 
-            \DB::table('field_scopes')
+            DB::table('field_scopes')
                 ->where('client_id', $client->id)
                 ->delete();
-            \DB::table('field_scopes')->insert($data);
+            DB::table('field_scopes')->insert($data);
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Cambios guardados correctamente.");
             return redirect()->action('Admin\FieldsController@scopes', $client->id);
-
         } catch (\Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar cambios.");
             return redirect()->back()->withInput($request->input());
@@ -89,21 +90,20 @@ class FieldsController extends Controller
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
-            \DB::table('field_scopes')
+            DB::table('field_scopes')
                 ->where('client_id', $client->id)
                 ->delete();
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Cambios guardados correctamente.");
             return redirect()->action('Admin\FieldsController@scopes', $client->id);
-
         } catch (\Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar cambios.");
             return redirect()->back()->withInput($request->input());

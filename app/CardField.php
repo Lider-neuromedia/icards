@@ -2,10 +2,10 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Enums\FieldType;
 use App\Enums\GroupField;
 use App\Models\Field;
-use Illuminate\Database\Eloquent\Model;
 
 class CardField extends Model
 {

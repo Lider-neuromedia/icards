@@ -3,8 +3,15 @@
 @section('title', 'Crear Vendedor')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('sellers.index') }}">Vendedores</a></li>
-    <li class="breadcrumb-item active">Crear Vendedor</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('sellers.index') }}">
+            {{-- TODO: __() --}}
+            Vendedores
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        Crear Vendedor
+    </li>
 @endsection
 
 @section('content')

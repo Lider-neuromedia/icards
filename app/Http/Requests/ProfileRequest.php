@@ -13,7 +13,7 @@ class ProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -23,7 +23,7 @@ class ProfileRequest extends FormRequest
      */
     public function rules()
     {
-        $id = \Auth::user()->id;
+        $id = auth()->user()->id;
 
         $validation = [
             'name' => ['required', 'string', 'max:100', 'min:5'],

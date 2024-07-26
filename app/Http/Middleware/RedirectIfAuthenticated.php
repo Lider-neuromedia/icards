@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,10 +19,13 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            if (auth()->user()->isClient()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isClient()) {
                 return redirect('/clients/cards');
             }
-            if (auth()->user()->isAdmin()) {
+            if ($authUser->isAdmin()) {
                 return redirect('/admin/clients');
             }
 

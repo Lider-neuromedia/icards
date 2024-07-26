@@ -3,8 +3,15 @@
 @section('title', 'Editar Cliente')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
-    <li class="breadcrumb-item active">Editar Cliente</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('clients.index') }}">
+            {{-- TODO: __() --}}
+            Clientes
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        Editar Cliente
+    </li>
 @endsection
 
 @section('content')
@@ -18,7 +25,11 @@
                 <form action="{{ route('clients.update', $client) }}" method="post">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" name="id" value="{{ $client->id }}">
+                    <input
+                        type="hidden"
+                        name="id"
+                        value="{{ $client->id }}"
+                    >
                     @include('admin.clients.form')
                 </form>
 

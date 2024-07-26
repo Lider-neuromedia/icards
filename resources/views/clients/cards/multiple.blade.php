@@ -3,7 +3,7 @@
     $create_multiple_route = route('cards.store-multiple');
     $back_route = route('cards.index');
     $template_route = route('cards.template-multiple');
-    
+
     if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
         $create_multiple_route = route('clients.cards.store-multiple', $client);
@@ -18,10 +18,21 @@
 
 @section('breadcrumbs')
     @if (isUserAdmin())
-        <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
+        {{-- TODO: __() --}}
+        <li class="breadcrumb-item">
+            <a href="{{ route('clients.index') }}">
+                Clientes
+            </a>
+        </li>
     @endif
-    <li class="breadcrumb-item"><a href="{{ $index_route }}">Tarjetas</a></li>
-    <li class="breadcrumb-item active">Crear Multiples Tarjetas</li>
+    <li class="breadcrumb-item">
+        <a href="{{ $index_route }}">
+            Tarjetas
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        Crear Multiples Tarjetas
+    </li>
 @endsection
 
 @section('content')
@@ -33,7 +44,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header text-primary">Plantilla</div>
+                            <div class="card-header text-primary">
+                                Plantilla
+                            </div>
                             <div class="card-body text-center">
 
                                 <a class="ml-auto btn btn-primary" href="{{ $template_route }}">
@@ -54,17 +67,27 @@
                     </div>
                 </div>
 
-                <form action="{{ $create_multiple_route }}" method="post" enctype="multipart/form-data">
+                <form
+                    action="{{ $create_multiple_route }}"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
                     @csrf
 
                     @if (isUserClient() && $filters->account)
-                        <input type="hidden" name="account" value="{{ $filters->account }}" />
+                        <input
+                            type="hidden"
+                            name="account"
+                            value="{{ $filters->account }}"
+                        />
                     @endif
 
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header text-primary">Subir archivo</div>
+                                <div class="card-header text-primary">
+                                    Subir archivo
+                                </div>
                                 <div class="card-body">
 
                                     @include('clients.cards.fields.csvfile')
@@ -76,7 +99,9 @@
 
                     <div class="row">
                         <div class="col-md-12 my-5">
-                            <a class="btn btn-dark" href="{{ $back_route }}">Volver</a>
+                            <a class="btn btn-dark" href="{{ $back_route }}">
+                                Volver
+                            </a>
                             <button class="btn btn-primary" type="submit">
                                 Guardar
                             </button>

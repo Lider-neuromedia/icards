@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GroupField;
 use App\Card;
 use App\CardField;
-use App\Enums\GroupField;
-use Carbon\Carbon;
 use Parsedown;
 
 class CardsController extends Controller
@@ -22,7 +21,7 @@ class CardsController extends Controller
             ->whereHas('client', function ($q) use ($client) {
                 $q->whereSlug($client)
                     ->whereHas('subscriptions', function ($q) {
-                        $now = Carbon::now()->format('Y-m-d H:i:s');
+                        $now = now()->format('Y-m-d H:i:s');
                         $q->where('finish_at', '>', $now);
                     });
             })
@@ -37,7 +36,7 @@ class CardsController extends Controller
             ->whereSlug($card)
             ->whereHas('client', function ($q) {
                 $q->whereHas('subscriptions', function ($q) {
-                    $now = Carbon::now()->format('Y-m-d H:i:s');
+                    $now = now()->format('Y-m-d H:i:s');
                     $q->where('finish_at', '>', $now);
                 });
             })

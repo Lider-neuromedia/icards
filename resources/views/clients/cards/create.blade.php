@@ -1,7 +1,7 @@
 @php
     $index_route = route('cards.index');
     $create_route = route('cards.store', $card);
-    
+
     if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
         $create_route = route('clients.cards.store', [$client, $card]);
@@ -14,10 +14,21 @@
 
 @section('breadcrumbs')
     @if (isUserAdmin())
-        <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
+        {{-- TODO: __() --}}
+        <li class="breadcrumb-item">
+            <a href="{{ route('clients.index') }}">
+                Clientes
+            </a>
+        </li>
     @endif
-    <li class="breadcrumb-item"><a href="{{ $index_route }}">Tarjetas</a></li>
-    <li class="breadcrumb-item active">Crear Tarjeta</li>
+    <li class="breadcrumb-item">
+        <a href="{{ $index_route }}">
+            Tarjetas
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        Crear Tarjeta
+    </li>
 @endsection
 
 @section('pre-scripts')
@@ -32,11 +43,19 @@
         <div class="row justify-content-center mb-5">
             <div class="col-12 col-sm-8">
 
-                <form action="{{ $create_route }}" method="post" enctype="multipart/form-data">
+                <form
+                    action="{{ $create_route }}"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
                     @csrf
 
                     @if (isUserClient() && $filters->account)
-                        <input type="hidden" name="account" value="{{ $filters->account }}" />
+                        <input
+                            type="hidden"
+                            name="account"
+                            value="{{ $filters->account }}"
+                        />
                     @endif
 
                     @include('clients.cards.form')

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Clients;
 
-use App\Card;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CardRequest;
 use App\Http\Requests\ThemeRequest;
 use App\Services\CardsService;
-use Illuminate\Http\Request;
+use App\Card;
 
 class CardsController extends Controller
 {

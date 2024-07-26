@@ -10,14 +10,22 @@
     <label class="form-label" for="{{ $field_key }}">
         {{ $field['label'] }}
         @if (isset($field['help']))
-            <small class="text-muted font-italic">{{ $field['help'] }}</small>
+            <small class="text-muted font-italic">
+                {{ $field['help'] }}
+            </small>
         @endif
     </label>
 
     <div class="form-group">
         <div class="custom-file @error($field_key) is-invalid @enderror">
-            <input name="{{ $field_key }}" id="{{ $field_key }}" type="file" class="custom-file-input file-field"
-                lang="es" accept="text/csv, .csv">
+            <input
+                name="{{ $field_key }}"
+                id="{{ $field_key }}"
+                type="file"
+                class="custom-file-input file-field"
+                lang="es"
+                accept="text/csv, .csv"
+            >
             <label class="custom-file-label" for="{{ $field_key }}">
                 Seleccionar archivo
             </label>

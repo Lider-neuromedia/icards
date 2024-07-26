@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminRequest;
 use App\User;
-use Illuminate\Http\Request;
 
 class AdminsController extends Controller
 {
@@ -56,7 +59,7 @@ class AdminsController extends Controller
 
     public function destroy(User $user)
     {
-        if (\Auth::user()->id == $user->id) {
+        if (auth()->user()->id == $user->id) {
             session()->flash('message-error', "El registro no puede ser borrado.");
             return redirect()->back();
         }
@@ -74,13 +77,13 @@ class AdminsController extends Controller
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $data = $request->only('name', 'email');
             $data['role'] = User::ROLE_ADMIN;
 
             if ($request->has('password') && $request->get('password')) {
-                $data['password'] = \Hash::make($request->get('password'));
+                $data['password'] = Hash::make($request->get('password'));
             }
 
             if ($user != null) {
@@ -90,15 +93,14 @@ class AdminsController extends Controller
                 $user->save();
             }
 
-            \DB::commit();
+            DB::commit();
 
             session()->flash('message', "Registro guardado correctamente.");
             return redirect()->action('Admin\AdminsController@edit', $user->id);
-
         } catch (\Exception $ex) {
-            \Log::info($ex->getMessage());
-            \Log::info($ex->getTraceAsString());
-            \DB::rollBack();
+            Log::info($ex->getMessage());
+            Log::info($ex->getTraceAsString());
+            DB::rollBack();
 
             session()->flash('message-error', "Error interno al guardar registro.");
             return redirect()->back()->withInput($request->input());

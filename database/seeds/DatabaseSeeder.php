@@ -1,15 +1,16 @@
 <?php
 
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use App\Services\CardsService;
+use App\Enums\GroupField;
 use App\Card;
 use App\CardField;
-use App\Enums\GroupField;
 use App\Seller;
-use App\Services\CardsService;
 use App\Subscription;
 use App\User;
-use Carbon\Carbon;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -88,7 +89,7 @@ class DatabaseSeeder extends Seeder
             'role' => User::ROLE_ADMIN,
             'name' => 'Jose Nieto',
             'email' => 'inge1neuro@gmail.com',
-            'password' => \Hash::make('secret'),
+            'password' => Hash::make(env('PASSWORD_TESTS', Str::random(14))),
         ]);
     }
 
@@ -98,10 +99,10 @@ class DatabaseSeeder extends Seeder
             'role' => User::ROLE_CLIENT,
             'name' => 'Centelsa',
             'email' => 'centelsa@mail.com',
-            'password' => \Hash::make('secret'),
+            'password' => Hash::make(env('PASSWORD_TESTS', Str::random(14))),
         ]);
-        $start_at = Carbon::now();
-        $finish_at = Carbon::now()->add('years', 1);
+        $start_at = now();
+        $finish_at = now()->add('years', 1);
 
         $subscription = new Subscription([
             'cards' => 5,
@@ -115,11 +116,11 @@ class DatabaseSeeder extends Seeder
             'role' => User::ROLE_CLIENT,
             'name' => 'Montana Group',
             'email' => 'montanagroup@mail.com',
-            'password' => \Hash::make('secret'),
+            'password' => Hash::make(env('PASSWORD_TESTS', Str::random(14))),
         ]);
 
-        $start_at = Carbon::now();
-        $finish_at = Carbon::now()->add('years', 1);
+        $start_at = now();
+        $finish_at = now()->add('years', 1);
 
         $subscription = new Subscription([
             'cards' => 3,

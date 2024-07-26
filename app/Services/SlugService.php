@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 class SlugService
 {
     public static function generate($name, $table, $id = null)
@@ -11,13 +14,13 @@ class SlugService
 
         do {
             if ($n === 0) {
-                $slug = \Str::slug($name);
+                $slug = Str::slug($name);
             } else {
-                $slug = \Str::slug($name . " $n");
+                $slug = Str::slug($name . " $n");
             }
             $n++;
 
-            $exists = \DB::table($table)
+            $exists = DB::table($table)
                 ->where('slug', $slug)
                 ->when($id != null, function ($q) use ($id) {
                     $q->where('id', '!=', $id);

@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
-use App\Card;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Card;
 
 class CardCreated extends Mailable
 {

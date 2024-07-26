@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\User;
 use Illuminate\Foundation\Http\FormRequest;
+use App\User;
 
 class AdminRequest extends FormRequest
 {
@@ -14,7 +14,7 @@ class AdminRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**

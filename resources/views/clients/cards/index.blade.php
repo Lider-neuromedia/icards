@@ -4,7 +4,7 @@
     $create_multiple_route = route('cards.create-multiple');
     $theme_route = route('cards.theme');
     $extraParams = '';
-    
+
     if (isUserClient() && $filters->account) {
         $extraParams = "?account={$filters->account}";
         // $index_route = route('cards.index');
@@ -12,7 +12,7 @@
         $create_multiple_route = route('cards.create-multiple') . $extraParams;
         $theme_route = route('cards.theme') . $extraParams;
     }
-    
+
     if (isUserAdmin()) {
         $index_route = route('clients.cards.index', $client);
         $create_route = route('clients.cards.create', $client);
@@ -27,9 +27,16 @@
 
 @section('breadcrumbs')
     @if (isUserAdmin())
-        <li class="breadcrumb-item"><a href="{{ route('clients.index') }}">Clientes</a></li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('clients.index') }}">
+                {{-- TODO: __() --}}
+                Clientes
+            </a>
+        </li>
     @endif
-    <li class="breadcrumb-item active">Tarjetas</li>
+    <li class="breadcrumb-item active">
+        Tarjetas
+    </li>
 @endsection
 
 @section('content')
@@ -58,7 +65,8 @@
                                         <option value="">Mis Tarjetas</option>
                                         @foreach ($filtersLists->accounts as $faccount)
                                             <option value="{{ $faccount->id }}"
-                                                @if ($filters->account == $faccount->id) selected @endif>
+                                                @if ($filters->account == $faccount->id) selected @endif
+                                            >
                                                 {{ $faccount->name }}
                                             </option>
                                         @endforeach
@@ -66,8 +74,13 @@
                                 @endif
 
                                 {{-- Search --}}
-                                <input value="{{ $filters->search }}" type="search" name="search"
-                                    class="form-control float-right" placeholder="Buscar">
+                                <input
+                                    value="{{ $filters->search }}"
+                                    type="search"
+                                    name="search"
+                                    class="form-control float-right"
+                                    placeholder="Buscar"
+                                >
 
                                 {{-- Action Search --}}
                                 <div class="input-group-append">
@@ -90,23 +103,38 @@
                                     <th># Tarjeta</th>
                                 @endif
 
-                                <th class="text-center">Total Visitas</th>
-                                <th class="text-center">QR Visitas</th>
+                                <th class="text-center">
+                                    Total Visitas
+                                </th>
+                                <th class="text-center">
+                                    QR Visitas
+                                </th>
                                 <th class="text-right">
-                                    <a href="{{ $theme_route }}" class="btn btn-success btn-sm" title="Tema General">
+                                    <a
+                                        href="{{ $theme_route }}"
+                                        class="btn btn-success btn-sm"
+                                        title="Tema General"
+                                    >
                                         <i class="nav-icon far fa fa-palette" aria-hidden="true"></i>
                                         Tema General
                                     </a>
 
                                     @if (!$client->isCardsLimitReached())
-                                        <a href="{{ $create_multiple_route }}" class="btn btn-primary btn-sm"
-                                            title="Crear Multiples Tarjetas">
+                                        <a
+                                            href="{{ $create_multiple_route }}"
+                                            class="btn btn-primary btn-sm"
+                                            title="Crear Multiples Tarjetas"
+                                        >
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                             Crear Varias
                                         </a>
-                                        <a href="{{ $create_route }}" class="btn btn-primary btn-sm" title="Crear Tarjeta">
+                                        <a
+                                            href="{{ $create_route }}"
+                                            class="btn btn-primary btn-sm"
+                                            title="Crear Tarjeta"
+                                        >
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                             Crear
                                         </a>
@@ -118,7 +146,9 @@
 
                             @if ($cards->count() == 0)
                                 <tr>
-                                    <td class="text-center" colspan="5">No hay tarjetas</td>
+                                    <td class="text-center" colspan="5">
+                                        No hay tarjetas
+                                    </td>
                                 </tr>
                             @endif
 
@@ -126,7 +156,7 @@
                                 @php
                                     $edit_route = route('cards.edit', $card);
                                     $destroy_route = route('cards.destroy', $card);
-                                    
+
                                     if (isUserAdmin()) {
                                         $edit_route = route('clients.cards.edit', [$client, $card]);
                                         $destroy_route = route('clients.cards.destroy', [$client, $card]);
@@ -136,11 +166,19 @@
                                     <td>
                                         <div>{{ $card->field('others', 'name') }}</div>
                                         @if ($card->use_card_number)
-                                            <a class="text-sm" target="_blank" href="{{ $card->url_number }}">
+                                            <a
+                                                class="text-sm"
+                                                target="_blank"
+                                                href="{{ $card->url_number }}"
+                                            >
                                                 {{ $card->url_number }}
                                             </a>
                                         @else
-                                            <a class="text-sm" target="_blank" href="{{ $card->url }}">
+                                            <a
+                                                class="text-sm"
+                                                target="_blank"
+                                                href="{{ $card->url }}"
+                                            >
                                                 {{ $card->url }}
                                             </a>
                                         @endif
@@ -151,11 +189,14 @@
                                             @php
                                                 $cardNumberFormUrl = null;
                                                 if (isUserClient() && $filters->account) {
-                                                    $cardNumberFormUrl = route('cards.number', ['card' => $card->id]) . $extraParams;
+                                                    $cardNumberFormUrl =
+                                                        route('cards.number', ['card' => $card->id]) . $extraParams;
                                                 } elseif (isUserClient()) {
                                                     $cardNumberFormUrl = route('cards.number', ['card' => $card->id]);
                                                 } elseif (isUserAdmin()) {
-                                                    $cardNumberFormUrl = route('clients.cards.number', ['card' => $card->id]);
+                                                    $cardNumberFormUrl = route('clients.cards.number', [
+                                                        'card' => $card->id,
+                                                    ]);
                                                 }
                                             @endphp
 
@@ -169,8 +210,11 @@
                                     <td class="text-center">{{ $card->visits }}</td>
                                     <td class="text-center">{{ $card->qr_visits }}</td>
                                     <td class="text-right">
-                                        <a class="btn btn-sm btn-success" href="{{ $edit_route }}"
-                                            title="Editar Tarjeta">
+                                        <a
+                                            class="btn btn-sm btn-success"
+                                            href="{{ $edit_route }}"
+                                            title="Editar Tarjeta"
+                                        >
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                             Editar
                                         </a>
@@ -196,7 +240,9 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Estadísticas</h3>
+                    <h3 class="card-title">
+                        Estadísticas
+                    </h3>
                     <div class="card-tools">
                         <a href="{{ route('analytics.download', $client->id) }}" class="btn btn-sm btn-primary">
                             <i class="fa fa-download" aria-hidden="true"></i>
@@ -219,7 +265,9 @@
                         <tbody>
                             @if ($cards->count() == 0)
                                 <tr>
-                                    <td class="text-center" colspan="{{ 1 + count($events) }}">No hay tarjetas</td>
+                                    <td class="text-center" colspan="{{ 1 + count($events) }}">
+                                        No hay tarjetas
+                                    </td>
                                 </tr>
                             @endif
 

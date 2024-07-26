@@ -2,13 +2,14 @@
 
 namespace App;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use App\Enums\GroupField;
 use App\Mail\AdminRenewSubsNotified;
 use App\Mail\RenewSubscriptionNotified;
-use Carbon\Carbon;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -193,7 +194,7 @@ class User extends Authenticatable
     public function getSubscriptionDaysLeft()
     {
         $sub = $this->subscriptions()->first();
-        return $sub != null ? Carbon::now()->diffInDays($sub->finish_at, false) : 0;
+        return $sub != null ? now()->diffInDays($sub->finish_at, false) : 0;
     }
 
     public function getSubscriptionStatusAttribute()
@@ -218,7 +219,7 @@ class User extends Authenticatable
             return 365;
         }
 
-        return Carbon::now()->diffInDays($sub->notified_at);
+        return now()->diffInDays($sub->notified_at);
     }
 
     public function scopeOnlyClients($query)
@@ -253,21 +254,21 @@ class User extends Authenticatable
         $clients = User::query()
             ->whereRole(User::ROLE_CLIENT)
             ->whereHas('subscriptions', function ($q) {
-                $q->whereDate('finish_at', '<=', Carbon::now()->addDays(20)) // 1.
+                $q->whereDate('finish_at', '<=', now()->addDays(20)) // 1.
                     ->where(function ($q) {
                         $q->whereNull('notified_at') // 2.
-                            ->orWhere('notified_at', '<=', Carbon::now()->subDays(7)); // 3.
+                            ->orWhere('notified_at', '<=', now()->subDays(7)); // 3.
                     });
             })
             ->with('subscriptions')
             ->get();
 
         $count = $clients->count();
-        $now = Carbon::now()->format('Y-m-d H:i:s');
-        \Log::info("Notificar clientes ($count) con suscripción a vencer: $now.");
+        $now = now()->format('Y-m-d H:i:s');
+        Log::info("Notificar clientes ($count) con suscripción a vencer: $now.");
 
         foreach ($clients as $client) {
-            \Log::info("Notificar cliente: {$client->id}.");
+            Log::info("Notificar cliente: {$client->id}.");
             Mail::to($client)->send(new RenewSubscriptionNotified($client));
 
             $client->subscriptions()
@@ -277,7 +278,7 @@ class User extends Authenticatable
 
         if ($count > 0) {
             // Enviar Notificación a administradores.
-            \Log::info("Notificar administradores");
+            Log::info("Notificar administradores");
             $admins = User::whereRole(User::ROLE_ADMIN)->get();
             Mail::to($admins)->send(new AdminRenewSubsNotified($clients));
         }
@@ -287,7 +288,7 @@ class User extends Authenticatable
     {
         $client = User::onlyClients()->inRandomOrder()->firstOrFail();
         $card = $client->cards()->inRandomOrder()->firstOrFail();
-        $credentials = ['email' => $client->email, 'password' => \Str::random(12)];
+        $credentials = ['email' => $client->email, 'password' => Str::random(12)];
 
         Mail::to($client)->send(new \App\Mail\AccountCreated($client, $credentials));
         Mail::to($client)->send(new \App\Mail\CardCreated($card));

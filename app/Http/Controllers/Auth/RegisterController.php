@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
+use App\User;
 
 class RegisterController extends Controller
 {
@@ -73,10 +73,13 @@ class RegisterController extends Controller
     public function redirectTo()
     {
         if (auth()->check()) {
-            if (auth()->user()->isClient()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isClient()) {
                 return '/clients/cards';
             }
-            if (auth()->user()->isAdmin()) {
+            if ($authUser->isAdmin()) {
                 return '/admin/clients';
             }
         }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+
 class HomeController extends Controller
 {
     /**
@@ -14,18 +16,16 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         if (auth()->check()) {
-            if (auth()->user()->isClient()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isClient()) {
                 return redirect('/clients/cards');
             }
-            if (auth()->user()->isAdmin()) {
+            if ($authUser->isAdmin()) {
                 return redirect('/admin/clients');
             }
         }

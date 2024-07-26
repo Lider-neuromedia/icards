@@ -3,8 +3,15 @@
 @section('title', 'Editar Vendedor')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('sellers.index') }}">Vendedores</a></li>
-    <li class="breadcrumb-item active">Editar Vendedor</li>
+    <li class="breadcrumb-item">
+        <a href="{{ route('sellers.index') }}">
+            {{-- TODO: __() --}}
+            Vendedores
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        Editar Vendedor
+    </li>
 @endsection
 
 @section('content')
@@ -18,7 +25,11 @@
                 <form action="{{ route('sellers.update', $seller) }}" method="post">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" name="id" value="{{ $seller->id }}">
+                    <input
+                        type="hidden"
+                        name="id"
+                        value="{{ $seller->id }}"
+                    >
                     @include('admin.sellers.form')
                 </form>
 
@@ -37,28 +48,31 @@
                 <table class="table table-bordered text-nowrap bg-white">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center">Clientes</th>
+                            <th class="text-center">
+                                Clientes
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         @if ($seller->clients()->count() == 0)
                             <tr>
-                                <td class="text-center">No tiene clientes</td>
+                                <td class="text-center">
+                                    No tiene clientes
+                                </td>
                             </tr>
                         @endif
 
                         @foreach ($seller->clients as $client)
                             <tr>
                                 <td class="text-center">
-                                    <a target="_blank"
-                                        href="{{ url('/admin/clients') }}?search={{ $client->name }}">{{ $client->name }}</a>
+                                    <a target="_blank" href="{{ url('/admin/clients') }}?search={{ $client->name }}">
+                                        {{ $client->name }}
+                                    </a>
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-
 
             </div>
         </div>

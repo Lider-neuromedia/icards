@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 use App\Models\Field;
 use App\User;
 use App\CardField;
@@ -46,7 +48,7 @@ class FieldService
 
     private static function isFieldGeneralOrSpecific(User $client, String $groupKey, String $fieldKey, bool $expected): bool
     {
-        $value = \DB::table('field_scopes')
+        $value = DB::table('field_scopes')
             ->where([
                 'client_id' => $client->id,
                 'field_group' => $groupKey,
@@ -57,7 +59,7 @@ class FieldService
         if (!$value) {
             $groupValues = CardField::TEMPLATE_FIELDS[$groupKey]['values'];
 
-            $field = array_first($groupValues, function($x) use ($fieldKey) {
+            $field = Arr::first($groupValues, function ($x) use ($fieldKey) {
                 return $x['key'] === $fieldKey;
             });
 

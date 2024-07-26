@@ -6,11 +6,12 @@
         type="text"
         name="name"
         id="name"
-        value="{{ old('name') ?: $client->name }}" >
+        value="{{ old('name') ?: $client->name }}"
+    >
 
     @error('name')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>

@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Enums\GroupField;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\GroupField;
 
 class Card extends Model
 {

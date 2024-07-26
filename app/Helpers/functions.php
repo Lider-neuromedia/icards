@@ -1,8 +1,8 @@
 <?php
 
+use App\Services\FieldService;
 use App\Card;
 use App\User;
-use App\Services\FieldService;
 
 if (!function_exists('cardValue')) {
     function cardValue(Card $card, $group, $key)
@@ -23,12 +23,18 @@ if (!function_exists('markdown')) {
 }
 
 if (!function_exists('isUserAdmin')) {
+    /**
+     * TODO: No usar esta función.
+     */
     function isUserAdmin()
     {
         if (!auth()->check()) {
             return false;
         }
-        return auth()->user()->isAdmin();
+
+        /** @var User */
+        $authUser = auth()->user();
+        return $authUser->isAdmin();
     }
 }
 
@@ -38,7 +44,10 @@ if (!function_exists('isUserClient')) {
         if (!auth()->check()) {
             return false;
         }
-        return auth()->user()->isClient();
+
+        /** @var User */
+        $authUser = auth()->user();
+        return $authUser->isClient();
     }
 }
 

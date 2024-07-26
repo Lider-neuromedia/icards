@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\Http\Controllers\Controller;
+use App\User;
 
 class ResetPasswordController extends Controller
 {
@@ -40,10 +41,13 @@ class ResetPasswordController extends Controller
     public function redirectTo()
     {
         if (auth()->check()) {
-            if (auth()->user()->isClient()) {
+            /** @var User */
+            $authUser = auth()->user();
+
+            if ($authUser->isClient()) {
                 return '/clients/cards';
             }
-            if (auth()->user()->isAdmin()) {
+            if ($authUser->isAdmin()) {
                 return '/admin/clients';
             }
         }

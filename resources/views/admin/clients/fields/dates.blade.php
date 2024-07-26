@@ -6,11 +6,12 @@
         type="datetime-local"
         name="start_at"
         id="start_at"
-        value="{{ old('start_at') ?: $subscription->start_at->format('Y-m-d\TH:i') }}" >
+        value="{{ old('start_at') ?: $subscription->start_at->format('Y-m-d\TH:i') }}"
+    >
 
     @error('start_at')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>
@@ -23,11 +24,12 @@
         type="datetime-local"
         name="finish_at"
         id="finish_at"
-        value="{{ old('finish_at') ?: $subscription->finish_at->format('Y-m-d\TH:i') }}" >
+        value="{{ old('finish_at') ?: $subscription->finish_at->format('Y-m-d\TH:i') }}"
+    >
 
     @error('finish_at')
         <span class="invalid-feedback" role="alert">
-            {{$message}}
+            {{ $message }}
         </span>
     @enderror
 </div>

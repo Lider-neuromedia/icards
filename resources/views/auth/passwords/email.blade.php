@@ -5,7 +5,11 @@
         <div class="col-md-8">
             <div class="card border-primary">
                 <div class="card-header bg-primary text-center">
-                    <img src="{{mix('assets/logo.png')}}" width="100px" height="auth">
+                    <img
+                        src="{{ mix('assets/logo.png') }}"
+                        width="100px"
+                        height="auth"
+                    >
                 </div>
 
                 <div class="card-body">
@@ -19,10 +23,21 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">
+                                {{ __('E-Mail Address') }}
+                            </label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    autocomplete="email"
+                                    required
+                                    autofocus
+                                >
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">

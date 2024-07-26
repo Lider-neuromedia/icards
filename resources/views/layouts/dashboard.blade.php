@@ -4,9 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" type="image/x-icon">
+    <link
+        rel="shortcut icon"
+        href="{{ url('favicon.ico') }}"
+        type="image/x-icon"
+    >
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- TODO: traer de .env --}}
     <title>@yield('title', 'Icard')</title>
 
     <!-- Scripts -->
@@ -15,9 +20,14 @@
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap"
+    >
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
@@ -29,13 +39,20 @@
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a></li>
+                <li class="nav-item"><a
+                        class="nav-link"
+                        data-widget="pushmenu"
+                        href="#"
+                        role="button"
+                    ><i class="fas fa-bars"></i></a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link" href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a
+                        class="nav-link"
+                        href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    >
                         Cerrar Sesión
                     </a>
                 </li>
@@ -46,15 +63,23 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ route('home') }}" class="brand-link pl-4" style="white-space: normal;">
-                <span class="brand-text font-weight-light">{{ \Auth::user()->name }}</span>
+            <a
+                href="{{ route('home') }}"
+                class="brand-link pl-4"
+                style="white-space: normal;"
+            >
+                <span class="brand-text font-weight-light">{{ auth()->user()->name }}</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
+                    <ul
+                        class="nav nav-pills nav-sidebar flex-column"
+                        data-widget="treeview"
+                        role="menu"
+                        data-accordion="false"
+                    >
 
                         @if (auth()->user()->isClient())
                             <li class="nav-item">
@@ -99,9 +124,11 @@
                         @endif
 
                         <li class="nav-item border-top">
-                            <a href="{{ route('logout') }}"
+                            <a
+                                href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                class="nav-link">
+                                class="nav-link"
+                            >
                                 <i class="nav-icon far fa fa-door-closed"></i>
                                 <p>Cerrar Sesión</p>
                             </a>
@@ -151,7 +178,12 @@
         </footer>
     </div>
 
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    <form
+        id="logout-form"
+        action="{{ route('logout') }}"
+        method="POST"
+        style="display: none;"
+    >
         @csrf
     </form>
 </body>

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Card;
-use App\CardStatistic;
-use App\User;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Card;
+use App\CardStatistic;
+use App\User;
 
 class AnalyticsController extends Controller
 {
@@ -50,7 +50,10 @@ class AnalyticsController extends Controller
 
     public function download(User $client)
     {
-        if (auth()->user()->hasNotAllowedAccount($client)) {
+        /** @var User */
+        $authUser = auth()->user();
+
+        if ($authUser->hasNotAllowedAccount($client)) {
             return abort(401);
         }
 
@@ -91,7 +94,7 @@ class AnalyticsController extends Controller
             $data[] = $rowData;
         }
 
-        $timestamp = Carbon::now()->format('Ymd');
+        $timestamp = now()->format('Ymd');
         $filename = "estadisticas-{$client->id}-$timestamp.xlsx";
         $path = storage_path("/app/statistics/$filename");
 
@@ -113,6 +116,6 @@ class AnalyticsController extends Controller
         $writer = new Xlsx($spreadsheet);
         $writer->save($path);
 
-        return \Storage::download("statistics/$filename");
+        return Storage::download("statistics/$filename");
     }
 }
