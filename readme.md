@@ -29,6 +29,14 @@ php artisan local:setup --test-passwords --id=1 --id=4
 
 ---
 
+Exportar la información de tarjetas a csv. Ejemplo, exportar la información de los usuarios 30,29.
+
+```
+http://neurocards.test/exports/cards?ids[0]=30&ids[1]=29
+```
+
+---
+
 Ejemplo API para generar los campos de las plantillas.
 
 ```php
