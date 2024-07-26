@@ -7,7 +7,7 @@
     $headerImage = '';
     $headerClass = '';
     $logoClass = $ecard->has_logo_bg === '1' ? 'header-logo-bg' : '';
-    
+
     if ($theme->header_bg_type == 'header_bg_color') {
         $headerClass = 'header-bg-color';
         $headerBackground = "{$theme->header_bg_color}";
@@ -16,7 +16,7 @@
         $color1 = $theme->header_bg_gradient[0];
         $color2 = $theme->header_bg_gradient[1];
         $direction = $theme->header_bg_gradient[2];
-    
+
         if ($direction == 'vertical') {
             $headerGradient = "linear-gradient(to bottom, $color1, $color2)";
         } elseif ($direction == 'horizontal') {
@@ -32,7 +32,7 @@
         $headerImage = "$headerImage?v=$version";
         $headerImage = "url($headerImage)";
     }
-    
+
     $themeStyles = "<style>
             body {
                 --bg-light-color: #ffffff;
@@ -46,14 +46,14 @@
                 --logo-bg: {$ecard->logo_bg};
             }
         </style>";
-    
+
     // Profile Image.
     $profileImage = null;
     if ($ecard->profile) {
         $profileImage = url("storage/cards/$ecard->profile");
         $profileImage = "url('{$profileImage}')";
     }
-    
+
     function getActionContactsValue($actions, $key)
     {
         foreach ($actions as $ac) {
@@ -67,7 +67,7 @@
         }
         return null;
     }
-    
+
     function getContactListValue($contactList, $key)
     {
         foreach ($contactList as $cl) {
@@ -79,7 +79,7 @@
         }
         return null;
     }
-    
+
     const ICONS = [
         'cellphone' => 'smart-phone',
         'phone1' => 'phone',
@@ -116,8 +116,12 @@
             {{-- Company Logo --}}
             @if ($ecard->logo)
                 <div class="header-logo {{ $logoClass }}">
-                    <img width="100px" height="auto" alt="{{ __('Company Logo') }}"
-                        src="{{ url("storage/cards/$ecard->logo") }}?v={{ $version }}">
+                    <img
+                        width="100px"
+                        height="auto"
+                        alt="{{ __('Company Logo') }}"
+                        src="{{ url("storage/cards/$ecard->logo") }}?v={{ $version }}"
+                    >
                 </div>
             @endif
 
@@ -160,7 +164,11 @@
                 <div class="wrapper">
                     <!-- Action Phone -->
                     @if ($actionPhone)
-                        <a href="tel:{{ $actionPhone }}" class="header-action track-event" data-event="contact-by-call">
+                        <a
+                            href="tel:{{ $actionPhone }}"
+                            class="header-action track-event"
+                            data-event="contact-by-call"
+                        >
                             <i class="icofont-phone"></i>
                             <span>{{ __('Call') }}</span>
                         </a>
@@ -168,8 +176,11 @@
 
                     <!-- Action Email -->
                     @if ($actionEmail)
-                        <a href="mailto:{{ $actionEmail }}" class="header-action track-event"
-                            data-event="contact-by-email">
+                        <a
+                            href="mailto:{{ $actionEmail }}"
+                            class="header-action track-event"
+                            data-event="contact-by-email"
+                        >
                             <i class="icofont-email"></i>
                             <span>{{ __('Send Email') }}</span>
                         </a>
@@ -198,8 +209,12 @@
 
                     <!-- Action Whatsapp -->
                     @if ($actionWhatsapp)
-                        <a target="_blank" class="header-action track-event" data-event="contact-by-whatsapp"
-                            href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}">
+                        <a
+                            target="_blank"
+                            class="header-action track-event"
+                            data-event="contact-by-whatsapp"
+                            href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}"
+                        >
                             <i class="no-rotate icofont-brand-whatsapp"></i>
                             <span>{{ __('Send Whatsapp') }}</span>
                         </a>
@@ -250,8 +265,12 @@
                         @foreach ($sl as $sl_key => $sl_value)
                             @if ($sl_value)
                                 <li>
-                                    <a href="{{ $sl_value }}" target="_blank" class="track-event"
-                                        data-event="visit-{{ $sl_key }}">
+                                    <a
+                                        href="{{ $sl_value }}"
+                                        target="_blank"
+                                        class="track-event"
+                                        data-event="visit-{{ $sl_key }}"
+                                    >
                                         <i class="icofont-{{ ICONS[$sl_key] }}"></i>
                                     </a>
                                 </li>
@@ -263,21 +282,37 @@
 
             {{-- Card --}}
             <section class="header-card">
-                <a class="action-black-button track-event" data-event="share-contact" target="_blank"
-                    href="https://api.whatsapp.com/send?text={{ $card->vcard }}">
+                <a
+                    class="action-black-button track-event"
+                    data-event="share-contact"
+                    target="_blank"
+                    href="https://api.whatsapp.com/send?text={{ $card->vcard }}"
+                >
                     {{ __('Share') }}
                 </a>
 
-                <a class="action-black-button track-event" data-event="save-contact" href="{{ $card->vcard }}">
+                <a
+                    class="action-black-button track-event"
+                    data-event="save-contact"
+                    href="{{ $card->vcard }}"
+                >
                     {{ __('Save Contact') }}
                 </a>
 
                 <article class="content-ecard">
-                    <canvas id="canvas-card" width="320" height="440"></canvas>
+                    <canvas
+                        id="canvas-card"
+                        width="320"
+                        height="440"
+                    ></canvas>
                 </article>
 
-                <button class="action-black-button content-ecard-download track-event" data-event="save-image"
-                    id="donwload-canvas-button" type="button">
+                <button
+                    class="action-black-button content-ecard-download track-event"
+                    data-event="save-image"
+                    id="donwload-canvas-button"
+                    type="button"
+                >
                     {{ __('Download Image') }}
                 </button>
             </section>
@@ -296,7 +331,12 @@
     </footer>
 
     <!-- Imagen necesaria para generar img desde el canvas -->
-    <img id="image1" src="" alt="Canvas" style="display: none;">
+    <img
+        id="image1"
+        src=""
+        alt="Canvas"
+        style="display: none;"
+    >
 
 @endsection
 
