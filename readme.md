@@ -15,10 +15,16 @@ npm run prod
 
 ---
 
-Cambiar la contraseña de todos los usuarios para pruebas.
+Cambiar la contraseña los usuarios para pruebas.
 
-```php
-\DB::table('users')->update(['password' => \Hash::make('secret')]);
+```sh
+# Todos
+php artisan local:setup --test-passwords
+```
+
+```sh
+# Solo a los usuarios con id 1 y 4.
+php artisan local:setup --test-passwords --id=1 --id=4
 ```
 
 ---
@@ -46,7 +52,6 @@ public const TEMPLATE_FIELDS = [
     ]),
 ];
 ```
-
 
 ```php
 
