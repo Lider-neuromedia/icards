@@ -6,8 +6,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +25,7 @@ use App\Services\SlugService;
 use App\Services\FieldService;
 use App\Mail\CardCreated;
 use App\Enums\GroupField;
+use App\Enums\FieldType;
 use App\User;
 use App\Card;
 use App\CardField;
@@ -216,7 +217,7 @@ class CardsService
                                     $image_path = array_reverse(explode('/', $image_path))[0];
                                     $value = $image_path;
                                 }
-                            } elseif ($field['type'] == 'gradient') {
+                            } elseif ($field['type'] == FieldType::GRADIENT) {
                                 $value = json_encode($request->get($field_key));
                             } else {
                                 $value = $request->get($field_key);
@@ -271,8 +272,6 @@ class CardsService
     }
 
     /**
-     * @param Request $request
-     * @param boolean $notify
      * @param User|Authenticatable $client
      * @param Card|null $card
      * @return RedirectResponse
@@ -328,7 +327,7 @@ class CardsService
                                 $image_path = array_reverse(explode('/', $image_path))[0];
                                 $value = $image_path;
                             }
-                        } elseif ($field['type'] == 'gradient') {
+                        } elseif ($field['type'] == FieldType::GRADIENT) {
                             $value = json_encode($request->get($field_key));
                         } else {
                             $value = $request->get($field_key);
@@ -431,7 +430,7 @@ class CardsService
                                 $value = $primary_card->field($group_key, $field['key']);
                                 $isJson = false;
 
-                                if ($field['type'] == 'gradient') {
+                                if ($field['type'] == FieldType::GRADIENT) {
                                     $isJson = true;
                                 }
 

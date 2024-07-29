@@ -72,35 +72,10 @@
                                                     @if ($isFieldGeneral)
                                                         @php
                                                             $field_key = $group_key . '_' . $field['key'];
+                                                            $field_type_name = $field['type'];
                                                         @endphp
 
-                                                        @if ($field['type'] == 'text')
-                                                            @include('clients.cards.fields.text')
-                                                        @endif
-
-                                                        @if ($field['type'] == 'textarea')
-                                                            @include('clients.cards.fields.textarea')
-                                                        @endif
-
-                                                        @if ($field['type'] == 'image')
-                                                            @include('clients.cards.fields.image')
-                                                        @endif
-
-                                                        @if ($field['type'] == 'color')
-                                                            @include('clients.cards.fields.color')
-                                                        @endif
-
-                                                        @if ($field['type'] == 'boolean')
-                                                            @include('clients.cards.fields.boolean')
-                                                        @endif
-
-                                                        @if ($field['type'] == 'gradient')
-                                                            @include('clients.cards.fields.gradient')
-                                                        @endif
-
-                                                        @if ($field['type'] == 'select')
-                                                            @include('clients.cards.fields.select')
-                                                        @endif
+                                                        @include('clients.cards.fields.' . $field_type_name)
                                                     @endif
                                                 @endforeach
 

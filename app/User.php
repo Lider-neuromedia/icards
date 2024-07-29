@@ -122,7 +122,7 @@ class User extends Authenticatable
     /**
      * El usuario tiene asociada o es la cuenta pasada por parámetro.
      * @param User|Authenticatable $account
-     * @return boolean
+     * @return bool
      */
     public function hasAllowedAccount(User $account): bool
     {
@@ -141,7 +141,7 @@ class User extends Authenticatable
      * El usuario tiene asociada o es dueño de la tarjeta pasada por parámetro.
      *
      * @param Card $card
-     * @return boolean
+     * @return bool
      */
     public function hasAllowedCard(Card $card): bool
     {
@@ -154,7 +154,7 @@ class User extends Authenticatable
 
     /**
      * @param User|Authenticatable $account
-     * @return boolean
+     * @return bool
      */
     public function hasNotAllowedAccount(User $account): bool
     {
@@ -163,7 +163,7 @@ class User extends Authenticatable
 
     /**
      * @param Card $card
-     * @return boolean
+     * @return bool
      */
     public function hasNotAllowedCard(Card $card): bool
     {

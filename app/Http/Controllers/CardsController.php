@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\GroupField;
+use App\Enums\FieldType;
 use App\Card;
 use App\CardField;
 use Parsedown;
@@ -71,8 +72,8 @@ class CardsController extends Controller
         if (isset($template[GroupField::OTHERS])) {
             foreach ($template[GroupField::OTHERS] as $field) {
                 $value = $field->value;
-                $isJson = $field->type == 'gradient';
-                $isMarkdown = $field->type == 'textarea';
+                $isJson = $field->type == FieldType::GRADIENT;
+                $isMarkdown = $field->type == FieldType::TEXTAREA;
 
                 $ecard[$field->key] = $value;
 
@@ -87,14 +88,14 @@ class CardsController extends Controller
         if (isset($template[GroupField::THEME])) {
             foreach ($template[GroupField::THEME] as $field) {
                 $value = $field->value;
-                $isJson = $field->type == 'gradient';
+                $isJson = $field->type == FieldType::GRADIENT;
                 $theme[$field->key] = $isJson ? json_decode($value) : $value;
             }
         }
         if (isset($template[GroupField::ACTION_CONTACTS])) {
             foreach ($template[GroupField::ACTION_CONTACTS] as $field) {
                 $value = $field->value;
-                $isJson = $field->type == 'gradient';
+                $isJson = $field->type == FieldType::GRADIENT;
                 $ecard[GroupField::ACTION_CONTACTS][] = (object) [
                     $field->key => $isJson ? json_decode($value) : $value,
                 ];
@@ -103,8 +104,8 @@ class CardsController extends Controller
         if (isset($template[GroupField::CONTACT_LIST])) {
             foreach ($template[GroupField::CONTACT_LIST] as $field) {
                 $value = $field->value;
-                $isJson = $field->type == 'gradient';
-                $isMarkdown = $field->type == 'textarea';
+                $isJson = $field->type == FieldType::GRADIENT;
+                $isMarkdown = $field->type == FieldType::TEXTAREA;
 
                 $tempValue = $value;
 
@@ -122,7 +123,7 @@ class CardsController extends Controller
         if (isset($template[GroupField::SOCIAL_LIST])) {
             foreach ($template[GroupField::SOCIAL_LIST] as $field) {
                 $value = $field->value;
-                $isJson = $field->type == 'gradient';
+                $isJson = $field->type == FieldType::GRADIENT;
                 $ecard[GroupField::SOCIAL_LIST][] = (object) [
                     $field->key => $isJson ? json_decode($value) : $value,
                 ];
@@ -132,7 +133,7 @@ class CardsController extends Controller
         // Llenar campos que estén vacíos.
         foreach (CardField::TEMPLATE_FIELDS as $group_key => $fields) {
             foreach ($fields['values'] as $field) {
-                $isJson = $field['type'] == 'gradient';
+                $isJson = $field['type'] == FieldType::GRADIENT;
                 $value = $field['default'];
 
                 if ($group_key == GroupField::OTHERS) {

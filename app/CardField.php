@@ -41,7 +41,7 @@ class CardField extends Model
                 }
             }
         }
-        return 'text';
+        return FieldType::TEXT;
     }
 
     // TODO: Usar DTO y mover a un servicio aparte.
