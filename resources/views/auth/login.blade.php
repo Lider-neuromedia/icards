@@ -12,7 +12,7 @@
 
     <div class="login-container row justify-content-center">
         <div class="col-sm-10 col-md-6 col-lg-4">
-            <div class="card bg-transparent border-0">
+            <div class="card bg-transparent shadow-none border-0">
                 <div class="card-header border-0 text-center mb-4">
                     <img
                         class="login-logo"

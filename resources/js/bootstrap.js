@@ -14,7 +14,7 @@ try {
     require('@fortawesome/fontawesome-free/js/all.min.js');
     require('@fortawesome/fontawesome-free/js/v4-shims.min.js');
     require('admin-lte');
-} catch (e) {}
+} catch (e) { }
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
