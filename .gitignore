@@ -1,6 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
+/public/.user.ini
+/public/php.ini
 /storage/*.key
 /vendor
 .env
