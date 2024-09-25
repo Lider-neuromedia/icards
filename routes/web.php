@@ -14,8 +14,6 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Services\ExportCardsService;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -49,6 +47,8 @@ Route::prefix('admin')
         Route::match(['PUT', 'PATCH'], 'clients/{client}/fields/scopes', 'FieldsController@resetScopes')->name('clients.fields.scopes-reset');
 
         Route::resource('users', 'AdminsController', ['except' => ['show']]);
+
+        Route::get('exports/cards', 'ExportsController@exportCards');
     });
 
 Route::prefix('clients')
@@ -91,16 +91,6 @@ if (env('MAINTENANCE_URLS') === true) {
         return response()->json(['done ', $exitCode], 200);
     });
 }
-
-Route::middleware(['auth', 'role:admin'])
-    ->get('/exports/cards', function (Request $request, ExportCardsService $service) {
-        $request->validate([
-            'ids' => ['required', 'array', 'min:1'],
-            'ids.*' => ['required', 'integer', 'exists:users,id'],
-        ]);
-        $service->exportCSVFile($request->get('ids'));
-        return response()->json('ok', 200);
-    });
 
 Route::get('/ec/{card}', 'CardsController@card');
 Route::get('/{client}/{card}', 'CardsController@clientCard');
