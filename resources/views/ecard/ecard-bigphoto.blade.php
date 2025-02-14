@@ -182,7 +182,7 @@
                             data-event="contact-by-email"
                         >
                             <i class="icofont-email"></i>
-                            <span>{{ __('Send Email') }}</span>
+                            <span>{{ __('Email') }}</span>
                         </a>
                     @endif
 
@@ -204,7 +204,7 @@
                     <!-- Action Guardar -->
                     {{-- <a class="header-action track-event" data-event="save-contact" href="{{ $card->vcard }}">
                         <i class="icofont-user-alt-2"></i>
-                        {{ __('Save Contact') }}
+                        {{ __('Add Contact') }}
                     </a> --}}
 
                     <!-- Action Whatsapp -->
@@ -216,7 +216,7 @@
                             href="https://api.whatsapp.com/send?phone={{ $actionWhatsapp }}&text={!! $ecard->whatsapp_message !!}"
                         >
                             <i class="no-rotate icofont-brand-whatsapp"></i>
-                            <span>{{ __('Send Whatsapp') }}</span>
+                            <span>{{ __('Text Me') }}</span>
                         </a>
                     @endif
                 </div>
@@ -296,7 +296,7 @@
                     data-event="save-contact"
                     href="{{ $card->vcard }}"
                 >
-                    {{ __('Save Contact') }}
+                    {{ __('Add Contact') }}
                 </a>
 
                 <article class="content-ecard">

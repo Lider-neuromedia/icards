@@ -115,7 +115,7 @@
                                         data-event="contact-by-email"
                                     >
                                         <i class="icofont-email"></i>
-                                        <span>{{ __('Send Email') }}</span>
+                                        <span>{{ __('Email') }}</span>
                                     </a>
                                 @endif
 
@@ -127,7 +127,7 @@
                                         href="https://api.whatsapp.com/send?phone={{ $value }}&text={!! $ecard->whatsapp_message !!}"
                                     >
                                         <i class="icofont-brand-whatsapp"></i>
-                                        <span>{{ __('Send Whatsapp') }}</span>
+                                        <span>{{ __('Text Me') }}</span>
                                     </a>
                                 @endif
                             </div>
@@ -152,7 +152,7 @@
                         data-event="save-contact"
                         href="{{ $card->vcard }}"
                     >
-                        {{ __('Save Contact') }}
+                        {{ __('Add Contact') }}
                     </a>
                 </div>
                 <ul>
@@ -249,7 +249,7 @@
                         data-event="save-contact"
                         href="{{ $card->vcard }}"
                     >
-                        {{ __('Save Contact') }}
+                        {{ __('Add Contact') }}
                     </a>
                 </div>
                 <div class="content-social-actions">
